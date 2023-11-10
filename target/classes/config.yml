@@ -1,0 +1,117 @@
+rewards:
+
+# If command is used, fill command with command that will be executed by console
+# If location is used, fill location with location
+spawn_teleport:
+  use: 'prior' # 'command' or 'location' or 'prior'
+  command: 'tp %player%'
+  location:
+    world: 'world'
+    x: 0.0
+    y: 0.0
+    z: 0.0
+
+cooldown:
+  before: 5 # seconds
+  after: 5 # seconds
+
+messages:
+  bad_usage: '&cInvalid usage'
+  arena:
+    help:
+      - '&e&lArena Help'
+      - '&a/arena list - Show your arenas'
+      - '&a/arena delete <name> - Delete your arena'
+      - '&a/arena public <name> - Make arena public/private'
+      - '&eHow to create new arena:'
+      - '&31. &a/arena create <name> - Create new arena'
+      - '&32. &a/arena sp1 <name> - Set spawn point for first player'
+      - '&32. &a/arena sp2 <name> - Set spawn point for second player and make arena ready'
+    public_command:
+      not_found: '&cArena not found'
+      not_yours: '&cArena is not yours'
+      success_private: '&aArena made private'
+      success_public: '&aArena made public'
+    list:
+      - '&e&lYour arenas:'
+      - '&a%arenas'
+    delete:
+      not_yours: '&cArena is not yours'
+      not_found: '&cArena not found'
+      delete: '&aArena deleted'
+      running: '&aArena is running, you cant delete it'
+    create:
+      exists: '&cArena already exists'
+      success: '&aArena created! Now set spawnpoint for first player with /arena sp1'
+    sp1:
+      not_yours: '&cArena is not yours'
+      not_found: '&cArena not found'
+      success: '&aSpawnpoint set for first player! Now set spawnpoint for second player with /arena sp2'
+    sp2:
+      not_yours: '&cArena is not yours'
+      not_found: '&cArena not found'
+      success: '&aSpawnpoint set for second player! Now your arena is ready to play!'
+      error: '&cSomething went wrong, arena is not ready'
+  pvp:
+    help:
+      - '&e&lPVP Help'
+      - '&a/pvp - Show help'
+      - '&a/pvp <player> - Invite player to 1v1 fight'
+      - '&a/pvp accept - Accept 1v1 fight (alternative for clickable message)'
+    invite:
+      player_offline: '&cPlayer is offline'
+      invite_self: '&cYou cant invite yourself'
+      invite_sent: '&aInvite was sent to %player%'
+  arena_select_gui:
+    inventory_name: '&e&lSELECT ARENA TO FIGHT'
+    arena_item:
+      item: 'GRASS_BLOCK'
+      name: '&a%arena_name'
+      lore:
+        - '&e&lArena name: &a%arena_name'
+        - '&e&lArena owner: &a%arena_owner'
+    arena_not_ready: '&cArena is not ready'
+    invite_message: '&aClick &4@[here]@ &ato join pvp arena with %inviter% in %arena_name%' # @ is replaced with clickable message to accept invite
+  gvg:
+    help:
+      - '&e&lGroup help'
+      - '&a/gvg <player> - Invite player to group fight'
+      - '&a/gvg invite <player> [player]... - Invite player/s to group fight'
+      - '&a/gvg leave - Leave group'
+      - '&a/gvg kick <player> - Kick player from group'
+    dont_have_group: '&cYou are not owner of your group'
+    not_in_group: '&cYou are not in group'
+    player_offline: '&cPlayer %player% is offline'
+    you_left: '&aYou left group'
+    player_not_in_group: '&cPlayer is not in group or is in your group'
+    invite:
+      already_in_group: '&cPlayer %player% is already in group'
+      invite_message: '&aClick &4@[here]@ &ato accept invite to group from %inviter%' # @ is replaced with clickable message to accept invite
+      invite_yourself: '&cYou cant invite yourself'
+      invite_sent: '&aInvite was sent to %player%'
+      cant_invite_yourself: '&cYou cant invite yourself'
+    accept:
+      invite_not_found: '&cInvite not found'
+      you_already_in_group: '&cYou are already in group'
+      accepted: '&aInvite accepted'
+      invite_accepted: '&a%player% accepted invite to group'
+    leave:
+      player_left_group: '&a%player% left group'
+    kick:
+      not_in_group: '&cYou are not in group or you dont have permission'
+      player_not_in_group: '&cPlayer is not in group'
+      you_kicked: '&cYou were kicked from group'
+      kicked: '&a%player% was kicked from group'
+  invite_accept:
+    invite_not_found: '&cInvite not found'
+    other_player_offline: '&cPlayer is offline'
+    arena_not_ready: '&cArena is not ready right now! Try again later'
+    group:
+      group_not_found: '&cGroup not found'
+      group_too_small: '&cGroup is too small'
+      someone_already_in_fight: '&cSomeone is already in fight'
+  fight:
+    starting: '&aFight is starting in %time% seconds'
+    started: '&aFight started!'
+    problem_saving_inventories: '&cProblem saving inventories'
+    end: '&aFight ended! Winner: %winner%, teleporting in %time% seconds'

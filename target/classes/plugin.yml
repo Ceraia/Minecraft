@@ -1,0 +1,17 @@
+name: XDBLArenas
+version: '1.0-SNAPSHOT'
+main: dev.xdbl.xdblarenas.XDBLArena
+api-version: '1.20'
+commands:
+  arena:
+    description: Arena command
+    usage: /arena <list|delete|public> [name]
+    permission: xdbl.arena
+  pvp:
+    description: PVP command
+    usage: /pvp <player|accept>
+    permission: xdbl.pvp
+  gvg:
+    description: GVG command
+    usage: /gvg <player|accept>
+    permission: xdbl.gvg
