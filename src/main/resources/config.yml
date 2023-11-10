@@ -1,5 +1,7 @@
 rewards:
 
+rewards-lose:
+
 # If command is used, fill command with command that will be executed by console
 # If location is used, fill location with location
 spawn_teleport:
@@ -17,6 +19,7 @@ cooldown:
 
 messages:
   bad_usage: '&cInvalid usage'
+  no_permission: "&cYou don't have permission to execute this command"
   arena:
     help:
       - '&e&lArena Help'
@@ -26,7 +29,7 @@ messages:
       - '&eHow to create new arena:'
       - '&31. &a/arena create <name> - Create new arena'
       - '&32. &a/arena sp1 <name> - Set spawn point for first player'
-      - '&32. &a/arena sp2 <name> - Set spawn point for second player and make arena ready'
+      - '&32. &a/arena sp2 <name> - Set spawn point for second player'
     public_command:
       not_found: '&cArena not found'
       not_yours: '&cArena is not yours'
@@ -39,19 +42,20 @@ messages:
       not_yours: '&cArena is not yours'
       not_found: '&cArena not found'
       delete: '&aArena deleted'
-      running: '&aArena is running, you cant delete it'
+      running: '&aArena is in use, you cant delete it'
     create:
       exists: '&cArena already exists'
-      success: '&aArena created! Now set spawnpoint for first player with /arena sp1'
+      success: '&aArena created! Now you can change the spawnpoints for the players with /arena sp1 & /arena sp2 respectively'
+      no_name: '&cYou need to specify name'
+      alphanumeric: '&cName must only contain letters and numbers'
     sp1:
       not_yours: '&cArena is not yours'
       not_found: '&cArena not found'
-      success: '&aSpawnpoint set for first player! Now set spawnpoint for second player with /arena sp2'
+      success: '&aSpawnpoint set for first player!'
     sp2:
       not_yours: '&cArena is not yours'
       not_found: '&cArena not found'
-      success: '&aSpawnpoint set for second player! Now your arena is ready to play!'
-      error: '&cSomething went wrong, arena is not ready'
+      success: '&aSpawnpoint set for second player!'
   pvp:
     help:
       - '&e&lPVP Help'
@@ -115,3 +119,4 @@ messages:
     started: '&aFight started!'
     problem_saving_inventories: '&cProblem saving inventories'
     end: '&aFight ended! Winner: %winner%, teleporting in %time% seconds'
+    end_global: '&a%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'

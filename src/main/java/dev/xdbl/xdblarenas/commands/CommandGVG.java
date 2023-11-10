@@ -1,4 +1,4 @@
-package dev.xdbl.xdblarenas.groups;
+package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
@@ -10,18 +10,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class GroupManager implements CommandExecutor, Listener {
+public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
     private final XDBLArena plugin;
     private final Map<Player, List<Player>> groups = new HashMap<>();
@@ -29,12 +27,17 @@ public class GroupManager implements CommandExecutor, Listener {
 
     private final Map<Player, Player> invites = new HashMap<>();
 
-    public GroupManager(XDBLArena plugin) {
+    public CommandGVG(XDBLArena plugin) {
         this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if(!sender.hasPermission("xdbl.gvg")){
+            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            return true;
+        }
+
         if (args.length == 0) {
             plugin.getConfig().getStringList("messages.gvg.help").forEach(s -> {
                 sender.sendMessage(s.replace("&", "§"));
@@ -238,6 +241,16 @@ public class GroupManager implements CommandExecutor, Listener {
         }
 
         return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args){
+        if (args.length == 1) {
+            return Arrays.asList("invite", "accept", "leave", "kick");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
+            return getPlayersByGroup((Player) sender).stream().map(Player::getName).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
 
     private void leaveGang(Player player) {

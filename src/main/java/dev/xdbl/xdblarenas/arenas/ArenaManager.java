@@ -55,6 +55,7 @@ public class ArenaManager {
 
     public void addArena(Arena arena) {
         arenas.add(arena);
+        arena.saveArena();
     }
 
     public void removeArena(Arena arena) {

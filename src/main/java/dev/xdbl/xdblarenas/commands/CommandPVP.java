@@ -7,21 +7,27 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class PVPCommand implements CommandExecutor {
+public class CommandPVP implements CommandExecutor, TabCompleter {
 
     private final XDBLArena plugin;
 
-    public PVPCommand(XDBLArena plugin) {
+    public CommandPVP(XDBLArena plugin) {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if(!sender.hasPermission("xdbl.pvp")){
+            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            return true;
+        }
 
         if (args.length == 0) {
             pvpHelp(sender);
@@ -170,6 +176,26 @@ public class PVPCommand implements CommandExecutor {
         return true;
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 1) {
+            // If there is an argument, suggest online player names
+            return getPlayerNames(sender);
+        }
+        // If there is more than one argument, return an empty list
+        return new ArrayList<>();
+    }
+
+    private List<String> getPlayerNames(CommandSender sender) {
+        List<String> playerNames = new ArrayList<>();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            // Exclude the sender's name from the suggestions
+            if (!player.getName().equals(sender.getName())) {
+                playerNames.add(player.getName());
+            }
+        }
+        return playerNames;
+    }
 
     private void pvpHelp(CommandSender sender) {
         plugin.getConfig().getStringList("messages.pvp.help").forEach(s -> {

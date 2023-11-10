@@ -62,15 +62,28 @@ public class Arena {
         this.configFile = configFile;
     }
 
-    public boolean setSpawnPoint2(Location loc) {
-        spawnPoint2 = loc;
+    public void setSpawnPoint1(Location loc) {
+        spawnPoint1 = loc;
+        saveArena();
+    }
 
+    public void setSpawnPoint2(Location loc) {
+        spawnPoint2 = loc;
+        saveArena();
+    }
+
+    public boolean saveArena() {
         try {
             configFile = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
-            configFile.createNewFile();
+
+            // Check if the file already exists
+            if (!configFile.exists()) {
+                configFile.createNewFile();
+            }
 
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
+            // Update or set the values
             config.set("name", name);
             config.set("owner", owner);
 
@@ -83,9 +96,9 @@ public class Arena {
             e.printStackTrace();
             return false;
         }
-
         return true;
     }
+
 
     public ArenaState getState() {
         return state;
@@ -109,10 +122,6 @@ public class Arena {
 
     public Location getSpawnPoint1() {
         return spawnPoint1;
-    }
-
-    public void setSpawnPoint1(Location loc) {
-        spawnPoint1 = loc;
     }
 
     public Location getSpawnPoint2() {
@@ -177,12 +186,14 @@ public class Arena {
     public void end(Player player, boolean quit) {
         boolean end = false;
         List<Player> winners = new ArrayList<>();
+        List<Player> losers = new ArrayList<>();
 
         if (this.getTeam1().contains(player)) {
             if (this.getTeam1().size() <= 1) {
                 end = true;
 
                 winners.addAll(this.getTeam2());
+                losers.addAll(this.getTeam1());
             } else {
                 List<Player> team = this.getTeam1();
                 team.remove(player);
@@ -193,6 +204,7 @@ public class Arena {
                 end = true;
 
                 winners.addAll(this.getTeam1());
+                losers.addAll(this.getTeam2());
             } else {
                 List<Player> team = this.getTeam2();
                 team.remove(player);
@@ -224,6 +236,11 @@ public class Arena {
             );
 
             pl.getInventory().clear();
+
+            pl.setHealth(20);
+            pl.setFireTicks(0);
+            pl.setFoodLevel(20);
+            pl.setSaturation(20);
         }
 
         this.setState(ArenaState.ENDING);
@@ -250,6 +267,13 @@ public class Arena {
                 // Reward
                 for (Player pl : winners) {
                     for (String command : plugin.getConfig().getStringList("rewards")) {
+                        pl.performCommand(command.replace("%player%", pl.getName()));
+                    }
+                }
+
+                // Reward losers
+                for (Player pl : losers) {
+                    for (String command : plugin.getConfig().getStringList("rewards_lose")) {
                         pl.performCommand(command.replace("%player%", pl.getName()));
                     }
                 }

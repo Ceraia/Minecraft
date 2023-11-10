@@ -14,6 +14,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.UUID;
+
 public class ArenaFightListener implements Listener {
 
     private final XDBLArena plugin;
@@ -84,6 +86,38 @@ public class ArenaFightListener implements Listener {
             player.setHealth(player.getHealthScale());
 
             // END OF FIGHT
+
+            // Get player that killed the player
+            Player killer = null;
+            if (e instanceof EntityDamageByEntityEvent) {
+                EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e;
+                if (event.getDamager() instanceof Player) {
+                    killer = (Player) event.getDamager();
+
+                    if(killer != null) {
+                        UUID killerUUID = killer.getUniqueId();
+                        UUID victimUUID = player.getUniqueId();
+
+                        // Get the win chance
+                        int winChance = plugin.getPlayerManager().CalculateWinChance(killerUUID, victimUUID);
+
+                        // Announce the winner and the win chance in chat
+                        Bukkit.broadcastMessage(
+                                plugin.getConfig().getString("messages.fight.end_global")
+                                        .replace("%winner%", killer.getName())
+                                        .replace("%loser%", player.getName())
+                                        .replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(victimUUID).getElo()))
+                                        .replace("%winchance%", String.valueOf(winChance))
+                                        .replace("%arena%", plugin.getArenaManager().getArena(player).getName())
+                                        .replace("&", "§")
+
+                        );
+
+                        // Handle ELO calculations
+                        plugin.getPlayerManager().PlayerKill(killerUUID, victimUUID);
+                    }
+                }
+            }
 
             Arena arena = plugin.getArenaManager().getArena(player);
 

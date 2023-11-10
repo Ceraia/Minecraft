@@ -5,23 +5,28 @@ import dev.xdbl.xdblarenas.arenas.Arena;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class ArenaCommand implements CommandExecutor {
+public class CommandArena implements CommandExecutor, TabCompleter {
 
     private final XDBLArena plugin;
     private final Map<String, Arena> creatingArenas = new HashMap<>();
 
-    public ArenaCommand(XDBLArena plugin) {
+    public CommandArena(XDBLArena plugin) {
         this.plugin = plugin;
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if(!sender.hasPermission("xdbl.arena")){
+            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            return true;
+        }
+
         if (args.length == 0) {
             arenaHelp(sender);
             return true;
@@ -30,26 +35,50 @@ public class ArenaCommand implements CommandExecutor {
         if (args[0].equalsIgnoreCase("list")) {
             arenaList(sender);
             return true;
-        } else if (args[0].equalsIgnoreCase("delete")) {
+        }
+        if (args[0].equalsIgnoreCase("delete")) {
             arenaDelete(sender, args);
             return true;
-        } else if (args[0].equalsIgnoreCase("create")) {
+        }
+        if (args[0].equalsIgnoreCase("create")) {
             arenaCreate(sender, args);
             return true;
-        } else if (args[0].equalsIgnoreCase("sp1")) {
+        }
+        if (args[0].equalsIgnoreCase("sp1")) {
             arenaSP1(sender, args);
             return true;
-        } else if (args[0].equalsIgnoreCase("sp2")) {
+        }
+        if (args[0].equalsIgnoreCase("sp2")) {
             arenaSP2(sender, args);
             return true;
-        } else if (args[0].equalsIgnoreCase("public")) {
+        }
+        if (args[0].equalsIgnoreCase("public")) {
             arenaPublic(sender, args);
             return true;
-        } else {
+        }
+        else {
             badUsage(sender);
             arenaHelp(sender);
             return true;
         }
+    }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2");
+        } else if (args.length == 2 && (
+                args[0].equalsIgnoreCase("delete") ||
+                        args[0].equalsIgnoreCase("public") ||
+                        args[0].equalsIgnoreCase("sp1") ||
+                        args[0].equalsIgnoreCase("sp2"))) {
+            return Arrays.asList("<arena>");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
+            return Arrays.asList("<name>");
+        } else if ((args.length == 3 && args[0].equalsIgnoreCase("public"))) {
+            return Arrays.asList("true", "false");
+        }
+        return new ArrayList<>();
     }
 
     private void arenaSP1(CommandSender sender, String[] args) {
@@ -101,14 +130,7 @@ public class ArenaCommand implements CommandExecutor {
             return;
         }
 
-        boolean ready = arena.setSpawnPoint2(((Player) sender).getLocation());
-        arena.setReady(ready);
-        if (!ready) {
-            sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.sp2.error").replace("&", "§")
-            );
-            return;
-        }
+        arena.setSpawnPoint2(((Player) sender).getLocation());
 
         plugin.getArenaManager().addArena(arena);
 
@@ -124,6 +146,23 @@ public class ArenaCommand implements CommandExecutor {
         }
 
         String name = args[1];
+
+        // Check if the string is the same as <name>, if so state the user should put a name
+        if (name.equalsIgnoreCase("<name>")) {
+            sender.sendMessage(
+                    plugin.getConfig().getString("messages.arena.create.no_name").replace("&", "§")
+            );
+            return;
+        }
+        // Check if the string is alphanumeric
+        if (!name.matches("[a-zA-Z0-9]*")) {
+            sender.sendMessage(
+                    plugin.getConfig().getString("messages.arena.create.alphanumeric").replace("&", "§")
+            );
+            return;
+        }
+
+        // Check if the arena already exists
         if (plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).count() > 0) {
             sender.sendMessage(
                     plugin.getConfig().getString("messages.arena.create.exists").replace("&", "§")
@@ -133,6 +172,11 @@ public class ArenaCommand implements CommandExecutor {
 
         Arena arena = new Arena(plugin, name, sender.getName());
         creatingArenas.put(name, arena);
+
+        arena.setSpawnPoint1(((Player) sender).getLocation());
+        arena.setSpawnPoint2(((Player) sender).getLocation());
+        arena.setReady(true);
+        plugin.getArenaManager().addArena(arena);
 
         sender.sendMessage(
                 plugin.getConfig().getString("messages.arena.create.success").replace("&", "§")
