@@ -31,7 +31,7 @@ public class PlayerManager {
             String uuid = config.getString("uuid");
             String elo = config.getString("elo");
 
-            ArenaPlayer arenaPlayer = new ArenaPlayer(plugin, UUID.fromString(uuid), Integer.parseInt(elo), file);
+            ArenaPlayer arenaPlayer = new ArenaPlayer(plugin, UUID.fromString(uuid), Integer.parseInt(elo), false, file);
             arenaPlayers.add(arenaPlayer);
         }
     }
@@ -94,10 +94,11 @@ public class PlayerManager {
 
             config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
+            config.set("scoreboard", true);
 
             config.save(configFile);
 
-            return new ArenaPlayer(plugin, playerUUID, defaultElo, configFile);
+            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, configFile);
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Handle the exception based on your needs

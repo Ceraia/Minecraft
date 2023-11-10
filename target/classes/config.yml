@@ -66,6 +66,9 @@ messages:
       player_offline: '&cPlayer is offline'
       invite_self: '&cYou cant invite yourself'
       invite_sent: '&aInvite was sent to %player%'
+    scoreboard:
+      enabled: '&aScoreboard enabled'
+      disabled: '&aScoreboard disabled'
   arena_select_gui:
     inventory_name: '&e&lSELECT ARENA TO FIGHT'
     arena_item:

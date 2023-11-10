@@ -23,17 +23,19 @@ public class ArenaPlayer {
     private final UUID uuid;
     private File configFile;
     private int elo;
+    private boolean scoreboard;
 
     // after ready
     private Location spawnPoint1, spawnPoint2;
     private boolean isReady = false;
 
 
-    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, File configFile) {
+    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;
         this.elo = elo;
+        this.scoreboard = scoreboard;
 
         this.configFile = configFile;
     }
@@ -56,5 +58,10 @@ public class ArenaPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean toggleScoreboard() {
+        scoreboard = !scoreboard;
+        return scoreboard;
     }
 }

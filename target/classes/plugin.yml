@@ -1,5 +1,5 @@
 name: XDBLArenas
-version: '1.1-SNAPSHOT'
+version: '1.2-SNAPSHOT'
 main: dev.xdbl.xdblarenas.XDBLArena
 api-version: '1.20'
 commands:
