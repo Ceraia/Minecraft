@@ -8,7 +8,6 @@ import dev.xdbl.xdblarenas.commands.CommandPVP;
 import dev.xdbl.xdblarenas.commands.CommandGVG;
 import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
 import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

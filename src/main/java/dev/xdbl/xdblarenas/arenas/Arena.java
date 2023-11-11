@@ -42,13 +42,6 @@ public class Arena {
 
     private final List<Player> startPlayers = new ArrayList<>();
 
-    public Arena(XDBLArena plugin, String name, String owner) {
-        this.plugin = plugin;
-
-        this.name = name;
-        this.owner = owner;
-    }
-
     public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
         this.plugin = plugin;
 
@@ -98,7 +91,6 @@ public class Arena {
         }
         return true;
     }
-
 
     public ArenaState getState() {
         return state;

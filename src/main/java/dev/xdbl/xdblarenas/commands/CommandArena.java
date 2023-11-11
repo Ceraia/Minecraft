@@ -9,8 +9,11 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -143,8 +146,8 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         String name = args[1];
-        Arena arena = creatingArenas.get(name);
 
+        Arena arena = creatingArenas.get(name);
         if (arena == null) {
             sender.sendMessage(
                     plugin.getConfig().getString("messages.arena.sp2.not_found").replace("&", "§")
@@ -157,11 +160,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             );
             return;
         }
-
         arena.setSpawnPoint2(((Player) sender).getLocation());
-
-        plugin.getArenaManager().addArena(arena);
-
         sender.sendMessage(
                 plugin.getConfig().getString("messages.arena.sp2.success").replace("&", "§")
         );
@@ -198,7 +197,9 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             return;
         }
 
-        Arena arena = new Arena(plugin, name, sender.getName());
+        File file = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
+
+        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, file);
         creatingArenas.put(name, arena);
 
         arena.setSpawnPoint1(((Player) sender).getLocation());
