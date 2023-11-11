@@ -1,4 +1,4 @@
-package dev.xdbl.xdblarenas.arenas.listeners;
+package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.XDBLArena;

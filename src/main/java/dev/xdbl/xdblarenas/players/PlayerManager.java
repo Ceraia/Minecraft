@@ -1,9 +1,8 @@
-package dev.xdbl.xdblarenas.arenas;
+package dev.xdbl.xdblarenas.players;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;

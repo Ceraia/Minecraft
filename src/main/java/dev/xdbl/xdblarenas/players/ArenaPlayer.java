@@ -1,21 +1,17 @@
-package dev.xdbl.xdblarenas.arenas;
+package dev.xdbl.xdblarenas.players;
 
-import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.Utils;
-import org.bukkit.GameMode;
+import dev.xdbl.xdblarenas.events.PlayerEloChangeEvent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class ArenaPlayer {
 
@@ -54,14 +50,32 @@ public class ArenaPlayer {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("elo", elo);
         try {
+            // Trigger the custom event when Elo changes
+            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
+
             config.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+    public boolean scoreboard() {
+        return scoreboard;
+    }
 
     public boolean toggleScoreboard() {
         scoreboard = !scoreboard;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("scoreboard", scoreboard);
+        try {
+            // Trigger the custom event when Elo changes
+            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
+
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return scoreboard;
     }
 }

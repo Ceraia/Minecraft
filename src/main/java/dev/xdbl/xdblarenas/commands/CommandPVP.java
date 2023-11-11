@@ -3,7 +3,8 @@ package dev.xdbl.xdblarenas.commands;
 import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
-import dev.xdbl.xdblarenas.arenas.ArenaPlayer;
+import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -137,28 +138,6 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("scoreboard")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(
-                        plugin.getConfig().getString("messages.only_players").replace("&", "§")
-                );
-                return true;
-            }
-
-            Player p = (Player) sender;
-
-            ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(p.getUniqueId());
-
-            if(arenaPlayer.toggleScoreboard()){
-                p.sendMessage(
-                        plugin.getConfig().getString("messages.pvp.scoreboard.enabled").replace("&", "§")
-                );
-            }else{
-                p.sendMessage(
-                        plugin.getConfig().getString("messages.pvp.scoreboard.disabled").replace("&", "§")
-                );
-            }
-        }
         // open gui for invite player
 
         String playerName = args[0];
@@ -204,8 +183,6 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             List<String> tabOptions = new ArrayList<>();
             // If there is an argument, suggest online player names
-            tabOptions.add("accept");
-            tabOptions.add("scoreboard");
             for (Player player : Bukkit.getOnlinePlayers()) {
                 // Exclude the sender's name from the suggestions
                 if (!player.getName().equals(sender.getName())) {

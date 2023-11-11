@@ -2,6 +2,9 @@ package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -36,6 +39,30 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             arenaList(sender);
             return true;
         }
+
+        if (args[0].equalsIgnoreCase("scoreboard")) {
+            Player p = (Player) sender;
+
+            ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(p.getUniqueId());
+
+            // Toggle the scoreboard
+            if (arenaPlayer != null) {
+                if (arenaPlayer.toggleScoreboard()) {
+                    p.sendMessage(
+                            plugin.getConfig().getString("messages.pvp.scoreboard.enabled").replace("&", "§")
+                    );
+                } else {
+                    p.sendMessage(
+                            plugin.getConfig().getString("messages.pvp.scoreboard.disabled").replace("&", "§")
+                    );
+                }
+
+                dev.xdbl.xdblarenas.events.PlayerEloChangeEvent eloChangeEvent = new dev.xdbl.xdblarenas.events.PlayerEloChangeEvent(p, arenaPlayer);
+                Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
+            }
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("delete")) {
             arenaDelete(sender, args);
             return true;
@@ -66,7 +93,8 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2");
+            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2"//, "scoreboard"
+            );
         } else if (args.length == 2 && (
                 args[0].equalsIgnoreCase("delete") ||
                         args[0].equalsIgnoreCase("public") ||

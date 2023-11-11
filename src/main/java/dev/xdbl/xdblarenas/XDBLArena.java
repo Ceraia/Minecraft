@@ -1,15 +1,14 @@
 package dev.xdbl.xdblarenas;
 
 import dev.xdbl.xdblarenas.arenas.ArenaManager;
-import dev.xdbl.xdblarenas.arenas.PlayerManager;
-import dev.xdbl.xdblarenas.arenas.listeners.ArenaBlockListener;
+import dev.xdbl.xdblarenas.listeners.*;
+import dev.xdbl.xdblarenas.players.PlayerManager;
 import dev.xdbl.xdblarenas.commands.CommandArena;
-import dev.xdbl.xdblarenas.arenas.listeners.ArenaExplodeListener;
-import dev.xdbl.xdblarenas.arenas.listeners.ArenaFightListener;
-import dev.xdbl.xdblarenas.arenas.listeners.ArenaItemListener;
 import dev.xdbl.xdblarenas.commands.CommandPVP;
 import dev.xdbl.xdblarenas.commands.CommandGVG;
 import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
+import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -23,17 +22,24 @@ public class XDBLArena extends JavaPlugin {
     private CommandPVP commandPVP;
     private CommandArena commmandArena;
     private PlayerManager playerManager;
+    private EloScoreboard eloScoreboard;
 
     public void onEnable() {
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
+
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.inviteManager = new InviteManager();
+
+        this.eloScoreboard = new EloScoreboard(this);
         this.arenaSelectGUI = new ArenaSelectGUI(this);
+
         this.commandGVG = new CommandGVG(this);
         this.commandPVP = new CommandPVP(this);
         this.commmandArena = new CommandArena(this);
+
+        new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
         new ArenaItemListener(this);
         new ArenaBlockListener(this);
