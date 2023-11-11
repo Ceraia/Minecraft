@@ -1,6 +1,7 @@
 package dev.xdbl.xdblarenas;
 
 import dev.xdbl.xdblarenas.arenas.ArenaManager;
+import dev.xdbl.xdblarenas.commands.CommandMod;
 import dev.xdbl.xdblarenas.listeners.*;
 import dev.xdbl.xdblarenas.players.PlayerManager;
 import dev.xdbl.xdblarenas.commands.CommandArena;
@@ -19,9 +20,10 @@ public class XDBLArena extends JavaPlugin {
     private ArenaSelectGUI arenaSelectGUI;
     private CommandGVG commandGVG;
     private CommandPVP commandPVP;
-    private CommandArena commmandArena;
+    private CommandArena commandArena;
     private PlayerManager playerManager;
     private EloScoreboard eloScoreboard;
+    private CommandMod commandMod;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -36,7 +38,8 @@ public class XDBLArena extends JavaPlugin {
 
         this.commandGVG = new CommandGVG(this);
         this.commandPVP = new CommandPVP(this);
-        this.commmandArena = new CommandArena(this);
+        this.commandArena = new CommandArena(this);
+        this.commandMod = new CommandMod(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
@@ -45,8 +48,9 @@ public class XDBLArena extends JavaPlugin {
         new ArenaExplodeListener(this);
 
         getCommand("pvp").setExecutor(commandPVP);
-        getCommand("arena").setExecutor(commmandArena);
+        getCommand("arena").setExecutor(commandArena);
         getCommand("gvg").setExecutor(commandGVG);
+        getCommand("mod").setExecutor(commandMod);
     }
 
     public ArenaManager getArenaManager() {

@@ -17,6 +17,8 @@ public class ArenaPlayer {
 
     private final XDBLArena plugin;
     private final UUID uuid;
+    private boolean pvpbanned;
+    private boolean arenabanned;
     private File configFile;
     private int elo;
     private boolean scoreboard;
@@ -26,11 +28,13 @@ public class ArenaPlayer {
     private boolean isReady = false;
 
 
-    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, File configFile) {
+    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;
         this.elo = elo;
+        this.arenabanned = arenabanned;
+        this.pvpbanned = pvpbanned;
         this.scoreboard = scoreboard;
 
         this.configFile = configFile;
@@ -77,5 +81,45 @@ public class ArenaPlayer {
             e.printStackTrace();
         }
         return scoreboard;
+    }
+
+    public boolean pvpBan(){
+        pvpbanned = !pvpbanned;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("pvpbanned", pvpbanned);
+        try {
+            // Trigger the custom event when Elo changes
+            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
+
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return pvpbanned;
+    }
+
+    public boolean arenaBan(){
+        arenabanned = !arenabanned;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("arenabanned", arenabanned);
+        try {
+            // Trigger the custom event when Elo changes
+            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
+
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return arenabanned;
+    }
+
+    public boolean pvpBanned() {
+        return pvpbanned;
+    }
+
+    public boolean arenaBanned() {
+        return arenabanned;
     }
 }

@@ -48,6 +48,7 @@ messages:
       success: '&aArena created! Now you can change the spawnpoints for the players with /arena sp1 & /arena sp2 respectively'
       no_name: '&cYou need to specify name'
       alphanumeric: '&cName must only contain letters and numbers'
+      banned: '&cYou are banned from making arenas'
     sp1:
       not_yours: '&cArena is not yours'
       not_found: '&cArena not found'
@@ -69,6 +70,22 @@ messages:
     scoreboard:
       enabled: '&aScoreboard enabled'
       disabled: '&aScoreboard disabled'
+    banned:
+      cant_invite: '&cYou are banned from making pvp fights'
+      cant_accept: '&cYou are banned from accepting pvp fights'
+  mod:
+    help:
+      - '&e&lMod Help'
+      - '&a/mod - Show help'
+      - '&a/mod ban arena - Toggle ban player from making arenas'
+      - '&a/mod ban pvp - Toggle ban player from making pvp fights'
+    ban:
+      arena:
+        banned: '&a%player% banned from making arenas'
+        unbanned: '&a%player% unbanned from making arenas'
+      pvp:
+        banned: '&a%player% banned from making pvp fights'
+        unbanned: '&a%player% unbanned from making pvp fights'
   arena_select_gui:
     inventory_name: '&e&lSELECT ARENA TO FIGHT'
     arena_item:
@@ -123,3 +140,5 @@ messages:
     problem_saving_inventories: '&cProblem saving inventories'
     end: '&aFight ended! Winner: %winner%, teleporting in %time% seconds'
     end_global: '&a%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'
+  scoreboard:
+    top: '&e&lTop 10 players in pvp'

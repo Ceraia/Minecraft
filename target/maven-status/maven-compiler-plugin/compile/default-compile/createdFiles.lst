@@ -5,6 +5,7 @@ dev\xdbl\xdblarenas\listeners\ArenaBlockListener.class
 dev\xdbl\xdblarenas\commands\CommandPVP.class
 dev\xdbl\xdblarenas\InviteManager.class
 dev\xdbl\xdblarenas\Utils.class
+dev\xdbl\xdblarenas\commands\CommandMod.class
 dev\xdbl\xdblarenas\arenas\Arena$ArenaState.class
 dev\xdbl\xdblarenas\arenas\Arena$2.class
 dev\xdbl\xdblarenas\scoreboards\EloScoreboard.class

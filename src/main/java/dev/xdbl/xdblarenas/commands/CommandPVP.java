@@ -36,8 +36,26 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        // Check if the sender is pvpbanned
+        ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(((Player) sender).getUniqueId());
+        if (arenaPlayer.pvpBanned()) {
+            sender.sendMessage(
+                    plugin.getConfig().getString("messages.pvp.banned.cant_invite").replace("&", "§")
+            );
+            return true;
+        }
+
+
         if (args[0].equalsIgnoreCase("accept")) {
             Player p = (Player) sender;
+
+            // Check if the player is banned
+            if (plugin.getPlayerManager().getArenaPlayer(p.getUniqueId()).pvpBanned()) {
+                sender.sendMessage(
+                        plugin.getConfig().getString("messages.pvp.banned.cant_accept").replace("&", "§")
+                );
+                return true;
+            }
 
             InviteManager.Invite invite = plugin.getInviteManager().invites.get(p);
 

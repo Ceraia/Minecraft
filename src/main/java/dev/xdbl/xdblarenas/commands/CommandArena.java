@@ -3,18 +3,16 @@ package dev.xdbl.xdblarenas.commands;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
-import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class CommandArena implements CommandExecutor, TabCompleter {
@@ -43,26 +41,40 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("scoreboard")) {
+        if (args[0].equalsIgnoreCase("scoreboard") || args[0].equalsIgnoreCase("top")) {
             Player p = (Player) sender;
 
-            ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(p.getUniqueId());
+            // Create and show a string list of the top 10 players with the highest elo
+            List<String> top = new ArrayList<>();
+            AtomicInteger i = new AtomicInteger();
+            i.set(1);
 
-            // Toggle the scoreboard
-            if (arenaPlayer != null) {
-                if (arenaPlayer.toggleScoreboard()) {
-                    p.sendMessage(
-                            plugin.getConfig().getString("messages.pvp.scoreboard.enabled").replace("&", "§")
-                    );
+            top.add(plugin.getConfig().getString("messages.scoreboard.top").replace("&", "§"));
+
+            plugin.getPlayerManager().getArenaPlayers().stream().sorted(Comparator.comparingInt(ArenaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
+                String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
+                int elo = ap.getElo();
+
+                String medal; // Default medal color for players outside the top 3
+
+                // Check for 1st, 2nd, and 3rd place
+                if (i.get() == 1) {
+                    medal = "§6"; // Gold for 1st place
+                } else if (i.get() == 2) {
+                    medal = "§7"; // Silver for 2nd place
+                } else if (i.get() == 3) {
+                    medal = "§#cd7f32"; // Bronze for 3rd place
                 } else {
-                    p.sendMessage(
-                            plugin.getConfig().getString("messages.pvp.scoreboard.disabled").replace("&", "§")
-                    );
+                    medal = "§f"; // Default medal color for players outside the top 3
                 }
 
-                dev.xdbl.xdblarenas.events.PlayerEloChangeEvent eloChangeEvent = new dev.xdbl.xdblarenas.events.PlayerEloChangeEvent(p, arenaPlayer);
-                Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
-            }
+                top.add(medal + i + " " + playerName + " §8- §7" + elo + " ELO");
+                i.getAndIncrement();
+            });
+
+            // Send the top 10 players with the highest elo to the player
+            top.forEach(p::sendMessage);
+
             return true;
         }
 
@@ -96,8 +108,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2"//, "scoreboard"
-            );
+            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2", "top", "scoreboard");
         } else if (args.length == 2 && (
                 args[0].equalsIgnoreCase("delete") ||
                         args[0].equalsIgnoreCase("public") ||
@@ -173,6 +184,14 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         String name = args[1];
+
+        // Check if the user is banned from creating arenas
+        if (plugin.getPlayerManager().getArenaPlayer(((Player) sender).getUniqueId()).arenaBanned()){
+            sender.sendMessage(
+                    plugin.getConfig().getString("messages.arena.create.banned").replace("&", "§")
+            );
+            return;
+        }
 
         // Check if the string is the same as <name>, if so state the user should put a name
         if (name.equalsIgnoreCase("<name>")) {

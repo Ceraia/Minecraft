@@ -30,14 +30,14 @@ public class Arena {
 
     // after ready
     private Location spawnPoint1, spawnPoint2;
-    private boolean isReady = false;
+    private boolean isApproved;
+    private boolean isReady;
 
     // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
     private List<Location> placedBlocks = new ArrayList<>();
     private Map<Player, Location> priorLocations = new HashMap<>();
-
     private ArenaState state = ArenaState.WAITING;
 
     private final List<Player> startPlayers = new ArrayList<>();
@@ -49,8 +49,9 @@ public class Arena {
         this.owner = owner;
         this.spawnPoint1 = spawnPoint1;
         this.spawnPoint2 = spawnPoint2;
-        this.isReady = true;
         this.isPublic = isPublic;
+        this.isApproved = false;
+        this.isReady = true;
 
         this.configFile = configFile;
     }
@@ -327,13 +328,14 @@ public class Arena {
         for (Player pl : players) {
             pl.setHealth(20);
             pl.setFoodLevel(20);
+            pl.setSaturation(20);
             pl.setGameMode(GameMode.SURVIVAL);
         }
 
         this.setState(Arena.ArenaState.STARTING);
 
         AtomicInteger i = new AtomicInteger(
-                plugin.getConfig().getInt("cooldown.before")
+                plugin.getConfig().getInt("cooldown.before") + 1
         );
 
         Arena thisArena = this;
@@ -341,16 +343,17 @@ public class Arena {
             public void run() {
                 for (Player pl : players) {
                     if (i.get() == 0) {
-                        pl.sendMessage(
-                                plugin.getConfig().getString("messages.fight.started")
-                                        .replace("&", "§")
-                        );
+                        pl.sendTitle("", "", 10, 70, 20);
+                    } else if (i.get() == 1) {
+                        // Send title for "fight started"
+                        String titleText = plugin.getConfig().getString("messages.fight.started")
+                                .replace("&", "§");
+                        pl.sendTitle("", titleText, 10, 70, 20);
                     } else {
-                        pl.sendMessage(
-                                plugin.getConfig().getString("messages.fight.starting")
-                                        .replace("%time%", String.valueOf(i.get()))
-                                        .replace("&", "§")
-                        );
+                        String titleText = plugin.getConfig().getString("messages.fight.starting")
+                                .replace("%time%", String.valueOf(i.get() -1))
+                                .replace("&", "§");
+                        pl.sendTitle("", titleText, 10, 70, 20);
                     }
                 }
 

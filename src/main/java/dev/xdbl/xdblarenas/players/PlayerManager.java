@@ -17,7 +17,7 @@ public class PlayerManager {
         this.plugin = plugin;
 
         // Load arenaPlayers
-        File f = new File(plugin.getDataFolder(), "data/arenaPlayers");
+        File f = new File(plugin.getDataFolder(), "data/players");
         if (!f.exists()) {
             f.mkdirs();
             return;
@@ -30,7 +30,19 @@ public class PlayerManager {
             String uuid = config.getString("uuid");
             String elo = config.getString("elo");
 
-            ArenaPlayer arenaPlayer = new ArenaPlayer(plugin, UUID.fromString(uuid), Integer.parseInt(elo), false, file);
+            String scoreboard = config.getString("scoreboard", "false");
+            String arenabanned = config.getString("arenabanned", "false");
+            String pvpbanned = config.getString("pvpbanned", "false");
+
+            ArenaPlayer arenaPlayer = new ArenaPlayer(
+                    plugin,
+                    UUID.fromString(uuid),
+                    Integer.parseInt(elo),
+                    Boolean.parseBoolean(scoreboard),
+                    Boolean.parseBoolean(arenabanned),
+                    Boolean.parseBoolean(pvpbanned),
+                    file
+            );
             arenaPlayers.add(arenaPlayer);
         }
     }
@@ -83,7 +95,7 @@ public class PlayerManager {
     }
 
     private ArenaPlayer createNewArenaPlayer(UUID playerUUID) {
-        File configFile = new File(plugin.getDataFolder(), "data/arenaPlayers/" + playerUUID + ".yml");
+        File configFile = new File(plugin.getDataFolder(), "data/players/" + playerUUID + ".yml");
         try {
             configFile.createNewFile();
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -93,11 +105,13 @@ public class PlayerManager {
 
             config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
-            config.set("scoreboard", true);
+            config.set("arenabanned", false);
+            config.set("pvpbanned", false);
+            config.set("scoreboard", false);
 
             config.save(configFile);
 
-            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, configFile);
+            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, false, false, configFile);
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Handle the exception based on your needs
