@@ -13,9 +13,25 @@ commands:
     permission: xdbl.pvp
   gvg:
     description: GVG command
-    usage: /gvg <player|accept>
+    usage: /gvg <player|accept|invite>
     permission: xdbl.gvg
   mod:
-    description: Mod command
-    usage: /mod <ban>
+    description: Moderation commands
+    usage: /mod <ban> <arena|pvp> <player>
     permission: xdbl.mod
+  top:
+    description: Show the top fighters in the server
+    usage: /top
+    permission: xdbl.pvp
+  leaderboard:
+    description: Show the top fighters in the server
+    usage: /top
+    permission: xdbl.pvp
+  profile:
+    description: Show your profile
+    usage: /profile
+    permission: xdbl.pvp
+  stats:
+    description: Show your profile
+    usage: /profile
+    permission: xdbl.pvp

@@ -140,5 +140,13 @@ messages:
     problem_saving_inventories: '&cProblem saving inventories'
     end: '&aFight ended! Winner: %winner%, teleporting in %time% seconds'
     end_global: '&a%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'
+  profile:
+    - '&e&lProfile of %player%'
+    - '&e&lELO: &a%elo%'
+    - '&e&lGames: &a%games%'
+    - '&e&lWins: &a%wins%'
+    - '&e&lLosses: &a%losses%'
+    - '&e&lPVP-Banned: &a%pvpbanned%'
+    - '&e&lArena-Banned: &a%arenabanned%'
   scoreboard:
     top: '&e&lTop 10 players in pvp'

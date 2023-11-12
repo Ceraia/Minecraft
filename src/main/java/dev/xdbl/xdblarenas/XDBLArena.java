@@ -1,12 +1,9 @@
 package dev.xdbl.xdblarenas;
 
 import dev.xdbl.xdblarenas.arenas.ArenaManager;
-import dev.xdbl.xdblarenas.commands.CommandMod;
+import dev.xdbl.xdblarenas.commands.*;
 import dev.xdbl.xdblarenas.listeners.*;
 import dev.xdbl.xdblarenas.players.PlayerManager;
-import dev.xdbl.xdblarenas.commands.CommandArena;
-import dev.xdbl.xdblarenas.commands.CommandPVP;
-import dev.xdbl.xdblarenas.commands.CommandGVG;
 import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
 import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +21,8 @@ public class XDBLArena extends JavaPlugin {
     private PlayerManager playerManager;
     private EloScoreboard eloScoreboard;
     private CommandMod commandMod;
+    private CommandTop commandTop;
+    private CommandProfile commandProfile;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -40,6 +39,8 @@ public class XDBLArena extends JavaPlugin {
         this.commandPVP = new CommandPVP(this);
         this.commandArena = new CommandArena(this);
         this.commandMod = new CommandMod(this);
+        this.commandTop = new CommandTop(this);
+        this.commandProfile = new CommandProfile(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
@@ -48,9 +49,18 @@ public class XDBLArena extends JavaPlugin {
         new ArenaExplodeListener(this);
 
         getCommand("pvp").setExecutor(commandPVP);
+
         getCommand("arena").setExecutor(commandArena);
+
         getCommand("gvg").setExecutor(commandGVG);
+
         getCommand("mod").setExecutor(commandMod);
+
+        getCommand("top").setExecutor(commandTop);
+        getCommand("leaderboard").setExecutor(commandTop);
+
+        getCommand("profile").setExecutor(commandProfile);
+        getCommand("stats").setExecutor(commandProfile);
     }
 
     public ArenaManager getArenaManager() {

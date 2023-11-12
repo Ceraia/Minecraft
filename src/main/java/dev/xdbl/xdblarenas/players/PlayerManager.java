@@ -27,20 +27,16 @@ public class PlayerManager {
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            String uuid = config.getString("uuid");
-            String elo = config.getString("elo");
-
-            String scoreboard = config.getString("scoreboard", "false");
-            String arenabanned = config.getString("arenabanned", "false");
-            String pvpbanned = config.getString("pvpbanned", "false");
-
             ArenaPlayer arenaPlayer = new ArenaPlayer(
                     plugin,
-                    UUID.fromString(uuid),
-                    Integer.parseInt(elo),
-                    Boolean.parseBoolean(scoreboard),
-                    Boolean.parseBoolean(arenabanned),
-                    Boolean.parseBoolean(pvpbanned),
+                    UUID.fromString(file.getName().split("\\.")[0]),
+                    Integer.parseInt(config.getString("elo", "1500")),
+                    Boolean.parseBoolean(config.getString("scoreboard", "false")),
+                    Boolean.parseBoolean(config.getString("arenabanned", "false")),
+                    Boolean.parseBoolean(config.getString("pvpbanned", "false")),
+                    Integer.parseInt(config.getString("wins", "0")),
+                    Integer.parseInt(config.getString("losses", "0")),
+                    config.getStringList("logs"),
                     file
             );
             arenaPlayers.add(arenaPlayer);
@@ -103,15 +99,17 @@ public class PlayerManager {
             // Set default values or load from other sources as needed
             int defaultElo = 1500;
 
-            config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
             config.set("arenabanned", false);
             config.set("pvpbanned", false);
             config.set("scoreboard", false);
+            config.set("wins", 0);
+            config.set("losses", 0);
+            config.set("logs", new ArrayList<String>());
 
             config.save(configFile);
 
-            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, false, false, configFile);
+            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, false, false, 0, 0, new ArrayList<String>(), configFile);
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Handle the exception based on your needs

@@ -1,3 +1,4 @@
+dev\xdbl\xdblarenas\commands\CommandTop.class
 dev\xdbl\xdblarenas\commands\CommandArena.class
 dev\xdbl\xdblarenas\XDBLArena.class
 dev\xdbl\xdblarenas\events\PlayerEloChangeEvent.class
@@ -13,6 +14,7 @@ dev\xdbl\xdblarenas\arenas\Arena$1.class
 dev\xdbl\xdblarenas\InviteManager$Invite.class
 dev\xdbl\xdblarenas\listeners\ArenaFightListener.class
 dev\xdbl\xdblarenas\listeners\ArenaItemListener.class
+dev\xdbl\xdblarenas\commands\CommandProfile.class
 dev\xdbl\xdblarenas\listeners\ArenaFightListener$1.class
 dev\xdbl\xdblarenas\commands\CommandGVG.class
 dev\xdbl\xdblarenas\listeners\ArenaExplodeListener.class

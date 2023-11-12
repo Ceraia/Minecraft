@@ -68,7 +68,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
                     medal = "§f"; // Default medal color for players outside the top 3
                 }
 
-                top.add(medal + i + " " + playerName + " §8- §7" + elo + " ELO");
+                top.add(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)");
                 i.getAndIncrement();
             });
 

@@ -18,8 +18,11 @@ public class ArenaPlayer {
     private final XDBLArena plugin;
     private final UUID uuid;
     private boolean pvpbanned;
+    private int wins;
+    private int losses;
     private boolean arenabanned;
     private File configFile;
+    private List<String> logs = new ArrayList<>();
     private int elo;
     private boolean scoreboard;
 
@@ -28,7 +31,7 @@ public class ArenaPlayer {
     private boolean isReady = false;
 
 
-    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, File configFile) {
+    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, List<String> logs, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;
@@ -36,6 +39,9 @@ public class ArenaPlayer {
         this.arenabanned = arenabanned;
         this.pvpbanned = pvpbanned;
         this.scoreboard = scoreboard;
+        this.wins = wins;
+        this.losses = losses;
+        this.logs = logs;
 
         this.configFile = configFile;
     }
@@ -121,5 +127,46 @@ public class ArenaPlayer {
 
     public boolean arenaBanned() {
         return arenabanned;
+    }
+
+    public int wins() {
+        return wins;
+    }
+
+    public int losses() {
+        return losses;
+    }
+
+    public void addWin() {
+        wins++;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("wins", wins);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addLoss() {
+        losses++;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("losses", losses);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void addLog(String string){
+        logs.add(string);
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("logs", logs);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

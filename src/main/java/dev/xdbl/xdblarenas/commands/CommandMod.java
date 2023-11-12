@@ -1,6 +1,7 @@
 package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.xdblarenas.players.ArenaPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -60,10 +61,13 @@ public class CommandMod implements CommandExecutor, TabCompleter {
                         sender.sendMessage(plugin.getConfig().getString("messages.player_not_found").replace("&", "§"));
                         return true;
                     }
-                    boolean arenabanned = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId()).arenaBan();
+                    ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
+                    boolean arenabanned = arenaPlayer.arenaBan();
                     if (arenabanned) {
+                        arenaPlayer.addLog("Banned from creation of arenas by " + sender.getName());
                         sender.sendMessage(plugin.getConfig().getString("messages.mod.ban.arena.banned").replace("&", "§").replace("%player%", target.getName()));
                     } else {
+                        arenaPlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
                         sender.sendMessage(plugin.getConfig().getString("messages.mod.ban.arena.unbanned").replace("&", "§").replace("%player%", target.getName()));
                     }
                 }
@@ -72,10 +76,13 @@ public class CommandMod implements CommandExecutor, TabCompleter {
                         sender.sendMessage(plugin.getConfig().getString("messages.player_not_found").replace("&", "§"));
                         return true;
                     }
-                    boolean pvpbanned = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId()).pvpBan();
+                    ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
+                    boolean pvpbanned = arenaPlayer.arenaBan();
                     if (pvpbanned) {
+                        arenaPlayer.addLog("Banned from PVPing by " + sender.getName());
                         sender.sendMessage(plugin.getConfig().getString("messages.mod.ban.pvp.banned").replace("&", "§").replace("%player%", target.getName()));
                     } else {
+                        arenaPlayer.addLog("Unbanned from PVPing by " + sender.getName());
                         sender.sendMessage(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned").replace("&", "§").replace("%player%", target.getName()));
                     }
                 }
