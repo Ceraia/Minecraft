@@ -1,13 +1,11 @@
 package dev.xdbl.xdblarenas.players;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.events.PlayerEloChangeEvent;
+import dev.xdbl.xdblarenas.events.PlayerEvents;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,13 +23,10 @@ public class ArenaPlayer {
     private List<String> logs = new ArrayList<>();
     private int elo;
     private boolean scoreboard;
-
-    // after ready
-    private Location spawnPoint1, spawnPoint2;
-    private boolean isReady = false;
+    private long lastFought;
 
 
-    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, List<String> logs, File configFile) {
+    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, List<String> logs, long lastFought, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;
@@ -42,6 +37,7 @@ public class ArenaPlayer {
         this.wins = wins;
         this.losses = losses;
         this.logs = logs;
+        this.lastFought = lastFought;
 
         this.configFile = configFile;
     }
@@ -61,7 +57,7 @@ public class ArenaPlayer {
         config.set("elo", elo);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -79,7 +75,7 @@ public class ArenaPlayer {
         config.set("scoreboard", scoreboard);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -95,7 +91,7 @@ public class ArenaPlayer {
         config.set("pvpbanned", pvpbanned);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -111,7 +107,7 @@ public class ArenaPlayer {
         config.set("arenabanned", arenabanned);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEloChangeEvent eloChangeEvent = new PlayerEloChangeEvent(Bukkit.getPlayer(uuid), this);
+            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -168,5 +164,18 @@ public class ArenaPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setLastFought(long lastFought) {
+        this.lastFought = lastFought;
+    }
+
+    public long lastFought() {
+        return lastFought;
+    }
+
+    public void decayElo() {
+        int decay = (int) (elo * 0.05);
+        setElo(elo - decay);
     }
 }

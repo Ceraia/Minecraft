@@ -23,6 +23,10 @@ commands:
     description: Show the top fighters in the server
     usage: /top
     permission: xdbl.pvp
+  leaderboard:
+    description: Show the top fighters in the server
+    usage: /top
+    permission: xdbl.pvp
   profile:
     description: Show your profile
     usage: /profile

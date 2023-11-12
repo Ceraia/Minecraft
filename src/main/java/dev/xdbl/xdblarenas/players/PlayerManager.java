@@ -30,13 +30,14 @@ public class PlayerManager {
             ArenaPlayer arenaPlayer = new ArenaPlayer(
                     plugin,
                     UUID.fromString(file.getName().split("\\.")[0]),
-                    Integer.parseInt(config.getString("elo", "1500")),
-                    Boolean.parseBoolean(config.getString("scoreboard", "false")),
-                    Boolean.parseBoolean(config.getString("arenabanned", "false")),
-                    Boolean.parseBoolean(config.getString("pvpbanned", "false")),
-                    Integer.parseInt(config.getString("wins", "0")),
-                    Integer.parseInt(config.getString("losses", "0")),
+                    config.getInt("elo", 1500),
+                    config.getBoolean("scoreboard", false),
+                    config.getBoolean("arenabanned", false),
+                    config.getBoolean("pvpbanned", false),
+                    config.getInt("wins", 0),
+                    config.getInt("losses", 0),
                     config.getStringList("logs"),
+                    config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
                     file
             );
             arenaPlayers.add(arenaPlayer);
@@ -109,7 +110,18 @@ public class PlayerManager {
 
             config.save(configFile);
 
-            return new ArenaPlayer(plugin, playerUUID, defaultElo, false, false, false, 0, 0, new ArrayList<String>(), configFile);
+            return new ArenaPlayer(
+                    plugin,
+                    playerUUID,
+                    defaultElo,
+                    false,
+                    false,
+                    false,
+                    0,
+                    0,
+                    new ArrayList<String>(),
+                    (int) (System.currentTimeMillis() / 1000L),
+                    configFile);
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Handle the exception based on your needs

@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
-public class PlayerEloChangeEvent extends Event {
+public class PlayerEvents extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final ArenaPlayer arenaPlayer;
 
-    public PlayerEloChangeEvent(Player player, ArenaPlayer arenaPlayer) {
+    public PlayerEvents(Player player, ArenaPlayer arenaPlayer) {
         this.player = player;
         this.arenaPlayer = arenaPlayer;
     }

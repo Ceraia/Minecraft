@@ -97,6 +97,7 @@ public class CommandMod implements CommandExecutor, TabCompleter {
         if (args.length == 1){
             List<String> tabOptions = new ArrayList<>();
             tabOptions.add("ban");
+            tabOptions.add("remove");
             return tabOptions;
         }
         if (args.length == 2){
@@ -106,15 +107,24 @@ public class CommandMod implements CommandExecutor, TabCompleter {
             return tabOptions;
         }
         if (args.length == 3) {
-            List<String> tabOptions = new ArrayList<>();
-            // If there is an argument, suggest online player names
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                // Exclude the sender's name from the suggestions
-                if (!player.getName().equals(sender.getName())) {
-                    tabOptions.add(player.getName());
+            if(args[2].equalsIgnoreCase("pvp")){
+                List<String> tabOptions = new ArrayList<>();
+                // If there is an argument, suggest online player names
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    // Exclude the sender's name from the suggestions
+                    if (!player.getName().equals(sender.getName())) {
+                        tabOptions.add(player.getName());
+                    }
                 }
+                return tabOptions;
             }
-            return tabOptions;
+            if(args[2].equalsIgnoreCase("arena")){
+                List<String> tabOptions = new ArrayList<>();
+                // If there is an argument, suggest all arena names
+                plugin.getArenaManager().getArenas().forEach(arena -> tabOptions.add(arena.getName()));
+
+                return tabOptions;
+            }
         }
         // If there is more than one argument, return an empty list
         return new ArrayList<>();

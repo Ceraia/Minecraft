@@ -260,6 +260,7 @@ public class Arena {
                 // Reward
                 for (Player pl : winners) {
                     plugin.getPlayerManager().getArenaPlayer(pl.getUniqueId()).addWin();
+                    plugin.getPlayerManager().getArenaPlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
                     for (String command : plugin.getConfig().getStringList("rewards")) {
                         pl.performCommand(command.replace("%player%", pl.getName()));
                     }
@@ -268,6 +269,7 @@ public class Arena {
                 // Reward losers
                 for (Player pl : losers) {
                     plugin.getPlayerManager().getArenaPlayer(pl.getUniqueId()).addLoss();
+                    plugin.getPlayerManager().getArenaPlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
                     for (String command : plugin.getConfig().getStringList("rewards_lose")) {
                         pl.performCommand(command.replace("%player%", pl.getName()));
                     }
