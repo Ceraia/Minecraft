@@ -107,6 +107,8 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        List<String> arenas = new ArrayList<>();
+
         if (args.length == 1) {
             return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2", "top", "scoreboard");
         } else if (args.length == 2 && (
@@ -114,7 +116,12 @@ public class CommandArena implements CommandExecutor, TabCompleter {
                         args[0].equalsIgnoreCase("public") ||
                         args[0].equalsIgnoreCase("sp1") ||
                         args[0].equalsIgnoreCase("sp2"))) {
-            return Arrays.asList("<arena>");
+            plugin.getArenaManager().getArenas().forEach(a ->{
+                if (a.getOwner().equals(sender.getName())) {
+                    arenas.add(a.getName());
+                }
+            });
+            return arenas;
         } else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
             return Arrays.asList("<name>");
         } else if ((args.length == 3 && args[0].equalsIgnoreCase("public"))) {
@@ -309,9 +316,9 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     private void arenaList(CommandSender sender) {
         List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> arena.getOwner().equals(sender.getName())).collect(Collectors.toList());
         plugin.getConfig().getStringList("messages.arena.list").forEach(s -> {
-            if (s.contains("%arenas")) {
+            if (s.contains("%arenas%")) {
                 arenas.forEach(a -> {
-                    sender.sendMessage(s.replace("%arenas", a.getName()).replace("&", "§") +
+                    sender.sendMessage(s.replace("%arenas%", a.getName()).replace("&", "§") +
                             (a.getSpawnPoint1() != null ? " §8(" + a.getSpawnPoint1().getBlockX() + ", " + a.getSpawnPoint1().getBlockY() + ", " + a.getSpawnPoint1().getBlockZ() + ")" : ""));
                 });
             } else {
