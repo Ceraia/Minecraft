@@ -309,9 +309,9 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     private void arenaList(CommandSender sender) {
         List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> arena.getOwner().equals(sender.getName())).collect(Collectors.toList());
         plugin.getConfig().getStringList("messages.arena.list").forEach(s -> {
-            if (s.contains("%arenas")) {
+            if (s.contains("%arenas%")) {
                 arenas.forEach(a -> {
-                    sender.sendMessage(s.replace("%arenas", a.getName()).replace("&", "§") +
+                    sender.sendMessage(s.replace("%arenas%", a.getName()).replace("&", "§") +
                             (a.getSpawnPoint1() != null ? " §8(" + a.getSpawnPoint1().getBlockX() + ", " + a.getSpawnPoint1().getBlockY() + ", " + a.getSpawnPoint1().getBlockZ() + ")" : ""));
                 });
             } else {
