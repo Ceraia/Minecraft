@@ -3,6 +3,8 @@ package dev.xdbl.xdblarenas.arenas;
 import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.Utils;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -222,10 +224,11 @@ public class Arena {
             }
 
             pl.sendMessage(
-                    plugin.getConfig().getString("messages.fight.end")
-                            .replace("%winner%", winners.stream().map(Player::getName).collect(Collectors.joining(", ")))
-                            .replace("%time%", String.valueOf(plugin.getConfig().getInt("cooldown.after")))
-                            .replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(
+                            plugin.getConfig().getString("messages.fight.end")
+                                    .replace("%winner%", winners.stream().map(Player::getName).collect(Collectors.joining(", ")))
+                                    .replace("%time%", String.valueOf(plugin.getConfig().getInt("cooldown.after")))
+                    )
             );
 
             pl.getInventory().clear();
@@ -311,7 +314,9 @@ public class Arena {
             System.out.println("Problem saving inventories, nothing was deleted!");
             for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                 pl.sendMessage(
-                        plugin.getConfig().getString("messages.fight.problem_saving_inventories").replace("&", "§")
+                        MiniMessage.miniMessage().deserialize(
+                                plugin.getConfig().getString("messages.fight.problem_saving_inventories")
+                        )
                 );
             }
 
@@ -349,15 +354,17 @@ public class Arena {
                     if (i.get() == 0) {
                         pl.sendTitle("", "", 10, 70, 20);
                     } else if (i.get() == 1) {
-                        // Send title for "fight started"
-                        String titleText = plugin.getConfig().getString("messages.fight.started")
-                                .replace("&", "§");
-                        pl.sendTitle("", titleText, 10, 70, 20);
+//                        // Send title for "fight started"
+//                        Component titleText = MiniMessage.miniMessage().deserialize(
+//                                plugin.getConfig().getString("messages.fight.started")
+//                        );
+//                        pl.title
                     } else {
-                        String titleText = plugin.getConfig().getString("messages.fight.starting")
-                                .replace("%time%", String.valueOf(i.get() -1))
-                                .replace("&", "§");
-                        pl.sendTitle("", titleText, 10, 70, 20);
+//                        String titleText = MiniMessage.miniMessage().deserialize(
+//                                plugin.getConfig().getString("messages.fight.starting")
+//                                        .replace("%time%", String.valueOf(i.get() - 1))
+//                        );
+//                        pl.sendTitle("", titleText, 10, 70, 20);
                     }
                 }
 

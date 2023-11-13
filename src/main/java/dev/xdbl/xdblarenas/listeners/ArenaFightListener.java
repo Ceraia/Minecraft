@@ -2,6 +2,7 @@ package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -102,14 +103,13 @@ public class ArenaFightListener implements Listener {
                         int winChance = plugin.getPlayerManager().CalculateWinChance(killerUUID, victimUUID);
 
                         // Announce the winner and the win chance in chat
-                        Bukkit.broadcastMessage(
+                        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(
                                 plugin.getConfig().getString("messages.fight.end_global")
                                         .replace("%winner%", killer.getName())
                                         .replace("%loser%", player.getName())
                                         .replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(victimUUID).getElo()))
                                         .replace("%winchance%", String.valueOf(winChance))
-                                        .replace("%arena%", plugin.getArenaManager().getArena(player).getName())
-                                        .replace("&", "§")
+                                        .replace("%arena%", plugin.getArenaManager().getArena(player).getName()))
 
                         );
 

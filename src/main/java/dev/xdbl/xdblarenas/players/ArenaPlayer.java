@@ -20,7 +20,7 @@ public class ArenaPlayer {
     private int losses;
     private boolean arenabanned;
     private File configFile;
-    private List<String> logs = new ArrayList<>();
+    private List<String> logs;
     private int elo;
     private boolean scoreboard;
     private long lastFought;
@@ -64,25 +64,6 @@ public class ArenaPlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-    public boolean scoreboard() {
-        return scoreboard;
-    }
-
-    public boolean toggleScoreboard() {
-        scoreboard = !scoreboard;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("scoreboard", scoreboard);
-        try {
-            // Trigger the custom event when Elo changes
-            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
-            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
-
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return scoreboard;
     }
 
     public boolean pvpBan(){

@@ -2,6 +2,7 @@ package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -29,7 +30,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!sender.hasPermission("xdbl.pvp")) {
-            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
             return true;
         }
 
@@ -37,7 +38,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             player = Bukkit.getPlayer(args[0]);
             if (player == null) {
-                sender.sendMessage(plugin.getConfig().getString("messages.bad_usage").replace("&", "§"));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.bad_usage")));
                 return true;
             }
         } else {
@@ -47,14 +48,14 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         // Return the player's profile
         ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(player.getUniqueId());
         plugin.getConfig().getStringList("messages.profile").forEach(s -> {
-            sender.sendMessage(s.replace("&", "§")
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(s
                     .replace("%player%", player.getName())
                     .replace("%elo%", String.valueOf(arenaPlayer.getElo()))
                     .replace("%wins%", String.valueOf(arenaPlayer.wins()))
                     .replace("%losses%", String.valueOf(arenaPlayer.losses()))
                     .replace("%games%", String.valueOf(arenaPlayer.wins() + arenaPlayer.losses()))
                     .replace("%pvpbanned%", arenaPlayer.pvpBanned() ? "§cYes" : "§aNo")
-                    .replace("%arenabanned%", arenaPlayer.arenaBanned() ? "§cYes" : "§aNo"));
+                    .replace("%arenabanned%", arenaPlayer.arenaBanned() ? "§cYes" : "§aNo")));
         });
 
 

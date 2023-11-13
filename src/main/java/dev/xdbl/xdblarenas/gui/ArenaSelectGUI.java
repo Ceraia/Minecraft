@@ -3,6 +3,7 @@ package dev.xdbl.xdblarenas.gui;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.InviteManager;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -33,13 +34,13 @@ public class ArenaSelectGUI implements Listener {
     public ArenaSelectGUI(XDBLArena plugin) {
         this.plugin = plugin;
 
-        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name").replace("&", "§");
+        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name");
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void reloadConfig() {
-        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name").replace("&", "§");
+        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name");
     }
 
     public void openGUI(Player inviter) {
@@ -62,14 +63,12 @@ public class ArenaSelectGUI implements Listener {
             meta.setDisplayName(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name")
                     .replace("%arena_name", a.getName())
                     .replace("%arena_owner", a.getOwner())
-                    .replace("&", "§")
             );
 
             List<String> lore = new ArrayList<>();
             for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
                 lore.add(s.replace("%arena_name", a.getName())
                         .replace("%arena_owner", a.getOwner())
-                        .replace("&", "§")
                 );
             }
 
@@ -111,7 +110,7 @@ public class ArenaSelectGUI implements Listener {
 
         if (arena == null || !arena.isReady() || arena.getState() != Arena.ArenaState.WAITING) {
             inviter.sendMessage(
-                    plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready"))
             );
             return;
         }
@@ -119,15 +118,14 @@ public class ArenaSelectGUI implements Listener {
         InviteManager.Invite invite = plugin.getInviteManager().selectingInvites.get(inviter);
 
         inviter.sendMessage(
-                plugin.getConfig().getString("messages.pvp.invite.invite_sent")
-                        .replace("%player%", invite.invited.getName())
-                        .replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.invite.invite_sent")
+                        .replace("%player%", invite.invited.getName()))
         );
 
-        String invite_message = plugin.getConfig().getString("messages.arena_select_gui.invite_message")
+        String invite_message = String.valueOf(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.invite_message")
                 .replace("%inviter%", inviter.getName())
                 .replace("%arena_name%", arena.getName())
-                .replace("&", "§");
+        ));
         String[] split = invite_message.split("@");
         // get between two @
         TextComponent message = new TextComponent(split[0]);

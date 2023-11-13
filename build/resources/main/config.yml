@@ -45,7 +45,7 @@ messages:
       running: '&aArena is in use, you cant delete it'
     create:
       exists: '&cArena already exists'
-      success: '&aArena created! Now you can change the spawnpoints for the players with /arena sp1 & /arena sp2 respectively'
+      success: '&aArena created! Now you can change the spawnpoints for the players with /arena sp1 and /arena sp2 respectively'
       no_name: '&cYou need to specify name'
       alphanumeric: '&cName must only contain letters and numbers'
       banned: '&cYou are banned from making arenas'
@@ -75,7 +75,7 @@ messages:
       cant_accept: '&cYou are banned from accepting pvp fights'
   mod:
     help:
-      - '&e&lMod Help'
+      - '<yellow><bold>Mod Help'
       - '&a/mod - Show help'
       - '&a/mod ban arena - Toggle ban player from making arenas'
       - '&a/mod ban pvp - Toggle ban player from making pvp fights'

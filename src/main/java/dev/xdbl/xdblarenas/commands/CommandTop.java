@@ -2,6 +2,8 @@ package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,18 +27,18 @@ public class CommandTop implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (!sender.hasPermission("xdbl.pvp")) {
-            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
             return true;
         }
 
         Player p = (Player) sender;
 
         // Create and show a string list of the top 10 players with the highest elo
-        List<String> top = new ArrayList<>();
+        List<Component> top = new ArrayList<>();
         AtomicInteger i = new AtomicInteger();
         i.set(1);
 
-        top.add(plugin.getConfig().getString("messages.scoreboard.top").replace("&", "§"));
+        top.add(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.scoreboard.top")));
 
         plugin.getPlayerManager().getArenaPlayers().stream().sorted(Comparator.comparingInt(ArenaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
             String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
@@ -55,7 +57,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
                 medal = "§f"; // Default medal color for players outside the top 3
             }
 
-            top.add(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)");
+            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
             i.getAndIncrement();
         });
 
