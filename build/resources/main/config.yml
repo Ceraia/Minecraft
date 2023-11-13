@@ -37,7 +37,7 @@ messages:
       success_public: '&aArena made public'
     list:
       - '&e&lYour arenas:'
-      - '&a%arenas'
+      - '&a%arenas%'
     delete:
       not_yours: '&cArena is not yours'
       not_found: '&cArena not found'
