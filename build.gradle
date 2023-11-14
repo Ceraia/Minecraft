@@ -3,7 +3,10 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.2.0"
 }
 
-version = '1.3-SNAPSHOT'
+// Get the day and the month
+def date = new Date()
+
+version = 0.1+'-build-'+date.format('dd')+date.format('MM')
 
 tasks {
     runServer {
