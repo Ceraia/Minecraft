@@ -3,6 +3,8 @@ package dev.xdbl.xdblarenas.commands;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +29,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(!sender.hasPermission("xdbl.arena")){
-            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
             return true;
         }
 
@@ -45,11 +47,11 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             Player p = (Player) sender;
 
             // Create and show a string list of the top 10 players with the highest elo
-            List<String> top = new ArrayList<>();
+            List<Component> top = new ArrayList<>();
             AtomicInteger i = new AtomicInteger();
             i.set(1);
 
-            top.add(plugin.getConfig().getString("messages.scoreboard.top").replace("&", "§"));
+            top.add(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.scoreboard.top")));
 
             plugin.getPlayerManager().getArenaPlayers().stream().sorted(Comparator.comparingInt(ArenaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
                 String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
@@ -68,7 +70,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
                     medal = "§f"; // Default medal color for players outside the top 3
                 }
 
-                top.add(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)");
+                top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
                 i.getAndIncrement();
             });
 
@@ -141,19 +143,19 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         Arena arena = creatingArenas.get(name);
         if (arena == null) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.sp1.not_found").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp1.not_found"))
             );
             return;
         }
         if (arena.getOwner() != sender.getName()) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.sp1.not_yours").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp1.not_yours"))
             );
             return;
         }
         arena.setSpawnPoint1(((Player) sender).getLocation());
         sender.sendMessage(
-                plugin.getConfig().getString("messages.arena.sp1.success").replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp1.success"))
         );
     }
 
@@ -168,19 +170,19 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         Arena arena = creatingArenas.get(name);
         if (arena == null) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.sp2.not_found").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp2.not_found"))
             );
             return;
         }
         if (arena.getOwner() != sender.getName()) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.sp2.not_yours").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp2.not_yours"))
             );
             return;
         }
         arena.setSpawnPoint2(((Player) sender).getLocation());
         sender.sendMessage(
-                plugin.getConfig().getString("messages.arena.sp2.success").replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.sp2.success"))
         );
     }
 
@@ -195,7 +197,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         // Check if the user is banned from creating arenas
         if (plugin.getPlayerManager().getArenaPlayer(((Player) sender).getUniqueId()).arenaBanned()){
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.create.banned").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.banned"))
             );
             return;
         }
@@ -203,14 +205,14 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         // Check if the string is the same as <name>, if so state the user should put a name
         if (name.equalsIgnoreCase("<name>")) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.create.no_name").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.no_name"))
             );
             return;
         }
         // Check if the string is alphanumeric
         if (!name.matches("[a-zA-Z0-9]*")) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.create.alphanumeric").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.alphanumeric"))
             );
             return;
         }
@@ -218,7 +220,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         // Check if the arena already exists
         if (plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).count() > 0) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.create.exists").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.exists"))
             );
             return;
         }
@@ -234,7 +236,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         plugin.getArenaManager().addArena(arena);
 
         sender.sendMessage(
-                plugin.getConfig().getString("messages.arena.create.success").replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.success"))
         );
     }
 
@@ -248,19 +250,19 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         Arena arena = plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
         if (arena == null) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.delete.not_found").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.delete.not_found"))
             );
             return;
         }
         if (!arena.getOwner().equals(sender.getName())) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.delete.not_yours").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.delete.not_yours"))
             );
             return;
         }
         if (arena.getState() != Arena.ArenaState.WAITING) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.delete.running").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.delete.running"))
             );
             return;
         }
@@ -269,7 +271,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         plugin.getArenaManager().removeArena(arena);
 
         sender.sendMessage(
-                plugin.getConfig().getString("messages.arena.delete.delete").replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.delete.delete"))
         );
     }
 
@@ -283,13 +285,13 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         Arena arena = plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
         if (arena == null) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.public_command.not_found").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.public_command.not_found"))
             );
             return;
         }
         if (!arena.getOwner().equals(sender.getName())) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.public_command.not_yours").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.public_command.not_yours"))
             );
             return;
         }
@@ -298,11 +300,11 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         if (isPublic) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.public_command.success_private").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.public_command.success_private"))
             );
         } else {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.arena.public_command.success_public").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.public_command.success_public"))
             );
         }
 
@@ -310,7 +312,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     }
 
     private void badUsage(CommandSender sender) {
-        sender.sendMessage(plugin.getConfig().getString("messages.bad_usage").replace("&", "§"));
+        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.bad_usage")));
     }
 
     private void arenaList(CommandSender sender) {
@@ -318,18 +320,18 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         plugin.getConfig().getStringList("messages.arena.list").forEach(s -> {
             if (s.contains("%arenas%")) {
                 arenas.forEach(a -> {
-                    sender.sendMessage(s.replace("%arenas%", a.getName()).replace("&", "§") +
-                            (a.getSpawnPoint1() != null ? " §8(" + a.getSpawnPoint1().getBlockX() + ", " + a.getSpawnPoint1().getBlockY() + ", " + a.getSpawnPoint1().getBlockZ() + ")" : ""));
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize(s.replace("%arenas%", a.getName()) +
+                            (a.getSpawnPoint1() != null ? " §8(" + a.getSpawnPoint1().getBlockX() + ", " + a.getSpawnPoint1().getBlockY() + ", " + a.getSpawnPoint1().getBlockZ() + ")" : "")));
                 });
             } else {
-                sender.sendMessage(s.replace("&", "§"));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(s));
             }
         });
     }
 
     private void arenaHelp(CommandSender sender) {
         plugin.getConfig().getStringList("messages.arena.help").forEach(s -> {
-            sender.sendMessage(s.replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(s));
         });
     }
 }

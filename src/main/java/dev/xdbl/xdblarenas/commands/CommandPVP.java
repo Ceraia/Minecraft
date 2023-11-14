@@ -5,6 +5,7 @@ import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
 import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -27,7 +28,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if(!sender.hasPermission("xdbl.pvp")){
-            sender.sendMessage(plugin.getConfig().getString("messages.no_permission").replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
             return true;
         }
 
@@ -40,11 +41,10 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(((Player) sender).getUniqueId());
         if (arenaPlayer.pvpBanned()) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.pvp.banned.cant_invite").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.banned.cant_invite"))
             );
             return true;
         }
-
 
         if (args[0].equalsIgnoreCase("accept")) {
             Player p = (Player) sender;
@@ -52,7 +52,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             // Check if the player is banned
             if (plugin.getPlayerManager().getArenaPlayer(p.getUniqueId()).pvpBanned()) {
                 sender.sendMessage(
-                        plugin.getConfig().getString("messages.pvp.banned.cant_accept").replace("&", "§")
+                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.banned.cant_accept"))
                 );
                 return true;
             }
@@ -61,7 +61,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
             if (invite == null) {
                 sender.sendMessage(
-                        plugin.getConfig().getString("messages.invite_accept.invite_not_found").replace("&", "§")
+                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.invite_not_found"))
                 );
                 plugin.getInviteManager().invites.remove(p);
                 return true;
@@ -69,7 +69,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
             if (!invite.invited.isOnline() || !invite.inviter.isOnline()) {
                 sender.sendMessage(
-                        plugin.getConfig().getString("messages.invite_accept.other_player_offline").replace("&", "§")
+                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.other_player_offline"))
                 );
                 plugin.getInviteManager().invites.remove(p);
                 return true;
@@ -80,7 +80,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             )) {
                 for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                     pl.sendMessage(
-                            plugin.getConfig().getString("messages.invite_accept.arena_not_ready").replace("&", "§")
+                            MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.arena_not_ready"))
                     );
                 }
                 plugin.getInviteManager().invites.remove(p);
@@ -96,7 +96,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (group1 == null || group2 == null) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                plugin.getConfig().getString("messages.invite_accept.group.group_not_found").replace("&", "§")
+                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.group.group_not_found"))
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -106,7 +106,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (group1.size() < 2 || group2.size() < 2) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                plugin.getConfig().getString("messages.invite_accept.group.group_too_small").replace("&", "§")
+                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.group.group_too_small"))
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -130,7 +130,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (!allPlayersAreReady) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                plugin.getConfig().getString("messages.invite_accept.group.someone_already_in_fight").replace("&", "§")
+                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.group.someone_already_in_fight"))
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -164,8 +164,8 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         if (playerName.equalsIgnoreCase("reload") && sender.isOp()) {
             plugin.reloadConfig();
             plugin.getArenaSelectGUI().reloadConfig();
-            sender.sendMessage(
-                    "§aReloaded!"
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                    "<green>Reloaded!")
             );
             return true;
         }
@@ -174,7 +174,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
         if (invited == null) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.pvp.invite.player_offline").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.invite.player_offline"))
             );
             return true;
         }
@@ -183,7 +183,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
         if (inviter == invited) {
             sender.sendMessage(
-                    plugin.getConfig().getString("messages.pvp.invite.invite_self").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.invite.invite_self"))
             );
             return true;
         }
@@ -214,10 +214,9 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         return new ArrayList<>();
     }
 
-
     private void pvpHelp(CommandSender sender) {
         plugin.getConfig().getStringList("messages.pvp.help").forEach(s -> {
-            sender.sendMessage(s.replace("&", "§"));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(s));
         });
     }
 }

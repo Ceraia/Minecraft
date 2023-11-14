@@ -1,12 +1,10 @@
 package dev.xdbl.xdblarenas.gui;
 
+import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
-import dev.xdbl.xdblarenas.InviteManager;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,28 +16,26 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class ArenaSelectGUI implements Listener {
 
-    private static String INVENTORY_NAME;
+    private static Component INVENTORY_NAME;
     private final XDBLArena plugin;
-    private Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
+    private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
     public ArenaSelectGUI(XDBLArena plugin) {
         this.plugin = plugin;
 
-        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name").replace("&", "§");
+        INVENTORY_NAME = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.inventory_name"));
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public void reloadConfig() {
-        INVENTORY_NAME = plugin.getConfig().getString("messages.arena_select_gui.inventory_name").replace("&", "§");
+
+        INVENTORY_NAME = MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.inventory_name"));
     }
 
     public void openGUI(Player inviter) {
@@ -49,7 +45,7 @@ public class ArenaSelectGUI implements Listener {
         // size is from arenas.size() and must be devidable by 9
         int size = Math.max(9, (arenas.size() + 8) / 9 * 9);
 
-        Inventory inv = Bukkit.createInventory(null, size, INVENTORY_NAME);
+        Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
 
         Map<Integer, Arena> arenasSelectSlots = new HashMap<>();
 
@@ -59,21 +55,21 @@ public class ArenaSelectGUI implements Listener {
                     plugin.getConfig().getString("messages.arena_select_gui.arena_item.item")
             ));
             ItemMeta meta = is.getItemMeta();
-            meta.setDisplayName(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name")
-                    .replace("%arena_name", a.getName())
-                    .replace("%arena_owner", a.getOwner())
-                    .replace("&", "§")
+            meta.displayName(
+                    MiniMessage.miniMessage().deserialize(
+                    plugin.getConfig().getString("messages.arena_select_gui.arena_item.name")
+                    .replace("%arena_name%", a.getName())
+                    .replace("%arena_owner%", a.getOwner()))
             );
 
-            List<String> lore = new ArrayList<>();
+            List<Component> lore = new ArrayList<>();
             for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
-                lore.add(s.replace("%arena_name", a.getName())
-                        .replace("%arena_owner", a.getOwner())
-                        .replace("&", "§")
-                );
+                lore.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", a.getName())
+                        .replace("%arena_owner%", a.getOwner())
+                ));
             }
 
-            meta.setLore(lore);
+            meta.lore(lore);
 
             is.setItemMeta(meta);
 
@@ -90,7 +86,7 @@ public class ArenaSelectGUI implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        if (!e.getView().getTitle().startsWith(INVENTORY_NAME)) {
+        if (!Objects.equals(e.getView().title().toString(), INVENTORY_NAME.toString())) {
             return;
         }
 
@@ -111,7 +107,7 @@ public class ArenaSelectGUI implements Listener {
 
         if (arena == null || !arena.isReady() || arena.getState() != Arena.ArenaState.WAITING) {
             inviter.sendMessage(
-                    plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready").replace("&", "§")
+                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready"))
             );
             return;
         }
@@ -119,25 +115,16 @@ public class ArenaSelectGUI implements Listener {
         InviteManager.Invite invite = plugin.getInviteManager().selectingInvites.get(inviter);
 
         inviter.sendMessage(
-                plugin.getConfig().getString("messages.pvp.invite.invite_sent")
-                        .replace("%player%", invite.invited.getName())
-                        .replace("&", "§")
+                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.pvp.invite.invite_sent")
+                        .replace("%player%", invite.invited.getName()))
         );
 
         String invite_message = plugin.getConfig().getString("messages.arena_select_gui.invite_message")
                 .replace("%inviter%", inviter.getName())
                 .replace("%arena_name%", arena.getName())
-                .replace("&", "§");
-        String[] split = invite_message.split("@");
-        // get between two @
-        TextComponent message = new TextComponent(split[0]);
+                .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(invite.invited.getUniqueId(), inviter.getUniqueId()) + "%");
 
-        TextComponent clickableMessage = new TextComponent(split[1]);
-        clickableMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/pvp accept"));
-        clickableMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to accept").create()));
-        message.addExtra(clickableMessage);
-        message.addExtra(split[2]);
-        invite.invited.spigot().sendMessage(message);
+        plugin.getServer().getPlayer(invite.invited.getUniqueId()).sendMessage(MiniMessage.miniMessage().deserialize(invite_message));
 
         invite.arena = arena;
         plugin.getInviteManager().selectingInvites.remove(inviter);
