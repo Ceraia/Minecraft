@@ -36,12 +36,9 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
-        if (!(e.getDamager() instanceof Player) || !(e.getEntity() instanceof Player)) {
+        if (!(e.getDamager() instanceof Player damager) || !(e.getEntity() instanceof Player player)) {
             return;
         }
-
-        Player player = (Player) e.getEntity();
-        Player damager = (Player) e.getDamager();
 
         Arena arena = plugin.getArenaManager().getArena(damager);
 
@@ -66,15 +63,15 @@ public class ArenaFightListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
-        if (!(e.getEntity() instanceof Player)) {
+        if (!(e.getEntity() instanceof Player player)) {
             return;
         }
-
-        Player player = (Player) e.getEntity();
 
         if (!isInArena(player)) {
             return;
         }
+
+        Arena arena = plugin.getArenaManager().getArena(player);
 
         double healthAfter = player.getHealth() - e.getFinalDamage();
         if (healthAfter <= 0) {
@@ -82,7 +79,7 @@ public class ArenaFightListener implements Listener {
                     player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
                 return;
             }
-            
+
             e.setCancelled(true);
             player.setHealth(player.getHealthScale());
 
@@ -90,12 +87,11 @@ public class ArenaFightListener implements Listener {
 
             // Get player that killed the player
             Player killer = null;
-            if (e instanceof EntityDamageByEntityEvent) {
-                EntityDamageByEntityEvent event = (EntityDamageByEntityEvent) e;
+            if (e instanceof EntityDamageByEntityEvent event) {
                 if (event.getDamager() instanceof Player) {
                     killer = (Player) event.getDamager();
 
-                    if(killer != null) {
+                    if (killer != null) {
                         UUID killerUUID = killer.getUniqueId();
                         UUID victimUUID = player.getUniqueId();
 
@@ -118,8 +114,6 @@ public class ArenaFightListener implements Listener {
                     }
                 }
             }
-
-            Arena arena = plugin.getArenaManager().getArena(player);
 
             arena.end(player, false);
         }

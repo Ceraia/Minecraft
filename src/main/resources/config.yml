@@ -95,7 +95,7 @@ messages:
         - '<yellow><bold>Arena name: <green>%arena_name%'
         - '<yellow><bold>Arena owner: <green>%arena_owner%'
     arena_not_ready: '<red>Arena is not ready'
-    invite_message: '<green>Click <red>[here] <green>to join PVP arena with %inviter% in %arena_name%' # @ is replaced with clickable message to accept invite
+    invite_message: '<green>Click <white><hover:show_text:"<red>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, you have a %winchance% chance of winning!'
   gvg:
     help:
       - '<yellow><bold>Group Help'
@@ -110,7 +110,7 @@ messages:
     player_not_in_group: '<red>Player is not in the group or is in your group'
     invite:
       already_in_group: '<red>Player %player% is already in the group'
-      invite_message: '<green>Click <red>[here] <green>to accept an invite to the group from %inviter%' # @ is replaced with clickable message to accept invite
+      invite_message: '<green>Click <red>[here] <green>to accept an invite to the group from %inviter%'
       invite_yourself: "<red>You can't invite yourself"
       invite_sent: '<green>Invite was sent to %player%'
       cant_invite_yourself: "<red>You can't invite yourself"
@@ -135,7 +135,7 @@ messages:
       group_too_small: '<red>Group is too small'
       someone_already_in_fight: '<red>Someone is already in a fight'
   fight:
-    starting: '<green>Fight is starting in %time% seconds'
+    starting: '<green>%time%'
     started: '<green>Fight started!'
     problem_saving_inventories: '<red>Problem saving inventories'
     end: '<green>Fight ended! Winner: %winner%, teleporting in %time% seconds'

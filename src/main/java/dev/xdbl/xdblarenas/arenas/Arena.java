@@ -5,6 +5,7 @@ import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.Utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.title.Title;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -352,19 +353,17 @@ public class Arena {
             public void run() {
                 for (Player pl : players) {
                     if (i.get() == 0) {
-                        pl.sendTitle("", "", 10, 70, 20);
+                        pl.showTitle(Title.title(Component.empty(), Component.empty()));
                     } else if (i.get() == 1) {
-//                        // Send title for "fight started"
-//                        Component titleText = MiniMessage.miniMessage().deserialize(
-//                                plugin.getConfig().getString("messages.fight.started")
-//                        );
-//                        pl.title
+                        pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
+                                plugin.getConfig().getString("messages.fight.started")
+                                        .replace("%time%", String.valueOf(i.get() - 1))
+                        ), Component.empty()));
                     } else {
-//                        String titleText = MiniMessage.miniMessage().deserialize(
-//                                plugin.getConfig().getString("messages.fight.starting")
-//                                        .replace("%time%", String.valueOf(i.get() - 1))
-//                        );
-//                        pl.sendTitle("", titleText, 10, 70, 20);
+                        pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
+                                plugin.getConfig().getString("messages.fight.starting")
+                                        .replace("%time%", String.valueOf(i.get() - 1))
+                        ), Component.empty()));
                     }
                 }
 
