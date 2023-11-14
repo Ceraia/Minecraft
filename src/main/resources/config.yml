@@ -21,6 +21,8 @@ messages:
   bad_usage: '<red>Invalid usage'
   no_permission: "<red>You don't have permission to execute this command"
   arena:
+    not_yours: '<red>Arena is not yours'
+    not_found: '<red>Arena not found'
     help:
       - '<yellow><bold>Arena Help'
       - '<green>/arena list - Show your arenas'
@@ -31,16 +33,12 @@ messages:
       - '<gold>2. <green>/arena sp1 <name> - Set spawn point for the first player'
       - '<gold>3. <green>/arena sp2 <name> - Set spawn point for the second player'
     public_command:
-      not_found: '<red>Arena not found'
-      not_yours: '<red>Arena is not yours'
       success_private: '<green>Arena made private'
       success_public: '<green>Arena made public'
     list:
       - '<yellow><bold>Your arenas:'
       - '<green>%arenas%'
     delete:
-      not_yours: '<red>Arena is not yours'
-      not_found: '<red>Arena not found'
       delete: '<green>Arena deleted'
       running: "<green>Arena is in use; you can't delete it"
     create:
@@ -50,13 +48,12 @@ messages:
       alphanumeric: '<red>Name must only contain letters and numbers'
       banned: '<red>You are banned from making arenas'
     sp1:
-      not_yours: '<red>Arena is not yours'
-      not_found: '<red>Arena not found'
       success: '<green>Spawn point set for the first player!'
     sp2:
-      not_yours: '<red>Arena is not yours'
-      not_found: '<red>Arena not found'
       success: '<green>Spawn point set for the second player!'
+    totems:
+        enabled: '<green>Totems have been enabled for this arena'
+        disabled: '<green>Totems have been <red>disabled<green> for this arena'
   pvp:
     help:
       - '<yellow><bold>PVP Help'
@@ -95,7 +92,7 @@ messages:
         - '<yellow><bold>Arena name: <green>%arena_name%'
         - '<yellow><bold>Arena owner: <green>%arena_owner%'
     arena_not_ready: '<red>Arena is not ready'
-    invite_message: '<green>Click <white><hover:show_text:"<red>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, you have a %winchance% chance of winning!'
+    invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, totems are %totemsenabled% you have a %winchance% chance of winning!'
   gvg:
     help:
       - '<yellow><bold>Group Help'
@@ -137,6 +134,8 @@ messages:
   fight:
     starting: '<green>%time%'
     started: '<green>Fight started!'
+    totems_enabled: '<green>Totems enabled!'
+    totems_disabled: '<red>Totems disabled!'
     problem_saving_inventories: '<red>Problem saving inventories'
     end: '<green>Fight ended! Winner: %winner%, teleporting in %time% seconds'
     end_global: '<green>%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'

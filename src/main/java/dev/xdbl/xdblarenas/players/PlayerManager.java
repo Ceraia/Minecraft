@@ -36,6 +36,7 @@ public class PlayerManager {
                     config.getBoolean("pvpbanned", false),
                     config.getInt("wins", 0),
                     config.getInt("losses", 0),
+                    config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
                     file
@@ -117,6 +118,7 @@ public class PlayerManager {
                     false,
                     false,
                     false,
+                    0,
                     0,
                     0,
                     new ArrayList<String>(),
