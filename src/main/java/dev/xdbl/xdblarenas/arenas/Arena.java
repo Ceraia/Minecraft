@@ -1,8 +1,8 @@
 package dev.xdbl.xdblarenas.arenas;
 
 import dev.xdbl.xdblarenas.InviteManager;
-import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.Utils;
+import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
@@ -28,24 +28,21 @@ public class Arena {
     // before ready
     private final String name;
     private final String owner;
+    private final List<Player> startPlayers = new ArrayList<>();
+    private boolean totems;
     private boolean isPublic = false;
     private File configFile;
-
     // after ready
     private Location spawnPoint1, spawnPoint2;
     private boolean isApproved;
-    private boolean isReady;
-
     // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
-    private List<Location> placedBlocks = new ArrayList<>();
-    private Map<Player, Location> priorLocations = new HashMap<>();
+    private final List<Location> placedBlocks = new ArrayList<>();
+    private final Map<Player, Location> priorLocations = new HashMap<>();
     private ArenaState state = ArenaState.WAITING;
 
-    private final List<Player> startPlayers = new ArrayList<>();
-
-    public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
+    public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean totems, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -53,20 +50,9 @@ public class Arena {
         this.spawnPoint1 = spawnPoint1;
         this.spawnPoint2 = spawnPoint2;
         this.isPublic = isPublic;
-        this.isApproved = false;
-        this.isReady = true;
+        this.totems = totems;
 
         this.configFile = configFile;
-    }
-
-    public void setSpawnPoint1(Location loc) {
-        spawnPoint1 = loc;
-        saveArena();
-    }
-
-    public void setSpawnPoint2(Location loc) {
-        spawnPoint2 = loc;
-        saveArena();
     }
 
     public boolean saveArena() {
@@ -120,16 +106,18 @@ public class Arena {
         return spawnPoint1;
     }
 
+    public void setSpawnPoint1(Location loc) {
+        spawnPoint1 = loc;
+        saveArena();
+    }
+
     public Location getSpawnPoint2() {
         return spawnPoint2;
     }
 
-    public boolean isReady() {
-        return isReady;
-    }
-
-    public void setReady(boolean isReady) {
-        this.isReady = isReady;
+    public void setSpawnPoint2(Location loc) {
+        spawnPoint2 = loc;
+        saveArena();
     }
 
     public List<Player> getTeam1() {
@@ -138,6 +126,15 @@ public class Arena {
 
     public void setTeam1(List<Player> team1) {
         this.team1 = team1;
+    }
+
+    public boolean hasTotems() {
+        return totems;
+    }
+
+    public boolean toggleTotems() {
+        totems = !totems;
+        return totems;
     }
 
     public List<Player> getTeam2() {
@@ -355,20 +352,27 @@ public class Arena {
                     if (i.get() == 0) {
                         pl.showTitle(Title.title(Component.empty(), Component.empty()));
                     } else if (i.get() == 1) {
-                        pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
-                                plugin.getConfig().getString("messages.fight.started")
-                                        .replace("%time%", String.valueOf(i.get() - 1))
-                        ), Component.empty()));
+                        Title title = Title.title(
+                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.started")
+                                        .replace("%time%", String.valueOf(i.get() - 1))),
+                                Component.empty()
+                        );
+
+                        pl.showTitle(title);
                     } else {
                         pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
                                 plugin.getConfig().getString("messages.fight.starting")
                                         .replace("%time%", String.valueOf(i.get() - 1))
-                        ), Component.empty()));
+                        ), MiniMessage.miniMessage().deserialize(
+                                plugin.getArenaManager().getArena(pl).hasTotems() ?
+                                        plugin.getConfig().getString("messages.fight.totems_enabled")
+                                        : plugin.getConfig().getString("messages.fight.totems_disabled")
+                        )));
                     }
                 }
 
                 if (i.get() == 0) {
-                    thisArena.setState(Arena.ArenaState.RUNNING);
+                    thisArena.setState(ArenaState.RUNNING);
                     cancel();
                     return;
                 }
@@ -377,10 +381,6 @@ public class Arena {
 
             }
         }.runTaskTimer(plugin, 0, 20);
-    }
-
-    public enum ArenaState {
-        WAITING, STARTING, RUNNING, ENDING
     }
 
     public void placeBlock(Location loc) {
@@ -413,5 +413,9 @@ public class Arena {
 
     public Location getPlayerPriorLocation(Player pl) {
         return priorLocations.get(pl);
+    }
+
+    public enum ArenaState {
+        WAITING, STARTING, RUNNING, ENDING
     }
 }

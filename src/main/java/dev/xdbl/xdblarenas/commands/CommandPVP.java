@@ -75,7 +75,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            if (!invite.arena.isReady() || invite.arena.getState() != Arena.ArenaState.WAITING || plugin.getArenaManager().getArenas().stream().noneMatch(
+            if (invite.arena.getState() != Arena.ArenaState.WAITING || plugin.getArenaManager().getArenas().stream().noneMatch(
                     a -> a.getName().equalsIgnoreCase(invite.arena.getName())
             )) {
                 for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {

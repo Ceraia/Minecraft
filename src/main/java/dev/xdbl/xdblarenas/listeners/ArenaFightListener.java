@@ -75,10 +75,11 @@ public class ArenaFightListener implements Listener {
 
         double healthAfter = player.getHealth() - e.getFinalDamage();
         if (healthAfter <= 0) {
-            if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING ||
-                    player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
-                return;
-            }
+            if(arena.hasTotems())
+                if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING ||
+                        player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
+                    return;
+                }
 
             e.setCancelled(true);
             player.setHealth(player.getHealthScale());

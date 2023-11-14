@@ -37,9 +37,10 @@ public class ArenaManager {
             String owner = config.getString("owner");
             Location spawnPoint1 = config.getLocation("spawnPoint1");
             Location spawnPoint2 = config.getLocation("spawnPoint2");
-            boolean isPublic = config.getBoolean("public");
+            boolean totems = config.getBoolean("totems", true);
+            boolean isPublic = config.getBoolean("public", false);
 
-            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, file);
+            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, totems, file);
             arenas.add(arena);
         }
 
@@ -52,6 +53,16 @@ public class ArenaManager {
     public Arena getArena(Player player) {
         return playersInArena.get(player);
     }
+
+    public Arena getArena(String name) {
+        for (Arena arena : arenas) {
+            if (arena.getName().equalsIgnoreCase(name)) {
+                return arena;
+            }
+        }
+        return null;
+    }
+    
 
     public void addArena(Arena arena) {
         arenas.add(arena);

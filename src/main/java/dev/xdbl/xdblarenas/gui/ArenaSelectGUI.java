@@ -50,7 +50,7 @@ public class ArenaSelectGUI implements Listener {
         Map<Integer, Arena> arenasSelectSlots = new HashMap<>();
 
         int i = 0;
-        for (Arena a : arenas.stream().filter(a -> a.isReady() && a.getState() == Arena.ArenaState.WAITING).collect(Collectors.toList())) {
+        for (Arena a : arenas.stream().filter(a -> a.getState() == Arena.ArenaState.WAITING).collect(Collectors.toList())) {
             ItemStack is = new ItemStack(Material.getMaterial(
                     plugin.getConfig().getString("messages.arena_select_gui.arena_item.item")
             ));
@@ -105,7 +105,7 @@ public class ArenaSelectGUI implements Listener {
         int slot = e.getSlot();
         Arena arena = selectingArenaCache.get(inviter).get(slot);
 
-        if (arena == null || !arena.isReady() || arena.getState() != Arena.ArenaState.WAITING) {
+        if (arena == null || arena.getState() != Arena.ArenaState.WAITING) {
             inviter.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready"))
             );
@@ -121,6 +121,7 @@ public class ArenaSelectGUI implements Listener {
 
         String invite_message = plugin.getConfig().getString("messages.arena_select_gui.invite_message")
                 .replace("%inviter%", inviter.getName())
+                .replace("%totemsenabled%", arena.hasTotems() ? "<green>enabled" : "<red>disabled")
                 .replace("%arena_name%", arena.getName())
                 .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(invite.invited.getUniqueId(), inviter.getUniqueId()) + "%");
 

@@ -19,9 +19,12 @@ public class Utils {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
             ItemStack[] content = new ItemStack[pl.getInventory().getContents().length];
+            try {
             for (String s : config.getConfigurationSection("items").getKeys(false)) {
                 int i = Integer.parseInt(s);
                 content[i] = config.getItemStack("items." + s);
+            }} catch (Exception e) {
+                System.out.println("Problem loading player inventories.");
             }
 
             pl.getInventory().setContents(content);
