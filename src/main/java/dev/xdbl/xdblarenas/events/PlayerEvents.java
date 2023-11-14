@@ -4,6 +4,7 @@ import dev.xdbl.xdblarenas.players.ArenaPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerEvents extends Event {
 
@@ -25,7 +26,7 @@ public class PlayerEvents extends Event {
     }
 
     @Override
-    public HandlerList getHandlers() {
+    public @NotNull HandlerList getHandlers() {
         return handlers;
     }
 

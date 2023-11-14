@@ -20,8 +20,8 @@ public class ArenaPlayer {
     private int wins;
     private int losses;
     private boolean arenabanned;
-    private File configFile;
-    private List<String> logs;
+    private final File configFile;
+    private final List<String> logs;
     private int elo;
     private boolean scoreboard;
     private long lastFought;
@@ -113,6 +113,10 @@ public class ArenaPlayer {
 
     public int losses() {
         return losses;
+    }
+
+    public int draws() {
+        return draws;
     }
 
     public void addWin() {

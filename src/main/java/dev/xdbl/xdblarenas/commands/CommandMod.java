@@ -9,9 +9,11 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandMod implements CommandExecutor, TabCompleter {
 
@@ -22,9 +24,9 @@ public class CommandMod implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!sender.hasPermission("xdbl.mod")) {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
             return true;
         }
 
@@ -59,32 +61,32 @@ public class CommandMod implements CommandExecutor, TabCompleter {
 
                 if (args[1].equalsIgnoreCase("arena")) {
                     if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.player_not_found")));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
                         return true;
                     }
                     ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
                     boolean arenabanned = arenaPlayer.arenaBan();
                     if (arenabanned) {
                         arenaPlayer.addLog("Banned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.mod.ban.arena.banned").replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.banned")).replace("%player%", target.getName())));
                     } else {
                         arenaPlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.mod.ban.arena.unbanned").replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.unbanned")).replace("%player%", target.getName())));
                     }
                 }
                 if (args[1].equalsIgnoreCase("pvp")) {
                     if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.player_not_found")));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
                         return true;
                     }
                     ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
                     boolean pvpbanned = arenaPlayer.pvpBan();
                     if (pvpbanned) {
                         arenaPlayer.addLog("Banned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.mod.ban.pvp.banned").replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.banned")).replace("%player%", target.getName())));
                     } else {
                         arenaPlayer.addLog("Unbanned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned").replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned")).replace("%player%", target.getName())));
                     }
                 }
             }
@@ -94,7 +96,7 @@ public class CommandMod implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (args.length == 1) {
             List<String> tabOptions = new ArrayList<>();
             tabOptions.add("ban");
@@ -128,8 +130,6 @@ public class CommandMod implements CommandExecutor, TabCompleter {
     }
 
     private void ModHelp(CommandSender sender) {
-        plugin.getConfig().getStringList("messages.mod.help").forEach(s -> {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(s));
-        });
+        plugin.getConfig().getStringList("messages.mod.help").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s)));
     }
 }

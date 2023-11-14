@@ -9,6 +9,7 @@ import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.Objects;
 
 public class XDBLArena extends JavaPlugin {
 
@@ -27,6 +28,7 @@ public class XDBLArena extends JavaPlugin {
     public void onEnable() {
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
+        new File(getDataFolder(), "data/players").mkdirs();
 
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
@@ -48,19 +50,19 @@ public class XDBLArena extends JavaPlugin {
         new ArenaBlockListener(this);
         new ArenaExplodeListener(this);
 
-        getCommand("pvp").setExecutor(commandPVP);
+        Objects.requireNonNull(getCommand("pvp")).setExecutor(commandPVP);
 
-        getCommand("arena").setExecutor(commandArena);
+        Objects.requireNonNull(getCommand("arena")).setExecutor(commandArena);
 
-        getCommand("gvg").setExecutor(commandGVG);
+        Objects.requireNonNull(getCommand("gvg")).setExecutor(commandGVG);
 
-        getCommand("mod").setExecutor(commandMod);
+        Objects.requireNonNull(getCommand("mod")).setExecutor(commandMod);
 
-        getCommand("top").setExecutor(commandTop);
-        getCommand("leaderboard").setExecutor(commandTop);
+        Objects.requireNonNull(getCommand("top")).setExecutor(commandTop);
+        Objects.requireNonNull(getCommand("leaderboard")).setExecutor(commandTop);
 
-        getCommand("profile").setExecutor(commandProfile);
-        getCommand("stats").setExecutor(commandProfile);
+        Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
+        Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
     }
 
     public ArenaManager getArenaManager() {

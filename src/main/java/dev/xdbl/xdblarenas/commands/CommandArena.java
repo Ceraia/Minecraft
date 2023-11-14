@@ -11,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.util.*;
@@ -26,7 +27,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if(!sender.hasPermission("xdbl.arena")){
             sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
             return true;
@@ -60,16 +61,16 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
                 // Check for 1st, 2nd, and 3rd place
                 if (i.get() == 1) {
-                    medal = "§6"; // Gold for 1st place
+                    medal = "<gold>"; // Gold for 1st place
                 } else if (i.get() == 2) {
-                    medal = "§7"; // Silver for 2nd place
+                    medal = "<#C0C0C0>"; // Silver for 2nd place
                 } else if (i.get() == 3) {
-                    medal = "§#cd7f32"; // Bronze for 3rd place
+                    medal = "<#cd7f32>"; // Bronze for 3rd place
                 } else {
-                    medal = "§f"; // Default medal color for players outside the top 3
+                    medal = "<white>"; // Default medal color for players outside the top 3
                 }
 
-                top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " §8- §7" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+                top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
                 i.getAndIncrement();
             });
 

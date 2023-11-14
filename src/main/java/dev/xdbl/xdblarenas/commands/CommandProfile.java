@@ -3,21 +3,17 @@ package dev.xdbl.xdblarenas.commands;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Objects;
 
 public class CommandProfile implements CommandExecutor, TabCompleter {
 
@@ -28,9 +24,9 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!sender.hasPermission("xdbl.pvp")) {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.no_permission")));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
             return true;
         }
 
@@ -38,7 +34,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             player = Bukkit.getPlayer(args[0]);
             if (player == null) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.bad_usage")));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.bad_usage"))));
                 return true;
             }
         } else {
@@ -47,16 +43,15 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
 
         // Return the player's profile
         ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(player.getUniqueId());
-        plugin.getConfig().getStringList("messages.profile").forEach(s -> {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(s
-                    .replace("%player%", player.getName())
-                    .replace("%elo%", String.valueOf(arenaPlayer.getElo()))
-                    .replace("%wins%", String.valueOf(arenaPlayer.wins()))
-                    .replace("%losses%", String.valueOf(arenaPlayer.losses()))
-                    .replace("%games%", String.valueOf(arenaPlayer.wins() + arenaPlayer.losses()))
-                    .replace("%pvpbanned%", arenaPlayer.pvpBanned() ? "§cYes" : "§aNo")
-                    .replace("%arenabanned%", arenaPlayer.arenaBanned() ? "§cYes" : "§aNo")));
-        });
+        plugin.getConfig().getStringList("messages.profile").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s
+                .replace("%player%", player.getName())
+                .replace("%elo%", String.valueOf(arenaPlayer.getElo()))
+                .replace("%wins%", String.valueOf(arenaPlayer.wins()))
+                .replace("%losses%", String.valueOf(arenaPlayer.losses()))
+                .replace("%draws%", String.valueOf(arenaPlayer.draws()))
+                .replace("%games%", String.valueOf(arenaPlayer.wins() + arenaPlayer.losses()))
+                .replace("%pvpbanned%", arenaPlayer.pvpBanned() ? "<red>Yes" : "<green>No")
+                .replace("%arenabanned%", arenaPlayer.arenaBanned() ? "<red>Yes" : "<green>No"))));
 
 
 
@@ -64,7 +59,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         // Return a list of all players
         if (args.length == 1) {
             List<String> players = new ArrayList<>();
