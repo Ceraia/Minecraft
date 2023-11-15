@@ -3,6 +3,7 @@ package dev.xdbl.xdblarenas;
 import dev.xdbl.xdblarenas.arenas.ArenaManager;
 import dev.xdbl.xdblarenas.commands.*;
 import dev.xdbl.xdblarenas.listeners.*;
+import dev.xdbl.xdblarenas.metrics.Metrics;
 import dev.xdbl.xdblarenas.players.PlayerManager;
 import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
 import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
@@ -25,7 +26,13 @@ public class XDBLArena extends JavaPlugin {
     private CommandTop commandTop;
     private CommandProfile commandProfile;
 
+    int pluginId = 20303;
+
+    Metrics metrics;
+
     public void onEnable() {
+        metrics = new Metrics(this, pluginId);
+
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/players").mkdirs();
@@ -63,6 +70,10 @@ public class XDBLArena extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
+    }
+
+    public void onDisable() {
+        metrics.shutdown();
     }
 
     public ArenaManager getArenaManager() {
