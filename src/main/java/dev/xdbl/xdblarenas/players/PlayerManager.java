@@ -70,17 +70,23 @@ public class PlayerManager {
 
         // Constants for the Elo calculation
         double kFactor = 32.0;
-        double expectedScoreKiller = 1.0 / (1.0 + Math.pow(10, (victim.getElo() - killer.getElo()) / 400.0));
-        double expectedScoreVictim = 1.0 / (1.0 + Math.pow(10, (killer.getElo() - victim.getElo()) / 400.0));
+        double ratingDifference = victim.getElo() - killer.getElo();
+        double expectedScoreKiller = 1.0 / (1.0 + Math.pow(10, ratingDifference / 400.0));
+        double expectedScoreVictim = 1.0 / (1.0 + Math.pow(10, -ratingDifference / 400.0));
 
-        // Update Elo ratings
-        int newEloKiller = (int) (killer.getElo() + kFactor * (1.0 - expectedScoreKiller));
-        int newEloVictim = (int) (victim.getElo() + kFactor * (0.0 - expectedScoreVictim));
+        // Actual outcome (1 for a win, 0 for a loss)
+        double actualOutcomeKiller = 1.0;
+        double actualOutcomeVictim = 0.0;
+
+        // Calculating the Elo changes with emphasis on expectation
+        int newEloKiller = (int) (killer.getElo() + kFactor * (actualOutcomeKiller - expectedScoreKiller) * Math.abs(expectedScoreKiller - 0.5) * 2);
+        int newEloVictim = (int) (victim.getElo() + kFactor * (actualOutcomeVictim - expectedScoreVictim) * Math.abs(expectedScoreVictim - 0.5) * 2);
 
         // Set new Elo ratings
         killer.setElo(newEloKiller);
         victim.setElo(newEloVictim);
     }
+
 
     public int CalculateWinChance(UUID playerKiller, UUID playerVictim){
         ArenaPlayer killer = getArenaPlayer(playerKiller);
