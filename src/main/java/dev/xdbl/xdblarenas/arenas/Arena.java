@@ -40,6 +40,7 @@ public class Arena {
     private final List<Location> placedBlocks = new ArrayList<>();
     private final Map<Player, Location> priorLocations = new HashMap<>();
     private ArenaState state = ArenaState.WAITING;
+    private int timer;
 
     public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean totems, File configFile) {
         this.plugin = plugin;
@@ -50,6 +51,7 @@ public class Arena {
         this.spawnPoint2 = spawnPoint2;
         this.isPublic = isPublic;
         this.totems = totems;
+        this.timer = timer; // TODO: Add timers for the arena for the bossbar additions.
 
         this.configFile = configFile;
     }
