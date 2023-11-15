@@ -15,6 +15,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class ArenaFightListener implements Listener {
@@ -37,6 +38,15 @@ public class ArenaFightListener implements Listener {
         }
 
         if (!(e.getDamager() instanceof Player damager) || !(e.getEntity() instanceof Player player)) {
+            return;
+        }
+
+        if (!isInArena(damager) && !isInArena(player)) {
+            return;
+        }
+
+        if (((isInArena(damager) && !isInArena(player)) || (!isInArena(damager) && isInArena(player))) || !Objects.equals(plugin.getArenaManager().getArena(damager).getName(), plugin.getArenaManager().getArena(player).getName())) {
+            e.setCancelled(true);
             return;
         }
 

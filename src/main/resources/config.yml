@@ -108,7 +108,7 @@ messages:
     player_not_in_group: '<red>Player is not in the group or is in your group'
     invite:
       already_in_group: '<red>Player %player% is already in the group'
-      invite_message: '<green>Click <red>[here] <green>to accept an invite to the group from %inviter%'
+      invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the group invite!"><click:run_command:/gvg accept>[here]</click></hover><green> to accept the group invite!'
       invite_yourself: "<red>You can't invite yourself"
       invite_sent: '<green>Invite was sent to %player%'
       cant_invite_yourself: "<red>You can't invite yourself"

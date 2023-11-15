@@ -2,6 +2,7 @@ package dev.xdbl.xdblarenas.commands;
 
 import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -90,18 +91,15 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
             }
 
             for (Player target : targets) {
-                String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.invite_message"))
-                        .replace("%inviter%", player.getName());
-                String[] split = invite_message.split("@");
-                // get between two @
-                TextComponent message = new TextComponent(split[0]);
-
-                TextComponent clickableMessage = new TextComponent(split[1]);
-                clickableMessage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/gvg accept"));
-                clickableMessage.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§aClick to accept").create()));
-                message.addExtra(clickableMessage);
-                message.addExtra(split[2]);
-                target.spigot().sendMessage(message);
+                Component message = Objects.requireNonNull(
+                        MiniMessage.miniMessage().deserialize(
+                                Objects.requireNonNull(
+                                        plugin.getConfig().getString("messages.gvg.invite.invite_message")
+                                ).replace("%inviter%", player.getName()
+                                )
+                        )
+                );
+                target.sendMessage(message);
 
                 invites.put(target, player);
             }
@@ -109,7 +107,8 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
             sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.invite_sent"))
                     .replace("%player%", targets.stream().map(Player::getName).collect(Collectors.joining(", ")))));
             return true;
-        } else if (args[0].equalsIgnoreCase("accept")) {
+        }
+        else if (args[0].equalsIgnoreCase("accept")) {
             Player inviter = invites.get(player);
 
             if (inviter == null || !inviter.isOnline()) {
@@ -143,9 +142,11 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                         .replace("%player%", player.getName())));
             }
             return true;
-        } else if (args[0].equalsIgnoreCase("leave")) {
+        }
+        else if (args[0].equalsIgnoreCase("leave")) {
             leaveGang(player);
-        } else if (args[0].equalsIgnoreCase("kick")) {
+        }
+        else if (args[0].equalsIgnoreCase("kick")) {
             if (!groups.containsKey(player)) {
                 sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.kick.not_in_group"))));
                 return true;
@@ -189,8 +190,9 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                         .replace("%player%", target.getName()))));
             }
             return true;
-        } else {
-            String playerName = args[0];
+        }
+        else if (args[0].equalsIgnoreCase("fight")) {
+            String playerName = args[1];
             Player invited = Bukkit.getPlayer(playerName);
 
             if (invited == null) {
@@ -209,7 +211,6 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                 sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.not_in_group"))));
                 return true;
             }
-
 
             if (!groups.containsKey(invited) || (groups.get(player).contains(invited) || groups.get(invited).contains(player))) {
                 sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.player_not_in_group"))));
@@ -231,10 +232,15 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args){
         if (args.length == 1) {
-            return Arrays.asList("invite", "accept", "leave", "kick");
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
+            return Arrays.asList("invite", "accept", "leave", "kick", "fight");
+        }
+        else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
             return getPlayersByGroup((Player) sender).stream().map(Player::getName).collect(Collectors.toList());
         }
+        else if (args.length == 2 && (args[0].equalsIgnoreCase("invite") ||args[0].equalsIgnoreCase("fight"))) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+        }
+
         return new ArrayList<>();
     }
 
