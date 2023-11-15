@@ -91,6 +91,7 @@ messages:
       lore:
         - '<yellow><bold>Arena name: <green>%arena_name%'
         - '<yellow><bold>Arena owner: <green>%arena_owner%'
+        - '<yellow><bold>Totems: %totemsenabled%'
     arena_not_ready: '<red>Arena is not ready'
     invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, totems are %totemsenabled% you have a %winchance% chance of winning!'
   gvg:

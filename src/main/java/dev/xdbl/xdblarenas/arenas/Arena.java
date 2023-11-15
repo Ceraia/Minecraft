@@ -30,11 +30,10 @@ public class Arena {
     private final String owner;
     private final List<Player> startPlayers = new ArrayList<>();
     private boolean totems;
-    private boolean isPublic = false;
+    private boolean isPublic;
     private File configFile;
     // after ready
     private Location spawnPoint1, spawnPoint2;
-    private boolean isApproved;
     // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
