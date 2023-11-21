@@ -9,11 +9,11 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
-public class ArenaItemListener implements Listener {
+public class PlayerInventoryListener implements Listener {
 
     private final XDBLArena plugin;
 
-    public ArenaItemListener(XDBLArena plugin) {
+    public PlayerInventoryListener(XDBLArena plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

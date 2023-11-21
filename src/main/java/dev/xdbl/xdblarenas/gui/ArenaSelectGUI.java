@@ -37,7 +37,8 @@ public class ArenaSelectGUI implements Listener {
         INVENTORY_NAME = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
     }
 
-    public void openGUI(Player inviter) {
+    public void openArenaList(Player inviter) {
+        // Get a list of all arenas accessible to the player
         List<Arena> arenas = plugin.getArenaManager().getArenas()
                 .stream().filter(a -> a.isPublic() || a.getOwner().equals(inviter.getName())).toList();
 

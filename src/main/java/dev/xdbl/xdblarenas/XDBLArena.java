@@ -53,7 +53,7 @@ public class XDBLArena extends JavaPlugin {
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
-        new ArenaItemListener(this);
+        new PlayerInventoryListener(this);
         new ArenaBlockListener(this);
         new ArenaExplodeListener(this);
 

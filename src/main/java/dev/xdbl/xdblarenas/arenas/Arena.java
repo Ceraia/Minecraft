@@ -29,6 +29,8 @@ public class Arena {
     private final String name;
     private final String owner;
     private final List<Player> startPlayers = new ArrayList<>();
+    private final List<Location> placedBlocks = new ArrayList<>();
+    private final Map<Player, Location> priorLocations = new HashMap<>();
     private boolean totems;
     private boolean isPublic;
     private File configFile;
@@ -37,8 +39,6 @@ public class Arena {
     // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
-    private final List<Location> placedBlocks = new ArrayList<>();
-    private final Map<Player, Location> priorLocations = new HashMap<>();
     private ArenaState state = ArenaState.WAITING;
     private int timer;
 
@@ -81,6 +81,14 @@ public class Arena {
             return false;
         }
         return true;
+    }
+
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 
     public ArenaState getState() {
@@ -179,6 +187,7 @@ public class Arena {
 
     public void end(Player player, boolean quit) {
         boolean end = false;
+
         List<Player> winners = new ArrayList<>();
         List<Player> losers = new ArrayList<>();
 

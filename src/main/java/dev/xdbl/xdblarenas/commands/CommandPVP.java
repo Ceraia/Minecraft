@@ -189,7 +189,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        plugin.getArenaSelectGUI().openGUI(inviter);
+        plugin.getArenaSelectGUI().openArenaList(inviter);
 
         InviteManager.Invite invite = new InviteManager.Invite(inviter, invited);
 
