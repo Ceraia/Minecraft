@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.commands;
 
-import dev.xdbl.xdblarenas.InviteManager;
+import dev.xdbl.xdblarenas.invites.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -213,13 +213,7 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            plugin.getArenaSelectGUI().openArenaList(player);
-
-            InviteManager.Invite invite = new InviteManager.Invite(player, invited);
-            invite.group = true;
-
-            plugin.getInviteManager().selectingInvites.put(player, invite);
-
+            plugin.getArenaSelectGUI().openArenaList(player, invited);
         }
 
         return true;

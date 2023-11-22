@@ -2,6 +2,7 @@ package dev.xdbl.xdblarenas;
 
 import dev.xdbl.xdblarenas.arenas.ArenaManager;
 import dev.xdbl.xdblarenas.commands.*;
+import dev.xdbl.xdblarenas.invites.InviteManager;
 import dev.xdbl.xdblarenas.listeners.*;
 import dev.xdbl.xdblarenas.metrics.Metrics;
 import dev.xdbl.xdblarenas.players.PlayerManager;

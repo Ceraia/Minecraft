@@ -1,4 +1,4 @@
-package dev.xdbl.xdblarenas;
+package dev.xdbl.xdblarenas.invites;
 
 import dev.xdbl.xdblarenas.arenas.Arena;
 import org.bukkit.entity.Player;
@@ -14,6 +14,7 @@ public class InviteManager {
     public static class Invite {
         public Player inviter, invited;
         public Arena arena;
+        public boolean accepted = false;
         public boolean group;
 
         public Invite(Player inviter, Player invited) {

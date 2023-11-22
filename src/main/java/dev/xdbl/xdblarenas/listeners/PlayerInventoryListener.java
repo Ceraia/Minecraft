@@ -37,7 +37,9 @@ public class PlayerInventoryListener implements Listener {
             return;
         }
 
-        if (e.getView().getTopInventory().getType() == InventoryType.PLAYER || e.getView().getTopInventory().getType() == InventoryType.CRAFTING) {
+        if (e.getView().getTopInventory().getType() == InventoryType.PLAYER
+                || e.getView().getTopInventory().getType() ==
+                InventoryType.CRAFTING) {
             return;
         }
 

@@ -94,6 +94,19 @@ messages:
         - '<yellow><bold>Totems: %totemsenabled%'
     arena_not_ready: '<red>Arena is not ready'
     invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, totems are %totemsenabled% you have a %winchance% chance of winning!'
+  totem_select_gui:
+    inventory_name: '<yellow><bold>ENABLE TOTEMS?'
+    items:
+      enable:
+        item: 'GREEN_STAINED_GLASS_PANE'
+        name: '<green>Enable totems'
+        lore:
+          - '<yellow><bold>Click to enable totems'
+      disable:
+        item: 'RED_STAINED_GLASS_PANE'
+        name: '<red>Disable totems'
+        lore:
+          - '<yellow><bold>Click to disable totems'
   gvg:
     help:
       - '<yellow><bold>Group Help'
@@ -126,6 +139,7 @@ messages:
       kicked: '<green>%player% was kicked from the group'
   invite_accept:
     invite_not_found: '<red>Invite not found'
+    invite_already_accepted: '<red>Invite already accepted'
     other_player_offline: '<red>Player is offline'
     arena_not_ready: '<red>Arena is not ready right now! Try again later'
     group:

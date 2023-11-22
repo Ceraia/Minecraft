@@ -2,6 +2,7 @@ package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.invites.InviteManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,6 +14,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
@@ -81,51 +83,60 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
+        // Get player that hurt the player
+        Player killer = null;
+        if (e instanceof EntityDamageByEntityEvent event) {
+            if (event.getDamager() instanceof Player) {
+                killer = (Player) event.getDamager();
+            }
+        }
+
         Arena arena = plugin.getArenaManager().getArena(player);
 
         double healthAfter = player.getHealth() - e.getFinalDamage();
         if (healthAfter <= 0) {
-            if(arena.hasTotems())
-                if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING ||
-                        player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
-                    return;
-                }
+
+            // Check if during the fight totems are allowed
+
+            InviteManager.Invite invite = plugin.getInviteManager().invites.get(player);
+
+            if(invite == null) invite = plugin.getInviteManager().selectingInvites.get(killer);
+
+            if (invite != null) {
+                if (arena.totems) {
+                    plugin.getLogger().info("Totems are allowed");
+                    if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
+                        return;
+                    }
+                } else plugin.getLogger().info("Totems are disallowed");
+            }
+
 
             e.setCancelled(true);
             player.setHealth(player.getHealthScale());
 
             // END OF FIGHT
+            if (killer != null) {
+                UUID killerUUID = killer.getUniqueId();
+                UUID victimUUID = player.getUniqueId();
 
-            // Get player that killed the player
-            Player killer = null;
-            if (e instanceof EntityDamageByEntityEvent event) {
-                if (event.getDamager() instanceof Player) {
-                    killer = (Player) event.getDamager();
+                // Get the win chance
+                int winChance = plugin.getPlayerManager().CalculateWinChance(killerUUID, victimUUID);
 
-                    if (killer != null) {
-                        UUID killerUUID = killer.getUniqueId();
-                        UUID victimUUID = player.getUniqueId();
+                // Announce the winner and the win chance in chat
+                Bukkit.broadcast(MiniMessage.miniMessage().deserialize(
+                        plugin.getConfig().getString("messages.fight.end_global")
+                                .replace("%winner%", killer.getName())
+                                .replace("%loser%", player.getName())
+                                .replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(victimUUID).getElo()))
+                                .replace("%winchance%", String.valueOf(winChance))
+                                .replace("%arena%", plugin.getArenaManager().getArena(player).getName()))
 
-                        // Get the win chance
-                        int winChance = plugin.getPlayerManager().CalculateWinChance(killerUUID, victimUUID);
+                );
 
-                        // Announce the winner and the win chance in chat
-                        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(
-                                plugin.getConfig().getString("messages.fight.end_global")
-                                        .replace("%winner%", killer.getName())
-                                        .replace("%loser%", player.getName())
-                                        .replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(victimUUID).getElo()))
-                                        .replace("%winchance%", String.valueOf(winChance))
-                                        .replace("%arena%", plugin.getArenaManager().getArena(player).getName()))
-
-                        );
-
-                        // Handle ELO calculations
-                        plugin.getPlayerManager().PlayerKill(killerUUID, victimUUID);
-                    }
-                }
+                // Handle ELO calculations
+                plugin.getPlayerManager().PlayerKill(killerUUID, victimUUID);
             }
-
             arena.end(player, false);
         }
     }
