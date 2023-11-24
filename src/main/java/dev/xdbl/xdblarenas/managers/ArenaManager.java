@@ -1,6 +1,7 @@
-package dev.xdbl.xdblarenas.arenas;
+package dev.xdbl.xdblarenas.managers;
 
 import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.xdblarenas.arenas.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -37,10 +38,9 @@ public class ArenaManager {
             String owner = config.getString("owner");
             Location spawnPoint1 = config.getLocation("spawnPoint1");
             Location spawnPoint2 = config.getLocation("spawnPoint2");
-            boolean totems = config.getBoolean("totems", true);
             boolean isPublic = config.getBoolean("public", false);
 
-            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, totems, file);
+            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, file);
             arenas.add(arena);
         }
 

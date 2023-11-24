@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.commands;
 
-import dev.xdbl.xdblarenas.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import dev.xdbl.xdblarenas.players.ArenaPlayer;
@@ -72,7 +72,13 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 sender.sendMessage(
                         MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.other_player_offline")))
                 );
-                plugin.getInviteManager().invites.remove(p);
+                return true;
+            }
+
+            if(invite.accepted){
+                sender.sendMessage(
+                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.invite_already_accepted")))
+                );
                 return true;
             }
 
@@ -151,7 +157,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             }
 
             // Starting arena
-
+            invite.accepted = true;
             invite.arena.start(invite, playersToFight);
 
             return true;
@@ -169,7 +175,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                     "<green>Reloaded!")
             );
             return true;
-        }
+        } // If the player is reload and the sender is op, reload the config
 
         Player invited = Bukkit.getPlayer(playerName);
 
@@ -178,7 +184,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                     MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.player_offline")))
             );
             return true;
-        }
+        } // If the player is offline, return
 
         Player inviter = (Player) sender;
 
@@ -187,13 +193,9 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                     MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.invite_self")))
             );
             return true;
-        }
+        } // If the inviter is the same as the invited, return
 
-        plugin.getArenaSelectGUI().openGUI(inviter);
-
-        InviteManager.Invite invite = new InviteManager.Invite(inviter, invited);
-
-        plugin.getInviteManager().selectingInvites.put(inviter, invite);
+        plugin.getArenaSelectGUI().openArenaList(inviter, invited);
         return true;
     }
 

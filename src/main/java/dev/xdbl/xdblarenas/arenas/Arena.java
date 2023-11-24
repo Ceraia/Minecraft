@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.arenas;
 
-import dev.xdbl.xdblarenas.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.Utils;
 import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
@@ -29,7 +29,8 @@ public class Arena {
     private final String name;
     private final String owner;
     private final List<Player> startPlayers = new ArrayList<>();
-    private boolean totems;
+    private final List<Location> placedBlocks = new ArrayList<>();
+    private final Map<Player, Location> priorLocations = new HashMap<>();
     private boolean isPublic;
     private File configFile;
     // after ready
@@ -37,11 +38,12 @@ public class Arena {
     // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
-    private final List<Location> placedBlocks = new ArrayList<>();
-    private final Map<Player, Location> priorLocations = new HashMap<>();
     private ArenaState state = ArenaState.WAITING;
+    private int timer;
+    public boolean totems = false;
 
-    public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean totems, File configFile) {
+
+    public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -49,7 +51,6 @@ public class Arena {
         this.spawnPoint1 = spawnPoint1;
         this.spawnPoint2 = spawnPoint2;
         this.isPublic = isPublic;
-        this.totems = totems;
 
         this.configFile = configFile;
     }
@@ -79,6 +80,28 @@ public class Arena {
             return false;
         }
         return true;
+    }
+
+    public boolean totems() {
+        return totems;
+    }
+
+    public void setTotems(boolean totems) {
+        this.totems = totems;
+    }
+
+    public void setTotems(boolean totems, boolean save) {
+        this.totems = totems;
+        if (save) {
+            saveArena();
+        }
+    }
+    public int getTimer() {
+        return timer;
+    }
+
+    public void setTimer(int timer) {
+        this.timer = timer;
     }
 
     public ArenaState getState() {
@@ -127,15 +150,6 @@ public class Arena {
         this.team1 = team1;
     }
 
-    public boolean hasTotems() {
-        return totems;
-    }
-
-    public boolean toggleTotems() {
-        totems = !totems;
-        return totems;
-    }
-
     public List<Player> getTeam2() {
         return team2;
     }
@@ -177,6 +191,9 @@ public class Arena {
 
     public void end(Player player, boolean quit) {
         boolean end = false;
+
+
+
         List<Player> winners = new ArrayList<>();
         List<Player> losers = new ArrayList<>();
 
@@ -363,10 +380,11 @@ public class Arena {
                                 plugin.getConfig().getString("messages.fight.starting")
                                         .replace("%time%", String.valueOf(i.get() - 1))
                         ), MiniMessage.miniMessage().deserialize(
-                                plugin.getArenaManager().getArena(pl).hasTotems() ?
-                                        plugin.getConfig().getString("messages.fight.totems_enabled")
-                                        : plugin.getConfig().getString("messages.fight.totems_disabled")
-                        )));
+                                        Objects.requireNonNull(plugin.getArenaManager().getArena(pl).totems ?
+                                                plugin.getConfig().getString("messages.fight.totems_enabled")
+                                                : plugin.getConfig().getString("messages.fight.totems_disabled"))
+                        )
+                        ));
                     }
                 }
 

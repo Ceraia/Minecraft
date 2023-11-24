@@ -1,13 +1,8 @@
 package dev.xdbl.xdblarenas.commands;
 
-import dev.xdbl.xdblarenas.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -217,13 +212,7 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            plugin.getArenaSelectGUI().openGUI(player);
-
-            InviteManager.Invite invite = new InviteManager.Invite(player, invited);
-            invite.group = true;
-
-            plugin.getInviteManager().selectingInvites.put(player, invite);
-
+            plugin.getArenaSelectGUI().openArenaList(player, invited);
         }
 
         return true;

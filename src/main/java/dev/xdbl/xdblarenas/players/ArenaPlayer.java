@@ -152,8 +152,6 @@ public class ArenaPlayer {
         }
     }
 
-
-
     public void addLog(String string){
         logs.add(string);
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);

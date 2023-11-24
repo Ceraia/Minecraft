@@ -100,40 +100,6 @@ public class CommandArena implements CommandExecutor, TabCompleter {
             arenaPublic(sender, args);
             return true;
         }
-        if (args[0].equalsIgnoreCase("totems")){
-            if (args.length == 1) {
-                badUsage(sender);
-                return true;
-            }
-
-            String name = args[1];
-            Arena arena = plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
-            if (arena == null) {
-                sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_found"))
-                );
-                return true;
-            }
-            if (!arena.getOwner().equals(sender.getName())) {
-                sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_yours"))
-                );
-                return true;
-            }
-
-            boolean totems = arena.toggleTotems();
-
-            if (totems) {
-                sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.totems.enabled"))
-                );
-            } else {
-                sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.totems.disabled"))
-                );
-            }
-            return true;
-        }
         else {
             badUsage(sender);
             arenaHelp(sender);
@@ -146,11 +112,10 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         List<String> arenas = new ArrayList<>();
 
         if (args.length == 1) {
-            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2", "totems", "top", "scoreboard");
+            return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2", "top", "scoreboard");
         } else if (args.length == 2 && (
                 args[0].equalsIgnoreCase("delete") ||
                         args[0].equalsIgnoreCase("public") ||
-                        args[0].equalsIgnoreCase("totems") ||
                         args[0].equalsIgnoreCase("sp1") ||
                         args[0].equalsIgnoreCase("sp2"))) {
             plugin.getArenaManager().getArenas().forEach(a ->{
@@ -263,7 +228,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         File file = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
 
-        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, true, file);
+        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, file);
 
         arena.setSpawnPoint1(((Player) sender).getLocation());
         arena.setSpawnPoint2(((Player) sender).getLocation());
