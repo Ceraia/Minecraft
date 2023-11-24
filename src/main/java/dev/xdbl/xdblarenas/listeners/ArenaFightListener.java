@@ -2,7 +2,7 @@ package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
-import dev.xdbl.xdblarenas.invites.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,7 +14,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
@@ -104,11 +103,10 @@ public class ArenaFightListener implements Listener {
 
             if (invite != null) {
                 if (arena.totems) {
-                    plugin.getLogger().info("Totems are allowed");
                     if (player.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING || player.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING) {
                         return;
                     }
-                } else plugin.getLogger().info("Totems are disallowed");
+                }
             }
 
 

@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.arenas;
 
-import dev.xdbl.xdblarenas.invites.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.Utils;
 import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
@@ -379,13 +379,12 @@ public class Arena {
                         pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
                                 plugin.getConfig().getString("messages.fight.starting")
                                         .replace("%time%", String.valueOf(i.get() - 1))
-                        ), Component.empty()));
-//                                MiniMessage.miniMessage().deserialize(
-//                                plugin.getArenaManager().getArena(pl).hasTotems() ?
-//                                        plugin.getConfig().getString("messages.fight.totems_enabled")
-//                                        : plugin.getConfig().getString("messages.fight.totems_disabled")
-//                        ))
-
+                        ), MiniMessage.miniMessage().deserialize(
+                                        Objects.requireNonNull(plugin.getArenaManager().getArena(pl).totems ?
+                                                plugin.getConfig().getString("messages.fight.totems_enabled")
+                                                : plugin.getConfig().getString("messages.fight.totems_disabled"))
+                        )
+                        ));
                     }
                 }
 

@@ -1,4 +1,4 @@
-package dev.xdbl.xdblarenas.invites;
+package dev.xdbl.xdblarenas.managers;
 
 import dev.xdbl.xdblarenas.arenas.Arena;
 import org.bukkit.entity.Player;

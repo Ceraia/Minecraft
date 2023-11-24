@@ -1,11 +1,11 @@
 package dev.xdbl.xdblarenas;
 
-import dev.xdbl.xdblarenas.arenas.ArenaManager;
+import dev.xdbl.xdblarenas.managers.ArenaManager;
 import dev.xdbl.xdblarenas.commands.*;
-import dev.xdbl.xdblarenas.invites.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.listeners.*;
 import dev.xdbl.xdblarenas.metrics.Metrics;
-import dev.xdbl.xdblarenas.players.PlayerManager;
+import dev.xdbl.xdblarenas.managers.PlayerManager;
 import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
 import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
 import org.bukkit.plugin.java.JavaPlugin;

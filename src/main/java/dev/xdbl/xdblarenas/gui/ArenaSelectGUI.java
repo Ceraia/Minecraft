@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.gui;
 
-import dev.xdbl.xdblarenas.invites.InviteManager;
+import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import dev.xdbl.xdblarenas.arenas.Arena;
 import net.kyori.adventure.text.Component;
@@ -19,7 +19,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class ArenaSelectGUI implements Listener {
-
     private static Component INVENTORY_NAME_ARENAS;
     private static Component INVENTORY_NAME_TOTEMS;
     private final XDBLArena plugin;
@@ -35,7 +34,6 @@ public class ArenaSelectGUI implements Listener {
     }
 
     public void reloadConfig() {
-
         INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
         INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name")));
     }
@@ -224,7 +222,8 @@ public class ArenaSelectGUI implements Listener {
             String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.invite_message"))
                     .replace("%inviter%", inviter.getName())
                     .replace("%arena_name%", arena.getName())
-                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(invite.invited.getUniqueId(), inviter.getUniqueId()) + "%");
+                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(invite.invited.getUniqueId(), inviter.getUniqueId()) + "%")
+                    .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>");
             // Get the invite message from the config and replace the placeholders
 
             Objects.requireNonNull(plugin.getServer().getPlayer(invite.invited.getUniqueId())).sendMessage(MiniMessage.miniMessage().deserialize(invite_message));// Send the actual message

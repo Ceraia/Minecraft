@@ -1,6 +1,5 @@
 package dev.xdbl.xdblarenas.commands;
 
-import dev.xdbl.xdblarenas.invites.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
