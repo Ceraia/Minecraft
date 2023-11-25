@@ -1,7 +1,7 @@
 package dev.xdbl.xdblarenas.managers;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

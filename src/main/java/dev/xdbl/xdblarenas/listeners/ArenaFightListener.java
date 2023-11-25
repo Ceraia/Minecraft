@@ -1,7 +1,7 @@
 package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.types.Arena;
 import dev.xdbl.xdblarenas.managers.InviteManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;

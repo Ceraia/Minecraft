@@ -1,8 +1,8 @@
-package dev.xdbl.xdblarenas.gui;
+package dev.xdbl.xdblarenas.types;
 
 import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.types.Arena;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;

@@ -1,8 +1,7 @@
 package dev.xdbl.xdblarenas.listeners;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.events.PlayerEvents;
-import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
+import dev.xdbl.xdblarenas.managers.EloScoreboardManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -17,15 +16,15 @@ public class PlayerEloChangeListener implements Listener {
     }
 
     @EventHandler // Custom on player Elo change event to update the scoreboard
-    public void onPlayerEloChange(PlayerEvents event) {
-        EloScoreboard eloScoreboard = new EloScoreboard(plugin);
-        eloScoreboard.updateScoreboard();
+    public void onPlayerEloChange(PlayerEventListener event) {
+        EloScoreboardManager eloScoreboardManager = new EloScoreboardManager(plugin);
+        eloScoreboardManager.updateScoreboard();
     }
 
     @EventHandler // On player join event to update the scoreboard
     public void onPlayerJoin(PlayerJoinEvent event) {
-        EloScoreboard eloScoreboard = new EloScoreboard(plugin);
-        eloScoreboard.updateScoreboard();
+        EloScoreboardManager eloScoreboardManager = new EloScoreboardManager(plugin);
+        eloScoreboardManager.updateScoreboard();
     }
 
 }

@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.listeners;
 
-import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.types.Arena;
 import dev.xdbl.xdblarenas.XDBLArena;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;

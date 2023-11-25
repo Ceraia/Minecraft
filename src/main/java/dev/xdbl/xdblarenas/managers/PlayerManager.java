@@ -1,7 +1,7 @@
 package dev.xdbl.xdblarenas.managers;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import dev.xdbl.xdblarenas.types.ArenaPlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -130,5 +130,14 @@ public class PlayerManager {
             e.printStackTrace();
             return null; // Handle the exception based on your needs
         }
+    }
+
+    public ArenaPlayer getPlayer(UUID uniqueId) {
+        for (ArenaPlayer arenaPlayer : arenaPlayers) {
+            if (arenaPlayer.getUUID().equals(uniqueId)) {
+                return arenaPlayer;
+            }
+        }
+        return null;
     }
 }

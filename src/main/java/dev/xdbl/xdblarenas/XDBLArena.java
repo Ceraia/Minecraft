@@ -1,13 +1,11 @@
 package dev.xdbl.xdblarenas;
 
-import dev.xdbl.xdblarenas.managers.ArenaManager;
+import dev.xdbl.xdblarenas.managers.*;
 import dev.xdbl.xdblarenas.commands.*;
-import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.listeners.*;
-import dev.xdbl.xdblarenas.metrics.Metrics;
-import dev.xdbl.xdblarenas.managers.PlayerManager;
-import dev.xdbl.xdblarenas.gui.ArenaSelectGUI;
-import dev.xdbl.xdblarenas.scoreboards.EloScoreboard;
+import dev.xdbl.xdblarenas.misc.Metrics;
+import dev.xdbl.xdblarenas.types.ArenaSelectGUI;
+import dev.xdbl.xdblarenas.types.MarketGUI;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -17,33 +15,36 @@ public class XDBLArena extends JavaPlugin {
 
     private ArenaManager arenaManager;
     private InviteManager inviteManager;
+    private MarketItemManager marketItemManager;
+    private EloScoreboardManager eloScoreboardManager;
     private ArenaSelectGUI arenaSelectGUI;
     private CommandGVG commandGVG;
     private CommandPVP commandPVP;
     private CommandArena commandArena;
     private PlayerManager playerManager;
-    private EloScoreboard eloScoreboard;
     private CommandMod commandMod;
     private CommandTop commandTop;
     private CommandProfile commandProfile;
-
-    int pluginId = 20303;
-
     Metrics metrics;
+    private CommandMarket commandMarket;
+    private MarketGUI marketGUI;
 
     public void onEnable() {
-        metrics = new Metrics(this, pluginId);
+        metrics = new Metrics(this, 20303);
 
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
+        new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/players").mkdirs();
 
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
+        this.marketItemManager = new MarketItemManager(this);
+        this.eloScoreboardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
 
-        this.eloScoreboard = new EloScoreboard(this);
         this.arenaSelectGUI = new ArenaSelectGUI(this);
+        this.marketGUI = new MarketGUI(this);
 
         this.commandGVG = new CommandGVG(this);
         this.commandPVP = new CommandPVP(this);
@@ -51,6 +52,7 @@ public class XDBLArena extends JavaPlugin {
         this.commandMod = new CommandMod(this);
         this.commandTop = new CommandTop(this);
         this.commandProfile = new CommandProfile(this);
+        this.commandMarket = new CommandMarket(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
@@ -71,6 +73,8 @@ public class XDBLArena extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
+
+        Objects.requireNonNull(getCommand("market")).setExecutor(commandMarket);
     }
 
     public void onDisable() {
@@ -89,8 +93,16 @@ public class XDBLArena extends JavaPlugin {
         return inviteManager;
     }
 
+    public MarketItemManager getMarketItemManager() {
+        return marketItemManager;
+    }
+
     public ArenaSelectGUI getArenaSelectGUI() {
         return arenaSelectGUI;
+    }
+    
+    public MarketGUI getMarketGUI() {
+        return marketGUI;
     }
 
     public CommandGVG getGroupManager() {

@@ -1,6 +1,6 @@
 package dev.xdbl.xdblarenas.managers;
 
-import dev.xdbl.xdblarenas.arenas.Arena;
+import dev.xdbl.xdblarenas.types.Arena;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
