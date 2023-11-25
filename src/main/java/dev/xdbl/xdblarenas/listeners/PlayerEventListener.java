@@ -1,18 +1,18 @@
-package dev.xdbl.xdblarenas.events;
+package dev.xdbl.xdblarenas.listeners;
 
-import dev.xdbl.xdblarenas.players.ArenaPlayer;
+import dev.xdbl.xdblarenas.types.ArenaPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class PlayerEvents extends Event {
+public class PlayerEventListener extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
     private final ArenaPlayer arenaPlayer;
 
-    public PlayerEvents(Player player, ArenaPlayer arenaPlayer) {
+    public PlayerEventListener(Player player, ArenaPlayer arenaPlayer) {
         this.player = player;
         this.arenaPlayer = arenaPlayer;
     }

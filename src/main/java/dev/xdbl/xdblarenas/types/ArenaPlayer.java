@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.players;
+package dev.xdbl.xdblarenas.types;
 
 import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.events.PlayerEvents;
+import dev.xdbl.xdblarenas.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -58,7 +58,7 @@ public class ArenaPlayer {
         config.set("elo", elo);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
+            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -73,7 +73,7 @@ public class ArenaPlayer {
         config.set("pvpbanned", pvpbanned);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
+            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);
@@ -89,7 +89,7 @@ public class ArenaPlayer {
         config.set("arenabanned", arenabanned);
         try {
             // Trigger the custom event when Elo changes
-            PlayerEvents eloChangeEvent = new PlayerEvents(Bukkit.getPlayer(uuid), this);
+            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
             Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
 
             config.save(configFile);

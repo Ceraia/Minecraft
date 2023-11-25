@@ -1,4 +1,4 @@
-package dev.xdbl.xdblarenas.arenas;
+package dev.xdbl.xdblarenas.types;
 
 import dev.xdbl.xdblarenas.managers.InviteManager;
 import dev.xdbl.xdblarenas.Utils;
@@ -41,7 +41,6 @@ public class Arena {
     private ArenaState state = ArenaState.WAITING;
     private int timer;
     public boolean totems = false;
-
 
     public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
         this.plugin = plugin;
