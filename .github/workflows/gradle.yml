@@ -46,7 +46,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
+          tag_name: $(cat release_name.txt)
           release_name: Release $(cat release_name.txt)
           body: |
             This is an automatically generated release.
