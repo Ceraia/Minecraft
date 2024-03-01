@@ -1,5 +1,4 @@
-# XDBLArena, portable easy to use arenas.
-### Overly branded as xdbl.dev, I know.
+# Double, portable easy to use arenas.
 
 This is a project that I initially commissioned and since then have edited substantially to allow a lot of different things.
 
