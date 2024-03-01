@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.commands;
+package dev.xdbl.commands;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
+import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.Double;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,9 +17,9 @@ import java.util.Objects;
 
 public class CommandMod implements CommandExecutor, TabCompleter {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public CommandMod(XDBLArena plugin) {
+    public CommandMod(Double plugin) {
         this.plugin = plugin;
     }
 

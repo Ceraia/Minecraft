@@ -1,6 +1,6 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
+import dev.xdbl.types.ArenaPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

@@ -1,6 +1,6 @@
-package dev.xdbl.xdblarenas;
+package dev.xdbl;
 
-import dev.xdbl.xdblarenas.types.Arena;
+import dev.xdbl.types.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -12,7 +12,7 @@ import java.io.File;
 
 public class Utils {
 
-    public static void revertInventory(XDBLArena plugin, Player pl, Arena arena) {
+    public static void revertInventory(Double plugin, Player pl, Arena arena) {
         try {
             File file = new File(plugin.getDataFolder(), "data/pinventory_" + arena.getName() + "_" + pl.getName() + ".yml");
 
@@ -36,7 +36,7 @@ public class Utils {
         }
     }
 
-    public static void teleportPlayerToSpawn(XDBLArena plugin, Player player, Arena arena) {
+    public static void teleportPlayerToSpawn(Double plugin, Player player, Arena arena) {
         String useLocation = plugin.getConfig().getString("spawn_teleport.use");
         if (useLocation.equalsIgnoreCase("command")) {
             Bukkit.dispatchCommand(

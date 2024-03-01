@@ -1,9 +1,9 @@
-package dev.xdbl.xdblarenas.commands;
+package dev.xdbl.commands;
 
-import dev.xdbl.xdblarenas.managers.InviteManager;
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.Arena;
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
+import dev.xdbl.managers.InviteManager;
+import dev.xdbl.Double;
+import dev.xdbl.types.Arena;
+import dev.xdbl.types.ArenaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,9 +20,9 @@ import java.util.Objects;
 
 public class CommandPVP implements CommandExecutor, TabCompleter {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public CommandPVP(XDBLArena plugin) {
+    public CommandPVP(Double plugin) {
         this.plugin = plugin;
     }
 

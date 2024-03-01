@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.managers;
+package dev.xdbl.managers;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.Arena;
+import dev.xdbl.Double;
+import dev.xdbl.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class ArenaManager {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
     private final List<Arena> arenas = new ArrayList<>();
     private final Map<Player, Arena> playersInArena = new HashMap<>();
 
-    public ArenaManager(XDBLArena plugin) {
+    public ArenaManager(Double plugin) {
         this.plugin = plugin;
 
         // Load arenas

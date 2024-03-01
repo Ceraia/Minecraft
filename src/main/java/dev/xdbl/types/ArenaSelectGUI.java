@@ -1,8 +1,7 @@
-package dev.xdbl.xdblarenas.types;
+package dev.xdbl.types;
 
-import dev.xdbl.xdblarenas.managers.InviteManager;
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.Arena;
+import dev.xdbl.Double;
+import dev.xdbl.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -21,10 +20,10 @@ import java.util.*;
 public class ArenaSelectGUI implements Listener {
     private static Component INVENTORY_NAME_ARENAS;
     private static Component INVENTORY_NAME_TOTEMS;
-    private final XDBLArena plugin;
+    private final Double plugin;
     private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
-    public ArenaSelectGUI(XDBLArena plugin) {
+    public ArenaSelectGUI(Double plugin) {
         this.plugin = plugin;
 
         INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
@@ -75,6 +74,7 @@ public class ArenaSelectGUI implements Listener {
             for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
                 lore.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", a.getName())
                         .replace("%arena_owner%", a.getOwner())
+                        .replace("%totems%", a.totems ? "<green>enabled</green>" : "<red>disabled</red>")
                 ));
             }
 
@@ -104,6 +104,7 @@ public class ArenaSelectGUI implements Listener {
                 Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.enable.item"))
         ))); // Create the itemstack
         ItemMeta metaEnable = itemStackEnable.getItemMeta();
+
         metaEnable.displayName(
                 MiniMessage.miniMessage().deserialize(
                         Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.enable.name"))
@@ -149,17 +150,17 @@ public class ArenaSelectGUI implements Listener {
 
         ItemMeta metaArena = itemStackArena.getItemMeta();
         metaArena.displayName(
-                MiniMessage.miniMessage().deserialize(
-                        Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
-                                .replace("%arena_name%", arena.getName())
-                                .replace("%arena_owner%", arena.getOwner())
-                )
+                MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
+                        .replace("%arena_name%", arena.getName())
+                        .replace("%arena_owner%", arena.getOwner()))
+
         );
 
         List<Component> loreArena = new ArrayList<>();
         for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
             loreArena.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", arena.getName())
                     .replace("%arena_owner%", arena.getOwner())
+                    .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>")
             ));
         }
 
@@ -174,7 +175,7 @@ public class ArenaSelectGUI implements Listener {
             return;
         } // If the item doesn't exist or is air, return
 
-        if (Objects.requireNonNull(e.getClickedInventory()).getType() == InventoryType.PLAYER) {
+        if (Objects.requireNonNull(e.getInventory()).getType() == InventoryType.PLAYER) {
             return;
         } // If the inventory is the player's inventory, return
 
@@ -192,8 +193,8 @@ public class ArenaSelectGUI implements Listener {
 
             if (arena == null || arena.getState() != Arena.ArenaState.WAITING) { // Somehow arena doesn't work, purely debug
                 inviter.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready")))
-                );
+                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready"))))
+                ;
                 return;
             }
 
@@ -216,13 +217,13 @@ public class ArenaSelectGUI implements Listener {
 
             inviter.sendMessage(
                     MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.invite_sent"))
-                            .replace("%player%", invite.invited.getName()))
-            ); // Send the invite confirmation message
+                            .replace("%player%", invite.invited.getName())))
+            ; // Send the invite confirmation message
 
             String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.invite_message"))
                     .replace("%inviter%", inviter.getName())
                     .replace("%arena_name%", arena.getName())
-                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(invite.invited.getUniqueId(), inviter.getUniqueId()) + "%")
+                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
                     .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>");
             // Get the invite message from the config and replace the placeholders
 

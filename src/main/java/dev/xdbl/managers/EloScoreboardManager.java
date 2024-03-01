@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.managers;
+package dev.xdbl.managers;
 
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.Double;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -9,9 +9,9 @@ import org.bukkit.scoreboard.*;
 
 public class EloScoreboardManager {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public EloScoreboardManager(XDBLArena plugin) {
+    public EloScoreboardManager(Double plugin) {
         this.plugin = plugin;
     }
 

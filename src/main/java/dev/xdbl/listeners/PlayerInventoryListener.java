@@ -1,6 +1,6 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,9 +11,9 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 
 public class PlayerInventoryListener implements Listener {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public PlayerInventoryListener(XDBLArena plugin) {
+    public PlayerInventoryListener(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

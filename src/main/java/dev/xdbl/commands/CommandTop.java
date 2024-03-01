@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.commands;
+package dev.xdbl.commands;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
+import dev.xdbl.Double;
+import dev.xdbl.types.ArenaPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandTop implements CommandExecutor, TabCompleter {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public CommandTop(XDBLArena plugin) {
+    public CommandTop(Double plugin) {
         this.plugin = plugin;
     }
 

@@ -1,8 +1,8 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.Arena;
-import dev.xdbl.xdblarenas.managers.InviteManager;
+import dev.xdbl.Double;
+import dev.xdbl.types.Arena;
+import dev.xdbl.managers.InviteManager;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -21,9 +21,9 @@ import java.util.UUID;
 
 public class ArenaFightListener implements Listener {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public ArenaFightListener(XDBLArena plugin) {
+    public ArenaFightListener(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

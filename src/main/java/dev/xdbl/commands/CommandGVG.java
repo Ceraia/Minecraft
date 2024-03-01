@@ -1,6 +1,6 @@
-package dev.xdbl.xdblarenas.commands;
+package dev.xdbl.commands;
 
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.Double;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
     private final Map<Player, List<Player>> groups = new HashMap<>();
     private final Map<Player, Player> playersByGroup = new HashMap<>();
 
     private final Map<Player, Player> invites = new HashMap<>();
 
-    public CommandGVG(XDBLArena plugin) {
+    public CommandGVG(Double plugin) {
         this.plugin = plugin;
     }
 

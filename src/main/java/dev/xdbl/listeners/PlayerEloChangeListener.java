@@ -1,16 +1,16 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.managers.EloScoreboardManager;
+import dev.xdbl.managers.EloScoreboardManager;
+import dev.xdbl.Double;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerEloChangeListener implements Listener {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public PlayerEloChangeListener(XDBLArena plugin) {
+    public PlayerEloChangeListener(Double plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
