@@ -27,27 +27,22 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
-      # Copy the JAR file to a location where it can be included in the release
-      - name: Copy JAR file
-        run: cp build/libs/*.jar release.jar
-
   release:
     needs: build
     runs-on: self-hosted
     steps:
-      - name: Generate Release Name
-        id: generate_release_name
-        run: |
-          echo "Release $(date +'%Y-%U') - ${{ github.sha }}" >> release_name.txt
-          
+      - name: Get JAR filename
+        id: get_jar_filename
+        run: echo "::set-output name=jar_filename::$(basename $(ls build/libs/*.jar) .jar)"
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: $(cat release_name.txt)
-          release_name: Release $(cat release_name.txt)
+          tag_name: ${{ steps.get_jar_filename.outputs.jar_filename }}
+          release_name: ${{ steps.get_jar_filename.outputs.jar_filename }}
           body: |
             This is an automatically generated release.
           draft: false
@@ -61,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./release.jar
-          asset_name: release.jar
+          asset_path: build/libs/*.jar
+          asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
