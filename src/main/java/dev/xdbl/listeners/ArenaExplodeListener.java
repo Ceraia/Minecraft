@@ -1,6 +1,6 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,9 +14,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ArenaExplodeListener implements Listener {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
-    public ArenaExplodeListener(XDBLArena plugin) {
+    public ArenaExplodeListener(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

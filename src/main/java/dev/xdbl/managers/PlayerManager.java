@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.managers;
+package dev.xdbl.managers;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.ArenaPlayer;
+import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.Double;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -11,10 +11,10 @@ import java.util.*;
 
 public class PlayerManager {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
     private final List<ArenaPlayer> arenaPlayers = new ArrayList<>();
 
-    public PlayerManager(XDBLArena plugin) {
+    public PlayerManager(Double plugin) {
         this.plugin = plugin;
 
         // Load arenaPlayers
@@ -92,6 +92,16 @@ public class PlayerManager {
         int winChance = (int) (expectedScoreKiller * 100);
 
         return winChance;
+    }
+
+    public int CalculateLossChance(UUID playerKiller, UUID playerVictim){
+        ArenaPlayer killer = getArenaPlayer(playerKiller);
+        ArenaPlayer victim = getArenaPlayer(playerVictim);
+
+        double expectedScoreVictim = 1.0 / (1.0 + Math.pow(10, (killer.getElo() - victim.getElo()) / 400.0));
+        int lossChance = (int) (expectedScoreVictim * 100);
+
+        return lossChance;
     }
 
     private ArenaPlayer createNewArenaPlayer(UUID playerUUID) {

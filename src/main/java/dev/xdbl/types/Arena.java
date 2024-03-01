@@ -1,8 +1,8 @@
-package dev.xdbl.xdblarenas.types;
+package dev.xdbl.types;
 
-import dev.xdbl.xdblarenas.managers.InviteManager;
-import dev.xdbl.xdblarenas.Utils;
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.Utils;
+import dev.xdbl.Double;
+import dev.xdbl.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class Arena {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
     // before ready
     private final String name;
@@ -42,7 +42,7 @@ public class Arena {
     private int timer;
     public boolean totems = false;
 
-    public Arena(XDBLArena plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
+    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -328,7 +328,7 @@ public class Arena {
             for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                 pl.sendMessage(
                         MiniMessage.miniMessage().deserialize(
-                                plugin.getConfig().getString("messages.fight.problem_saving_inventories")
+                                Objects.requireNonNull(plugin.getConfig().getString("messages.fight.problem_saving_inventories"))
                         )
                 );
             }

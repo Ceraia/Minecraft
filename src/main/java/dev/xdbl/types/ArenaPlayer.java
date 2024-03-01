@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.types;
+package dev.xdbl.types;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.listeners.PlayerEventListener;
+import dev.xdbl.Double;
+import dev.xdbl.listeners.PlayerEventListener;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ArenaPlayer {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
     private final UUID uuid;
     private int draws;
     private boolean pvpbanned;
@@ -27,7 +27,7 @@ public class ArenaPlayer {
     private long lastFought;
 
 
-    public ArenaPlayer(XDBLArena plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, int draws, List<String> logs, long lastFought, File configFile) {
+    public ArenaPlayer(Double plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, int draws, List<String> logs, long lastFought, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;

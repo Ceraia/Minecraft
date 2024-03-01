@@ -1,12 +1,9 @@
-package dev.xdbl.xdblarenas.managers;
+package dev.xdbl.managers;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.types.Arena;
-import dev.xdbl.xdblarenas.types.MarketItem;
-import org.bukkit.Location;
+import dev.xdbl.Double;
+import dev.xdbl.types.MarketItem;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -15,11 +12,11 @@ import java.util.*;
 
 public class MarketItemManager {
 
-    private final XDBLArena plugin;
+    private final Double plugin;
 
     private final List<MarketItem> marketItems = new ArrayList<>();
 
-    public MarketItemManager(XDBLArena plugin) {
+    public MarketItemManager(Double plugin) {
         this.plugin = plugin;
 
         // Load arenas

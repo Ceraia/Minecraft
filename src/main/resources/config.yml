@@ -107,7 +107,7 @@ messages:
       lore:
         - '<yellow><bold>Arena name: <green>%arena_name%'
         - '<yellow><bold>Arena owner: <green>%arena_owner%'
-        - '<yellow><bold>Totems: %totemsenabled%'
+        - '<yellow><bold>Totems: %totems%'
     arena_not_ready: '<red>Arena is not ready'
     invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, totems are %totems% you have a %winchance% chance of winning!'
   totem_select_gui:
@@ -170,22 +170,6 @@ messages:
     problem_saving_inventories: '<red>Problem saving inventories'
     end: '<green>Fight ended! Winner: %winner%, teleporting in %time% seconds'
     end_global: '<green>%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'
-  market:
-    help:
-      - '<yellow><bold>Market Help'
-      - '<green>/market - Open the market'
-      - '<green>/market sell <price> - Sell the currently held item for the specified price'
-      - '<green>/market buy - Open the market'
-    create:
-      success: '<green>Item added to the market'
-      fail: '<red>Fail???? Pls fix me, tell axo about this'
-      no_item: '<red>Item not found'
-    item_lore:
-      - '<yellow><bold>Price: <green>%price%'
-      - '<yellow><bold>Click to buy'
-    inventory_name: '<yellow><bold>MARKET'
-    item_bought: '<green>You bought %item% for %price%'
-    item_not_found: '<red>Item not found'
   profile:
     - '<yellow><bold>Profile of %player%'
     - '<yellow><bold>ELO: <green>%elo%'

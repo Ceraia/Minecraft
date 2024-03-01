@@ -1,12 +1,9 @@
-package dev.xdbl.xdblarenas.types;
+package dev.xdbl.types;
 
-import dev.xdbl.xdblarenas.XDBLArena;
-import dev.xdbl.xdblarenas.listeners.PlayerEventListener;
+import dev.xdbl.Double;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
@@ -15,13 +12,13 @@ import java.util.*;
 
 public class MarketItem {
     private ItemStack itemstack;
-    private XDBLArena plugin;
+    private Double plugin;
     public UUID uuid;
     public UUID owneruuid;
     private int price;
     public final File configFile;
 
-    public MarketItem(XDBLArena plugin, UUID uuid, UUID owneruuid, int price, ItemStack itemStack, File configFile) {
+    public MarketItem(Double plugin, UUID uuid, UUID owneruuid, int price, ItemStack itemStack, File configFile) {
         this.plugin = plugin;
 
         this.uuid = uuid;

@@ -1,7 +1,7 @@
-package dev.xdbl.xdblarenas.listeners;
+package dev.xdbl.listeners;
 
-import dev.xdbl.xdblarenas.types.Arena;
-import dev.xdbl.xdblarenas.XDBLArena;
+import dev.xdbl.types.Arena;
+import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,9 +10,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class ArenaBlockListener implements Listener {
 
-    private XDBLArena plugin;
+    private Double plugin;
 
-    public ArenaBlockListener(XDBLArena plugin) {
+    public ArenaBlockListener(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
