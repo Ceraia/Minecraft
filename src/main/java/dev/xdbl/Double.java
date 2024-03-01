@@ -8,6 +8,8 @@ import dev.xdbl.managers.*;
 import dev.xdbl.commands.*;
 import dev.xdbl.listeners.*;
 import dev.xdbl.types.ArenaSelectGUI;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -27,6 +29,7 @@ public class Double extends JavaPlugin {
     private CommandMod commandMod;
     private CommandTop commandTop;
     private CommandProfile commandProfile;
+    private CommandBidenBlast commandBidenBlast;
     Metrics metrics;
 
     public void onEnable() {
@@ -51,12 +54,14 @@ public class Double extends JavaPlugin {
         this.commandMod = new CommandMod(this);
         this.commandTop = new CommandTop(this);
         this.commandProfile = new CommandProfile(this);
+        this.commandBidenBlast = new CommandBidenBlast(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
         new PlayerInventoryListener(this);
         new ArenaBlockListener(this);
         new ArenaExplodeListener(this);
+        new SpellsListener(this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(commandPVP);
 
@@ -71,6 +76,8 @@ public class Double extends JavaPlugin {
 
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
+
+        Objects.requireNonNull(getCommand("bidenblast")).setExecutor(commandBidenBlast);
     }
 
     public void onDisable() {
@@ -100,4 +107,5 @@ public class Double extends JavaPlugin {
     public CommandGVG getGroupManager() {
         return commandGVG;
     }
+
 }
