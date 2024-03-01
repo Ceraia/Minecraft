@@ -26,7 +26,11 @@ jobs:
 
       - name: Build with Gradle Wrapper
         run: ./gradlew build
-        
+
+  release:
+    needs: build
+    runs-on: self-hosted
+    steps:
       - name: Get JAR filename
         id: get_jar_filename
         run: echo "::set-output name=jar_filename::$(basename $(find build/libs -name '*.jar') .jar)"
