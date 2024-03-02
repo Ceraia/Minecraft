@@ -75,3 +75,22 @@ jobs:
           content: |
             New automatically generated release: ${{ steps.get_jar_filename.outputs.jar_filename }}
             ```${{ github.event.head_commit.message }}```
+
+  notify:
+    # If build or release fails, notify the Discord channel
+    needs: [build, release]
+    runs-on: self-hosted
+    if: failure()
+    steps:
+      - name: Notify Discord
+        uses: tsickert/discord-webhook@v5.3.0
+        with:
+          webhook-url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
+          content: |
+            Build or release failed for ${{ github.repository }}
+            Commit: ${{ github.sha }}
+            ${{ github.event.head_commit.message }}
+            ${{ job.status }}
+            ${{ job.conclusion }}
+            ${{ job.steps[*].conclusion }}
+            ${{ job.steps[*].name }}
