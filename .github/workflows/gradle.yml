@@ -66,3 +66,10 @@ jobs:
           asset_path: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
+
+      # Upload the JAR file to a Discord webhook
+      - name: Upload JAR to Discord Webhook
+        uses: Ilshidur/action-discord@v2
+        with:
+          webhook_url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
+          files: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
