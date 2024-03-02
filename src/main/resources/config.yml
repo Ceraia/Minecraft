@@ -15,20 +15,6 @@ spawn_teleport:
 
 elo-scoreboard: true # Whether to enable the scoreboard for player rankings.
 
-custom-enchants:
-  schrodingers-instant-death:
-    potion-effect: 'HARMING:100:100'
-    target: 'RANDOM'
-    chance: 1.0
-    cooldown: 10
-    message: '<red>You have observed the cat, meow!'
-    lightning-strike: false
-    name: '<red>Schrodingers Instant Death'
-    lore:
-      - '<red>Chance: 100%'
-      - '<red>Cooldown: 10 seconds'
-      - '<red>Target: Random'
-
 cooldown:
   before: 5 # seconds
   after: 5 # seconds
