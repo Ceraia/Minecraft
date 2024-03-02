@@ -44,9 +44,6 @@ jobs:
           draft: false
           prerelease: true
 
-      - name: List files in build/libs directory
-        run: ls -la build/libs
-
       # Upload the JAR file as an asset of the release
       - name: Upload Release Asset
         id: upload-release-asset
@@ -55,6 +52,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "build/libs/*.jar"
+          asset_path: "build/libs/Double-0.24.1-build-030203.jar" # Replace this with the actual name of the JAR file
           asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
