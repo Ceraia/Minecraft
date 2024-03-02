@@ -72,4 +72,6 @@ jobs:
         with:
           webhook-url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
           filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
-          content: "New release: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar"
+          content: |
+            New automatically generated release: ${{ steps.get_jar_filename.outputs.jar_filename }}
+            ```${{ github.event.head_commit.message }}```
