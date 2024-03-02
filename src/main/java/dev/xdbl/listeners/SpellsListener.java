@@ -1,14 +1,16 @@
 package dev.xdbl.listeners;
 
 import dev.xdbl.Double;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Trident;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Objects;
 
@@ -48,6 +50,80 @@ public class SpellsListener implements Listener {
                     trident.addScoreboardTag("getauttahere"); // Add a tag to the Trident to identify it later
                     trident.addPassenger(p);
                     p.sendMessage("You casted Getauttahere!");
+                } else if (name.equals("Shitstorm")){
+                    event.setCancelled(true);
+                    for(int i = 0; i < 1; i++) {
+                        Arrow arrow = p.launchProjectile(org.bukkit.entity.Arrow.class);
+                        arrow.setVelocity(p.getLocation().getDirection().multiply(10));
+                        arrow.addScoreboardTag("explosive");
+                    }
+                } else if (name.equals("Kamikazesheep")){
+                    event.setCancelled(true);
+
+                    Sheep sheep = p.getWorld().spawn(p.getLocation(), Sheep.class);
+
+                    TNTPrimed tnt = p.getWorld().spawn(p.getLocation(), TNTPrimed.class);
+                    tnt.setFuseTicks(100);
+
+
+                    sheep.addPassenger(tnt);
+                    sheep.addScoreboardTag("kamikaze");
+                    sheep.setCustomNameVisible(true);
+                    sheep.customName(MiniMessage.miniMessage().deserialize("jeb_"));
+
+                    sheep.addPotionEffect(
+                            new org.bukkit.potion.PotionEffect(
+                                    PotionEffectType.SPEED, 1000000, 2, false, false
+                            )
+                    );
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            // Make the sheep walk towards the player
+                            sheep.getPathfinder().moveTo(p.getLocation());
+                        }
+                    }.runTaskTimer(plugin, 0L, 2L);
+                }  else if (name.equals("Kamikazebat")){
+                    event.setCancelled(true);
+
+                    Bat bat = p.getWorld().spawn(p.getLocation(), Bat.class);
+
+                    TNTPrimed tnt = p.getWorld().spawn(p.getLocation(), TNTPrimed.class);
+                    tnt.setFuseTicks(100);
+
+
+                    bat.addPassenger(tnt);
+                    bat.addScoreboardTag("kamikaze");
+                    bat.setCustomNameVisible(true);
+
+                    bat.addPotionEffect(
+                            new org.bukkit.potion.PotionEffect(
+                                    PotionEffectType.SPEED, 1000000, 2, false, false
+                            )
+                    );
+
+                    bat.lookAt(p);
+
+                    Sheep sheep = p.getWorld().spawn(p.getLocation(), Sheep.class);
+
+                    sheep.addPassenger(bat);
+                    sheep.addPotionEffect(
+                            new org.bukkit.potion.PotionEffect(
+                                    PotionEffectType.SPEED, 1000000, 2, false, false
+                            )
+                    );
+                    sheep.addPotionEffect(                            new org.bukkit.potion.PotionEffect(
+                            PotionEffectType.INVISIBILITY, 1000000, 2, false, false
+                    ));
+
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            // Make the sheep walk towards the player
+                            sheep.getPathfinder().moveTo(p.getLocation());
+                        }
+                    }.runTaskTimer(plugin, 0L, 2L);
                 }
             }
         }
@@ -62,7 +138,15 @@ public class SpellsListener implements Listener {
         }
     }
 
-
+    @EventHandler
+    public void onArrowHit(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Arrow arrow) {
+            if (arrow.getScoreboardTags().contains("explosive")) {
+                arrow.getWorld().createExplosion(arrow.getLocation(), 50);
+                arrow.remove();
+            }
+        }
+    }
 
     @EventHandler
     public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
