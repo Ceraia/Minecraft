@@ -53,7 +53,6 @@ public class SpellsListener implements Listener {
         }
     }
 
-    // Listen for Trident hit event to destroy it when it lands
     @EventHandler
     public void onTridentHit(ProjectileHitEvent event) {
         if (event.getEntity() instanceof Trident trident) {
