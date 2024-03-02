@@ -1,4 +1,4 @@
-name: Prepare Release
+name: Java CI with Gradle
 
 on:
   push:
@@ -11,7 +11,7 @@ jobs:
 
     runs-on: self-hosted
     permissions:
-      contents: write
+      contents: read
 
     steps:
       - uses: actions/checkout@v4
@@ -27,10 +27,14 @@ jobs:
       - name: Build with Gradle Wrapper
         run: ./gradlew build
 
+  release:
+    needs: build
+    runs-on: self-hosted
+    steps:
       - name: Get JAR filename
         id: get_jar_filename
         run: echo "::set-output name=jar_filename::$(basename $(find build/libs -name '*.jar') .jar)"
-        
+      
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -52,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: "build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar"
+          asset_path: build/libs/*.jar
           asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
