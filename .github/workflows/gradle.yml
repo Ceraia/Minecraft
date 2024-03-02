@@ -13,7 +13,7 @@ on:
 jobs:
   build:
 
-    if: contains(github.event.head_commit.message, 'plugin')
+    if: contains(github.event.head_commit.message, '/release') || contains(github.event.head_commit.message, 'plugin changes')
 
     runs-on: self-hosted
     permissions:
