@@ -4,12 +4,7 @@ import dev.xdbl.commands.*;
 import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
-import dev.xdbl.managers.*;
-import dev.xdbl.commands.*;
-import dev.xdbl.listeners.*;
 import dev.xdbl.types.ArenaSelectGUI;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;

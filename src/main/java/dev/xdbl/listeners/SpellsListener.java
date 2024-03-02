@@ -60,90 +60,71 @@ public class SpellsListener implements Listener {
                 } else if (name.equals("Kamikazesheep")){
                     event.setCancelled(true);
 
-                    Sheep sheep = p.getWorld().spawn(p.getLocation(), Sheep.class);
-
-                    TNTPrimed tnt = p.getWorld().spawn(p.getLocation(), TNTPrimed.class);
-                    tnt.setFuseTicks(100);
-
-
-                    sheep.addPassenger(tnt);
-                    sheep.addScoreboardTag("kamikaze");
-                    sheep.setCustomNameVisible(true);
-                    sheep.customName(MiniMessage.miniMessage().deserialize("jeb_"));
-
-                    sheep.addPotionEffect(
-                            new org.bukkit.potion.PotionEffect(
-                                    PotionEffectType.SPEED, 1000000, 2, false, false
-                            )
-                    );
-
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            // Make the sheep walk towards the player
-                            sheep.getPathfinder().moveTo(p.getLocation());
-                        }
-                    }.runTaskTimer(plugin, 0L, 2L);
-                }  else if (name.equals("Kamikazebat")){
-                    event.setCancelled(true);
-
-                    Bat bat = p.getWorld().spawn(p.getLocation(), Bat.class);
-
-                    TNTPrimed tnt = p.getWorld().spawn(p.getLocation(), TNTPrimed.class);
-                    tnt.setFuseTicks(100);
-
-
-                    bat.addPassenger(tnt);
-                    bat.addScoreboardTag("kamikaze");
-                    bat.setCustomNameVisible(true);
-
-                    bat.addPotionEffect(
-                            new org.bukkit.potion.PotionEffect(
-                                    PotionEffectType.SPEED, 1000000, 2, false, false
-                            )
-                    );
-
-                    bat.lookAt(p);
-
-                    Sheep sheep = p.getWorld().spawn(p.getLocation(), Sheep.class);
-
-                    sheep.addPassenger(bat);
-                    sheep.addPotionEffect(
-                            new org.bukkit.potion.PotionEffect(
-                                    PotionEffectType.SPEED, 1000000, 2, false, false
-                            )
-                    );
-                    sheep.addPotionEffect(                            new org.bukkit.potion.PotionEffect(
-                            PotionEffectType.INVISIBILITY, 1000000, 2, false, false
-                    ));
-
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            // Make the sheep walk towards the player
-                            sheep.getPathfinder().moveTo(p.getLocation());
-                        }
-                    }.runTaskTimer(plugin, 0L, 2L);
+                    p.launchProjectile(org.bukkit.entity.Egg.class).addScoreboardTag("kamikazesheep");
+                    p.sendMessage("You casted Kamikazesheep!");
                 }
             }
         }
     }
 
     @EventHandler
-    public void onTridentHit(ProjectileHitEvent event) {
+    public void onEntityHit(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Arrow arrow) {
+            if (arrow.getScoreboardTags().contains("explosive")) {
+                arrow.getWorld().createExplosion(arrow.getLocation(), 100, true, true);
+                arrow.remove();
+            }
+        }
         if (event.getEntity() instanceof Trident trident) {
             if (trident.getScoreboardTags().contains("getauttahere")) {
                 trident.remove();
             }
         }
-    }
+        if (event.getEntity() instanceof Egg egg) {
+            if (egg.getScoreboardTags().contains("kamikazesheep")) {
+                // Get the closest player to the egg
+                Player p = null;
+                double distance = 100;
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.getLocation().distance(egg.getLocation()) < distance) {
+                        p = player;
+                        distance = player.getLocation().distance(egg.getLocation());
+                    }
+                }
 
-    @EventHandler
-    public void onArrowHit(ProjectileHitEvent event) {
-        if (event.getEntity() instanceof Arrow arrow) {
-            if (arrow.getScoreboardTags().contains("explosive")) {
-                arrow.getWorld().createExplosion(arrow.getLocation(), 50);
-                arrow.remove();
+                Sheep sheep = egg.getWorld().spawn(egg.getLocation(), Sheep.class);
+
+                TNTPrimed tnt = egg.getWorld().spawn(egg.getLocation(), TNTPrimed.class);
+                tnt.setFuseTicks(300);
+
+
+                sheep.addPassenger(tnt);
+                sheep.addScoreboardTag("kamikaze");
+                sheep.setCustomNameVisible(true);
+                sheep.customName(MiniMessage.miniMessage().deserialize("jeb_"));
+                sheep.setInvulnerable(true);
+
+                sheep.addPotionEffect(
+                        new org.bukkit.potion.PotionEffect(
+                                PotionEffectType.SPEED, 1000000, 2, false, false
+                        )
+                );
+
+                egg.remove();
+
+                Player finalP = p;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        // Make the sheep walk towards the player
+                        assert finalP != null;
+                        sheep.getPathfinder().moveTo(finalP.getLocation());
+                        if(sheep.getPassengers().size() == 0) {
+                            sheep.remove();
+                            this.cancel();
+                        }
+                    }
+                }.runTaskTimer(plugin, 0L, 2L);
             }
         }
     }
