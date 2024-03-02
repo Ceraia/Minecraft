@@ -44,6 +44,9 @@ jobs:
           draft: false
           prerelease: true
 
+      - name: List files in build/libs directory
+        run: ls -la build/libs
+
       # Upload the JAR file as an asset of the release
       - name: Upload Release Asset
         id: upload-release-asset
