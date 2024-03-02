@@ -67,8 +67,7 @@ jobs:
           asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
 
-      # Upload the JAR file to a Discord webhook
-      - name: Upload JAR to Discord Webhook
+      - name: Upload release to Discord
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
