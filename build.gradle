@@ -9,7 +9,7 @@ def date = new Date()
 def major = "0"
 def minor = "1"
 
-version = major + "." + date.format('YY') + "."  + minor +'-build-'+date.format('mm')+date.format('dd')+date.format('MM')
+version =  major + "." + date.format('YY') + "."  + minor +'.'+date.format('M')+date.format('dd')+"-build-"+date.format('hh')+date.format('mm')
 
 tasks {
     runServer {

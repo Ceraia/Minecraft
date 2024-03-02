@@ -4,8 +4,10 @@ import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.Objects;
@@ -34,7 +36,29 @@ public class SpellsListener implements Listener {
                     for (int i = 0; i < 10; i++) {
                         p.launchProjectile(org.bukkit.entity.Arrow.class);
                     }
+                } else if (name.equals("Fireflies")) {
+                    // Launch snowballs that light the person it hits on fire
+                    event.setCancelled(true);
+                    p.sendMessage("You casted Fireflies!");
+                    p.launchProjectile(org.bukkit.entity.SmallFireball.class);
+                } else if (name.equals("Getauttahere")){
+                    event.setCancelled(true);
+                    Trident trident = p.launchProjectile(org.bukkit.entity.Trident.class);
+                    trident.setPickupStatus(Trident.PickupStatus.DISALLOWED); // Prevents Trident from being picked up
+                    trident.addScoreboardTag("getauttahere"); // Add a tag to the Trident to identify it later
+                    trident.addPassenger(p);
+                    p.sendMessage("You casted Getauttahere!");
                 }
+            }
+        }
+    }
+
+    // Listen for Trident hit event to destroy it when it lands
+    @EventHandler
+    public void onTridentHit(ProjectileHitEvent event) {
+        if (event.getEntity() instanceof Trident trident) {
+            if (trident.getScoreboardTags().contains("getauttahere")) {
+                trident.remove();
             }
         }
     }
