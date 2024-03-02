@@ -1,13 +1,19 @@
-name: Java CI with Gradle
+name: Build & Release
 
 on:
   push:
     branches: [ "master" ]
+    paths-ignore:
+      - '*.md'
   pull_request:
     branches: [ "master" ]
+    paths-ignore:
+      - '*.md'
 
 jobs:
   build:
+
+    if: contains(github.event.head_commit.message, 'plugin')
 
     runs-on: self-hosted
     permissions:
@@ -34,7 +40,7 @@ jobs:
       - name: Get JAR filename
         id: get_jar_filename
         run: echo "::set-output name=jar_filename::$(basename $(find build/libs -name '*.jar') .jar)"
-      
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -43,8 +49,7 @@ jobs:
         with:
           tag_name: "paper"
           release_name: ${{ steps.get_jar_filename.outputs.jar_filename }}
-          body: |
-            This is an automatically generated release.
+          body: ${{ github.event.head_commit.message }} # Using commit message as release body
           draft: false
           prerelease: true
 
