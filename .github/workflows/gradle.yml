@@ -31,18 +31,6 @@ jobs:
         id: get_jar_filename
         run: echo "::set-output name=jar_filename::$(basename $(find build/libs -name '*.jar') .jar)"
         
-      # Upload the JAR file as an asset of the release
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: $(find build/libs -name '*.jar')
-          asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
-          asset_content_type: application/java-archive
-        
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -55,3 +43,15 @@ jobs:
             This is an automatically generated release.
           draft: false
           prerelease: true
+
+      # Upload the JAR file as an asset of the release
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: $(find build/libs -name '*.jar')
+          asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
+          asset_content_type: application/java-archive
