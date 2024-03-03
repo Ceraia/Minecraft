@@ -39,8 +39,9 @@ public class ArenaManager {
             Location spawnPoint1 = config.getLocation("spawnPoint1");
             Location spawnPoint2 = config.getLocation("spawnPoint2");
             boolean isPublic = config.getBoolean("public", false);
+            boolean isFFA = config.getBoolean("ffa", false);
 
-            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, file);
+            Arena arena = new Arena(plugin, name, owner, spawnPoint1, spawnPoint2, isPublic, isFFA, file);
             arenas.add(arena);
         }
 

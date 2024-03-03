@@ -53,9 +53,6 @@ messages:
       success: '<green>Spawn point set for the first player!'
     sp2:
       success: '<green>Spawn point set for the second player!'
-    totems:
-        enabled: '<green>Totems have been enabled for this arena'
-        disabled: '<green>Totems have been <red>disabled<green> for this arena'
   pvp:
     help:
       - '<yellow><bold>PVP Help'
@@ -93,7 +90,6 @@ messages:
       lore:
         - '<yellow><bold>Arena name: <green>%arena_name%'
         - '<yellow><bold>Arena owner: <green>%arena_owner%'
-        - '<yellow><bold>Totems: %totems%'
     arena_not_ready: '<red>Arena is not ready'
     invite_message: '<green>Click <white><hover:show_text:"<green>Click to accept the pvp match!"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with %inviter% in %arena_name%, totems are %totems% you have a %winchance% chance of winning!'
   totem_select_gui:
@@ -101,14 +97,14 @@ messages:
     items:
       enable:
         item: 'GREEN_STAINED_GLASS_PANE'
-        name: '<green>Enable totems'
+        name: '<green>Enabled totems'
         lore:
-          - '<yellow><bold>Click to enable totems'
+          - '<yellow><bold>Click to enable totems for the fight.'
       disable:
         item: 'RED_STAINED_GLASS_PANE'
-        name: '<red>Disable totems'
+        name: '<red>Disabled totems'
         lore:
-          - '<yellow><bold>Click to disable totems'
+          - '<yellow><bold>Click to disable totems for the fight.'
   gvg:
     help:
       - '<yellow><bold>Group Help'

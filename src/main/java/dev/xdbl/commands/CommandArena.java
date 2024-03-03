@@ -228,7 +228,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         File file = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
 
-        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, file);
+        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, false, file);
 
         arena.setSpawnPoint1(((Player) sender).getLocation());
         arena.setSpawnPoint2(((Player) sender).getLocation());

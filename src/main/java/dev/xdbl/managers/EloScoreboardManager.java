@@ -3,6 +3,7 @@ package dev.xdbl.managers;
 import dev.xdbl.types.ArenaPlayer;
 import dev.xdbl.Double;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
@@ -18,8 +19,8 @@ public class EloScoreboardManager {
     public void updateScoreboard() {
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         Scoreboard scoreboardDefault = scoreboardManager.getNewScoreboard();
-        Objective objectivePlayerList = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", "dummy", NamedTextColor.GREEN + "Top Elo Players");
-        Objective objectiveBelowName = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", "dummy", NamedTextColor.GREEN + "ELO");
+        Objective objectivePlayerList = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", "dummy", MiniMessage.miniMessage().deserialize("Top Arena Players"));
+        Objective objectiveBelowName = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", "dummy", MiniMessage.miniMessage().deserialize("<green>ELO"));
 
         // Get all online players and set their score to their Elo rating
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {

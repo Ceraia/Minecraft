@@ -15,6 +15,7 @@ public class ArenaPlayer {
 
     private final Double plugin;
     private final UUID uuid;
+    private final String name;
     private int draws;
     private boolean pvpbanned;
     private int wins;
@@ -23,18 +24,17 @@ public class ArenaPlayer {
     private final File configFile;
     private final List<String> logs;
     private int elo;
-    private boolean scoreboard;
     private long lastFought;
 
 
-    public ArenaPlayer(Double plugin, UUID uuid, int elo, boolean scoreboard, boolean arenabanned, boolean pvpbanned, int wins, int losses, int draws, List<String> logs, long lastFought, File configFile) {
+    public ArenaPlayer(Double plugin, String name, UUID uuid, int elo, boolean arenabanned, boolean pvpbanned, int wins, int losses, int draws, List<String> logs, long lastFought, File configFile) {
         this.plugin = plugin;
 
+        this.name = name;
         this.uuid = uuid;
         this.elo = elo;
         this.arenabanned = arenabanned;
         this.pvpbanned = pvpbanned;
-        this.scoreboard = scoreboard;
         this.wins = wins;
         this.losses = losses;
         this.draws = draws;

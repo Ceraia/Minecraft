@@ -2,6 +2,7 @@ package dev.xdbl.managers;
 
 import dev.xdbl.types.ArenaPlayer;
 import dev.xdbl.Double;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -30,9 +31,9 @@ public class PlayerManager {
 
             ArenaPlayer arenaPlayer = new ArenaPlayer(
                     plugin,
+                    config.getString("name"),
                     UUID.fromString(file.getName().split("\\.")[0]),
                     config.getInt("elo", 1500),
-                    config.getBoolean("scoreboard", false),
                     config.getBoolean("arenabanned", false),
                     config.getBoolean("pvpbanned", false),
                     config.getInt("wins", 0),
@@ -116,7 +117,6 @@ public class PlayerManager {
             config.set("elo", defaultElo);
             config.set("arenabanned", false);
             config.set("pvpbanned", false);
-            config.set("scoreboard", false);
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
@@ -125,9 +125,9 @@ public class PlayerManager {
 
             return new ArenaPlayer(
                     plugin,
+                    Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName(),
                     playerUUID,
                     defaultElo,
-                    false,
                     false,
                     false,
                     0,

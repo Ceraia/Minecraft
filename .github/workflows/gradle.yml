@@ -50,7 +50,8 @@ jobs:
           tag_name: ${{ steps.get_jar_filename.outputs.jar_filename }}
           release_name: ${{ steps.get_jar_filename.outputs.jar_filename }}
           body: |
-            This is an automaticcally generated release.
+            This is an automatically generated bleeding edge release.
+            This will contain the absolute latest changes and may not be stable.
             ${{ github.event.head_commit.message }}
           draft: false
           prerelease: true
@@ -73,7 +74,8 @@ jobs:
           webhook-url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
           filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           content: |
-            New automatically generated release: ${{ steps.get_jar_filename.outputs.jar_filename }}
+            New `BLEEDING_EDGE` release : ${{ steps.get_jar_filename.outputs.jar_filename }}
+            This will contain the absolute latest changes and may not be stable.
             ```${{ github.event.head_commit.message }}```
 
   notify:

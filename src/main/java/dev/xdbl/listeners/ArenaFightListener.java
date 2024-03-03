@@ -1,8 +1,8 @@
 package dev.xdbl.listeners;
 
 import dev.xdbl.Double;
-import dev.xdbl.types.Arena;
 import dev.xdbl.managers.InviteManager;
+import dev.xdbl.types.Arena;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,6 +10,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockDamageEvent;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -85,8 +87,25 @@ public class ArenaFightListener implements Listener {
         // Get player that hurt the player
         Player killer = null;
         if (e instanceof EntityDamageByEntityEvent event) {
+            // If the damage is caused by a player
             if (event.getDamager() instanceof Player) {
+                plugin.getLogger().info("Player");
                 killer = (Player) event.getDamager();
+            }
+            // If the damage is caused by a projectile
+            else if (event.getDamager() instanceof org.bukkit.entity.Projectile projectile) {
+                plugin.getLogger().info("Arrow");
+                if (projectile.getShooter() instanceof Player) {
+                    killer = (Player) projectile.getShooter();
+                }
+            }
+
+            // If the damage is caused by a tnt
+            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.PRIMED_TNT) {
+                plugin.getLogger().info("TNT");
+                if (event.getDamager().customName() != null) {
+                    killer = Bukkit.getPlayer(Objects.requireNonNull(event.getDamager().customName()).toString());
+                }
             }
         }
 
@@ -99,7 +118,7 @@ public class ArenaFightListener implements Listener {
 
             InviteManager.Invite invite = plugin.getInviteManager().invites.get(player);
 
-            if(invite == null) invite = plugin.getInviteManager().selectingInvites.get(killer);
+            if (invite == null) invite = plugin.getInviteManager().selectingInvites.get(killer);
 
             if (invite != null) {
                 if (arena.totems) {
@@ -113,28 +132,6 @@ public class ArenaFightListener implements Listener {
             e.setCancelled(true);
             player.setHealth(player.getHealthScale());
 
-            // END OF FIGHT
-            if (killer != null) {
-                UUID killerUUID = killer.getUniqueId();
-                UUID victimUUID = player.getUniqueId();
-
-                // Get the win chance
-                int winChance = plugin.getPlayerManager().CalculateWinChance(killerUUID, victimUUID);
-
-                // Announce the winner and the win chance in chat
-                Bukkit.broadcast(MiniMessage.miniMessage().deserialize(
-                        plugin.getConfig().getString("messages.fight.end_global")
-                                .replace("%winner%", killer.getName())
-                                .replace("%loser%", player.getName())
-                                .replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(victimUUID).getElo()))
-                                .replace("%winchance%", String.valueOf(winChance))
-                                .replace("%arena%", plugin.getArenaManager().getArena(player).getName()))
-
-                );
-
-                // Handle ELO calculations
-                plugin.getPlayerManager().PlayerKill(killerUUID, victimUUID);
-            }
             arena.end(player, false);
         }
     }
@@ -147,6 +144,17 @@ public class ArenaFightListener implements Listener {
         Arena arena = plugin.getArenaManager().getArena(e.getEntity());
 
         Location loc = e.getEntity().getLocation();
+
+        Player killer = e.getEntity().getKiller();
+
+        if (killer == null) {
+            killer = Bukkit.getPlayer(Objects.requireNonNull(Objects.requireNonNull(e.getEntity().getLastDamageCause()).getEntity().customName()).toString());
+        }
+        if (killer != null) {
+            matchEnd(e.getEntity(), killer);
+        }
+
+
 
         e.getEntity().spigot().respawn();
         new BukkitRunnable() {
@@ -164,7 +172,33 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
+
+
         Arena arena = plugin.getArenaManager().getArena(e.getPlayer());
+
+        // Check in which team the player is
+        if (arena.getTeam1().contains(e.getPlayer())) {
+            matchEnd(e.getPlayer(), arena.getTeam2().get(0));
+        } else {
+            matchEnd(e.getPlayer(), arena.getTeam1().get(0));
+        }
+
         arena.end(e.getPlayer(), true);
+    }
+
+    private void matchEnd(Player loser, Player winner) {
+        UUID winnerUUID = winner.getUniqueId();
+        UUID loserUUID = loser.getUniqueId();
+
+        // Get the win chance
+        int winChance = plugin.getPlayerManager().CalculateWinChance(winnerUUID, loserUUID);
+
+        // Announce the winner and the win chance in chat
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaManager().getArena(loser).getName()))
+
+        );
+
+        // Handle ELO calculations
+        plugin.getPlayerManager().PlayerKill(winnerUUID, loserUUID);
     }
 }

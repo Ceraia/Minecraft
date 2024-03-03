@@ -5,26 +5,21 @@ import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
 import dev.xdbl.types.ArenaSelectGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.UUID;
 
 public class Double extends JavaPlugin {
 
     private ArenaManager arenaManager;
     private InviteManager inviteManager;
     private MarketItemManager marketItemManager;
-    private EloScoreboardManager eloScoreboardManager;
     private ArenaSelectGUI arenaSelectGUI;
     private CommandGVG commandGVG;
-    private CommandPVP commandPVP;
-    private CommandArena commandArena;
     private PlayerManager playerManager;
-    private CommandMod commandMod;
-    private CommandTop commandTop;
-    private CommandProfile commandProfile;
-    private CommandBidenBlast commandBidenBlast;
     Metrics metrics;
 
     public void onEnable() {
@@ -38,18 +33,18 @@ public class Double extends JavaPlugin {
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.marketItemManager = new MarketItemManager(this);
-        this.eloScoreboardManager = new EloScoreboardManager(this);
+        EloScoreboardManager eloScoreboardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
 
         this.commandGVG = new CommandGVG(this);
-        this.commandPVP = new CommandPVP(this);
-        this.commandArena = new CommandArena(this);
-        this.commandMod = new CommandMod(this);
-        this.commandTop = new CommandTop(this);
-        this.commandProfile = new CommandProfile(this);
-        this.commandBidenBlast = new CommandBidenBlast(this);
+        CommandPVP commandPVP = new CommandPVP(this);
+        CommandArena commandArena = new CommandArena(this);
+        CommandMod commandMod = new CommandMod(this);
+        CommandTop commandTop = new CommandTop(this);
+        CommandProfile commandProfile = new CommandProfile(this);
+        CommandVersion commandVersion = new CommandVersion(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
@@ -72,7 +67,7 @@ public class Double extends JavaPlugin {
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
 
-        Objects.requireNonNull(getCommand("bidenblast")).setExecutor(commandBidenBlast);
+        Objects.requireNonNull(getCommand("version")).setExecutor(commandVersion);
     }
 
     public void onDisable() {

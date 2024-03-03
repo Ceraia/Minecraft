@@ -41,8 +41,9 @@ public class Arena {
     private ArenaState state = ArenaState.WAITING;
     private int timer;
     public boolean totems = false;
+    private boolean isFFA = false;
 
-    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
+    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean isFFA, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -50,6 +51,7 @@ public class Arena {
         this.spawnPoint1 = spawnPoint1;
         this.spawnPoint2 = spawnPoint2;
         this.isPublic = isPublic;
+        this.isFFA = isFFA;
 
         this.configFile = configFile;
     }

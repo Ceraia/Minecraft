@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class ArenaBlockListener implements Listener {
 
-    private Double plugin;
+    private final Double plugin;
 
     public ArenaBlockListener(Double plugin) {
         this.plugin = plugin;

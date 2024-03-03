@@ -160,7 +160,6 @@ public class ArenaSelectGUI implements Listener {
         for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
             loreArena.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", arena.getName())
                     .replace("%arena_owner%", arena.getOwner())
-                    .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>")
             ));
         }
 
