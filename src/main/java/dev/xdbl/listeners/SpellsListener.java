@@ -59,16 +59,12 @@ public class SpellsListener implements Listener {
                     }
                     case "Kamikazesheep" -> {
                         event.setCancelled(true);
-                        p.launchProjectile(Egg.class).addScoreboardTag("kamikazesheep");
+                        p.launchProjectile(Snowball.class).addScoreboardTag("kamikazesheep");
                         p.sendMessage("You casted Kamikazesheep!");
                     }
-                    case "Earfquake" -> {
+                    case "ThermonuclearDetonation" -> {
                         event.setCancelled(true);
-                        p.launchProjectile(Egg.class).addScoreboardTag("earfquake");
-                    }
-                    case "Earfffquake" -> {
-                        event.setCancelled(true);
-                        p.launchProjectile(Egg.class).addScoreboardTag("earfffquake");
+                        p.launchProjectile(Snowball.class).addScoreboardTag("earfquake");
                     }
                 }
             }
@@ -86,21 +82,21 @@ public class SpellsListener implements Listener {
             if (trident.getScoreboardTags().contains("getauttahere")) {
                 trident.remove();
             }
-        } else if (event.getEntity() instanceof Egg egg) {
-            if (egg.getScoreboardTags().contains("kamikazesheep")) {
-                // Get the closest player to the egg
+        } else if (event.getEntity() instanceof Snowball snowball) {
+            if (snowball.getScoreboardTags().contains("kamikazesheep")) {
+                // Get the closest player to the snowball
                 Player p = null;
                 double distance = 100;
                 for (Player player : Bukkit.getOnlinePlayers()) {
-                    if (player.getLocation().distance(egg.getLocation()) < distance) {
+                    if (player.getLocation().distance(snowball.getLocation()) < distance) {
                         p = player;
-                        distance = player.getLocation().distance(egg.getLocation());
+                        distance = player.getLocation().distance(snowball.getLocation());
                     }
                 }
 
-                Sheep sheep = egg.getWorld().spawn(egg.getLocation(), Sheep.class);
+                Sheep sheep = snowball.getWorld().spawn(snowball.getLocation(), Sheep.class);
 
-                TNTPrimed tnt = egg.getWorld().spawn(egg.getLocation(), TNTPrimed.class);
+                TNTPrimed tnt = snowball.getWorld().spawn(snowball.getLocation(), TNTPrimed.class);
                 tnt.setFuseTicks(300);
 
 
@@ -116,7 +112,7 @@ public class SpellsListener implements Listener {
                         )
                 );
 
-                egg.remove();
+                snowball.remove();
 
                 Player finalP = p;
                 new BukkitRunnable() {
@@ -131,24 +127,65 @@ public class SpellsListener implements Listener {
                         }
                     }
                 }.runTaskTimer(plugin, 0L, 2L);
-            } else if (egg.getScoreboardTags().contains("earfquake")) {
-                egg.getWorld().createExplosion(egg.getLocation(), 4, false, false); // Adjust power as needed
+            } else if (snowball.getScoreboardTags().contains("earfquake")) {
+                snowball.getWorld().createExplosion(snowball.getLocation(), 80, true, false); // Adjust power as needed
 
                 // Get the blocks in the affected area
-                int radius = 10; // Adjust as needed
+                int radius = 40; // Adjust as needed
+
+                int remTree = radius * 5;
+
+                // Remove all trees and leaves in the affected area
+                for (int x = -remTree; x <= remTree; x++) {
+                    for (int y = -remTree; y <= remTree; y++) {
+                        for (int z = -remTree; z <= remTree; z++) {
+                            if (Math.sqrt(x * x + (y) * (y) + z * z) <= remTree) {
+                                Block block = snowball.getLocation().clone().add(x, y, z).getBlock();
+                                if (block.getType() == Material.OAK_LOG || block.getType() == Material.BIRCH_LOG || block.getType() == Material.SPRUCE_LOG || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.ACACIA_LOG || block.getType() == Material.DARK_OAK_LOG) {
+                                    block.setType(Material.FIRE);
+                                }
+                                if(block.getType() == Material.OAK_LEAVES|| block.getType() == Material.BIRCH_LEAVES || block.getType() == Material.SPRUCE_LEAVES || block.getType() == Material.JUNGLE_LEAVES || block.getType() == Material.ACACIA_LEAVES || block.getType() == Material.DARK_OAK_LEAVES) {
+                                    block.setType(Material.FIRE);
+                                }
+                                if(block.getType() == Material.BAMBOO || block.getType() == Material.SHORT_GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.VINE ) {
+                                    block.setType(Material.FIRE);
+                                }
+                                if(block.getType() == Material.GRASS_BLOCK || block.getType() == Material.DIRT || block.getType() == Material.COARSE_DIRT || block.getType() == Material.PODZOL || block.getType() == Material.DIRT_PATH || block.getType() == Material.MYCELIUM || block.getType() == Material.SNOW_BLOCK) {
+                                    // Choose random number if the block should be converted to course dirt or other "ruined" blocks
+                                    int random = (int) (Math.random() * 100);
+                                    if(random < 40) block.setType(Material.COARSE_DIRT);
+                                    else if(random < 50) block.setType(Material.SOUL_SAND);
+                                    else if(random < 60) block.setType(Material.DIRT_PATH);
+                                    else if(random < 70) block.setType(Material.GRAVEL);
+                                    else if(random < 80) block.setType(Material.PODZOL);
+                                    else if(random < 90) block.setType(Material.MANGROVE_ROOTS);
+                                    else if(random < 100) block.setType(Material.MUDDY_MANGROVE_ROOTS);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Do the explosion
                 for (int x = -radius; x <= radius; x++) {
                     for (int y = -radius; y <= radius; y++) {
                         for (int z = -radius; z <= radius; z++) {
                             if (Math.sqrt(x * x + y * y + z * z) <= radius) {
-                                Block block = egg.getLocation().clone().add(x, y, z).getBlock();
-                                if (block.getType() != Material.AIR) {
+                                Block block = snowball.getLocation().clone().add(x, y, z).getBlock();
+                                if ((block.getType() != Material.AIR)
+                                        &&(block.getType() != Material.BEDROCK)
+                                        &&(block.getType() != Material.AIR)
+                                ) {
+                                    if((block.getType() == Material.WATER)) block.setType(Material.AIR);
+
+
                                     // Spawn falling block entities at the location of each block
-                                    FallingBlock fallingBlock = egg.getWorld().spawnFallingBlock(block.getLocation(), block.getBlockData());
+                                    FallingBlock fallingBlock = snowball.getWorld().spawnFallingBlock(block.getLocation(), block.getBlockData());
                                     // Apply velocity to simulate launch effect
                                     fallingBlock.setVelocity(new Vector(
-                                            (Math.random() - 0.5) * 2,
-                                            Math.random() + .2,
-                                            (Math.random() - 0.5) * 2
+                                            (Math.random() - 0.5) * 2 * 2,
+                                            Math.random() + 1.2,
+                                            (Math.random() - 0.5) * 2 * 2
                                     ));
                                     // Remove the original block
                                     block.setType(Material.AIR);
@@ -160,11 +197,5 @@ public class SpellsListener implements Listener {
             }
 
         }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent event) {
-        this.plugin.getLogger().info("Player joined");
-        this.plugin.getLogger().info(event.getPlayer().getUniqueId().toString());
     }
 }
