@@ -157,7 +157,7 @@ public class SpellsListener implements Listener {
                                     else if(random < 50) {
                                         block.setType(Material.SOUL_SAND);
                                         Block blockFire = snowball.getLocation().clone().add(x, (y + 1), z).getBlock();
-                                        if(blockFire.getType == Material.AIR) blockFire.setType(Material.FIRE);
+                                        if(blockFire.getType() == Material.AIR) blockFire.setType(Material.FIRE);
                                     }
                                     else if(random < 60) block.setType(Material.DIRT_PATH);
                                     else if(random < 70) block.setType(Material.GRAVEL);
