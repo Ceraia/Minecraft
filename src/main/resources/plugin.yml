@@ -38,3 +38,6 @@ commands:
   version:
     description: Show the plugin version
     usage: /version
+  login:
+    description: Login to the server
+    usage: /login

@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -69,6 +70,12 @@ public class SpellsListener implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event){
+        // Log the UUID in the console
+        System.out.println(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -131,7 +138,7 @@ public class SpellsListener implements Listener {
                 snowball.getWorld().createExplosion(snowball.getLocation(), 80, true, false); // Adjust power as needed
 
                 // Get the blocks in the affected area
-                float radius = 35; // Adjust as needed however no bigger than 40 has been tested which is already very large
+                float radius = 30; // Adjust as needed however no bigger than 40 has been tested which is already very large
 
 
                 int remTree = (int) (radius * 5);

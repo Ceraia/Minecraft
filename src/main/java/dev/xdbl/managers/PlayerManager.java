@@ -1,6 +1,6 @@
 package dev.xdbl.managers;
 
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,13 +13,13 @@ import java.util.*;
 public class PlayerManager {
 
     private final Double plugin;
-    private final List<ArenaPlayer> arenaPlayers = new ArrayList<>();
+    private final List<DoublePlayer> doublePlayers = new ArrayList<>();
 
     public PlayerManager(Double plugin) {
         this.plugin = plugin;
 
         // Load arenaPlayers
-        File f = new File(plugin.getDataFolder(), "data/players");
+        File f = new File(plugin.getDataFolder(), "data/users");
         if (!f.exists()) {
             f.mkdirs();
             return;
@@ -29,7 +29,7 @@ public class PlayerManager {
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            ArenaPlayer arenaPlayer = new ArenaPlayer(
+            DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
                     UUID.fromString(file.getName().split("\\.")[0]),
@@ -41,34 +41,36 @@ public class PlayerManager {
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
+                    config.getString("password", "12345"),
                     file
             );
-            arenaPlayers.add(arenaPlayer);
+            doublePlayers.add(doublePlayer);
         }
     }
 
-    public List<ArenaPlayer> getArenaPlayers() {
-        return arenaPlayers;
+    public List<DoublePlayer> getDoublePlayers() {
+        return doublePlayers;
     }
 
-    public ArenaPlayer getArenaPlayer(UUID playerUUID) {
+    public DoublePlayer getDoublePlayer(UUID playerUUID) {
         // Check if the player is already in the list
-        for (ArenaPlayer arenaPlayer : arenaPlayers) {
-            if (arenaPlayer.getUUID().equals(playerUUID)) {
-                return arenaPlayer;
+        for (DoublePlayer doublePlayer : doublePlayers) {
+            if (doublePlayer.getUUID().equals(playerUUID)) {
+                return doublePlayer;
             }
         }
 
-        // If the player is not in the list, create a new ArenaPlayer
-        ArenaPlayer newPlayer = createNewArenaPlayer(playerUUID);
-        arenaPlayers.add(newPlayer);
-
-        return newPlayer;
+//        // If the player is not in the list, create a new ArenaPlayer
+//        DoublePlayer newPlayer = createNewDoublePlayer(playerUUID);
+//        doublePlayers.add(newPlayer);
+//
+//        return newPlayer;
+        return null;
     }
 
     public void PlayerKill(UUID playerKiller, UUID playerVictim) {
-        ArenaPlayer killer = getArenaPlayer(playerKiller);
-        ArenaPlayer victim = getArenaPlayer(playerVictim);
+        DoublePlayer killer = getDoublePlayer(playerKiller);
+        DoublePlayer victim = getDoublePlayer(playerVictim);
 
         // Constants for the Elo calculation
         double kFactor = 32.0;
@@ -86,8 +88,8 @@ public class PlayerManager {
 
 
     public int CalculateWinChance(UUID playerKiller, UUID playerVictim){
-        ArenaPlayer killer = getArenaPlayer(playerKiller);
-        ArenaPlayer victim = getArenaPlayer(playerVictim);
+        DoublePlayer killer = getDoublePlayer(playerKiller);
+        DoublePlayer victim = getDoublePlayer(playerVictim);
 
         double expectedScoreKiller = 1.0 / (1.0 + Math.pow(10, (victim.getElo() - killer.getElo()) / 400.0));
         int winChance = (int) (expectedScoreKiller * 100);
@@ -96,8 +98,8 @@ public class PlayerManager {
     }
 
     public int CalculateLossChance(UUID playerKiller, UUID playerVictim){
-        ArenaPlayer killer = getArenaPlayer(playerKiller);
-        ArenaPlayer victim = getArenaPlayer(playerVictim);
+        DoublePlayer killer = getDoublePlayer(playerKiller);
+        DoublePlayer victim = getDoublePlayer(playerVictim);
 
         double expectedScoreVictim = 1.0 / (1.0 + Math.pow(10, (killer.getElo() - victim.getElo()) / 400.0));
         int lossChance = (int) (expectedScoreVictim * 100);
@@ -105,8 +107,8 @@ public class PlayerManager {
         return lossChance;
     }
 
-    private ArenaPlayer createNewArenaPlayer(UUID playerUUID) {
-        File configFile = new File(plugin.getDataFolder(), "data/players/" + playerUUID + ".yml");
+    private DoublePlayer createNewDoublePlayer(UUID playerUUID, String password) {
+        File configFile = new File(plugin.getDataFolder(), "data/users/" + playerUUID + ".yml");
         try {
             configFile.createNewFile();
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -123,7 +125,7 @@ public class PlayerManager {
 
             config.save(configFile);
 
-            return new ArenaPlayer(
+            return new DoublePlayer(
                     plugin,
                     Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName(),
                     playerUUID,
@@ -135,17 +137,19 @@ public class PlayerManager {
                     0,
                     new ArrayList<String>(),
                     (int) (System.currentTimeMillis() / 1000L),
-                    configFile);
+                    password,
+                    configFile
+            );
         } catch (IOException e) {
             e.printStackTrace();
             return null; // Handle the exception based on your needs
         }
     }
 
-    public ArenaPlayer getPlayer(UUID uniqueId) {
-        for (ArenaPlayer arenaPlayer : arenaPlayers) {
-            if (arenaPlayer.getUUID().equals(uniqueId)) {
-                return arenaPlayer;
+    public DoublePlayer getPlayer(UUID uniqueId) {
+        for (DoublePlayer doublePlayer : doublePlayers) {
+            if (doublePlayer.getUUID().equals(uniqueId)) {
+                return doublePlayer;
             }
         }
         return null;

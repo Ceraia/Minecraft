@@ -1,6 +1,6 @@
-package dev.xdbl.commands;
+package dev.xdbl.commands.system;
 
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.Double;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -64,13 +64,13 @@ public class CommandMod implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
                         return true;
                     }
-                    ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
-                    boolean arenabanned = arenaPlayer.arenaBan();
+                    DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
+                    boolean arenabanned = doublePlayer.arenaBan();
                     if (arenabanned) {
-                        arenaPlayer.addLog("Banned from creation of arenas by " + sender.getName());
+                        doublePlayer.addLog("Banned from creation of arenas by " + sender.getName());
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.banned")).replace("%player%", target.getName())));
                     } else {
-                        arenaPlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
+                        doublePlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.unbanned")).replace("%player%", target.getName())));
                     }
                 }
@@ -79,13 +79,13 @@ public class CommandMod implements CommandExecutor, TabCompleter {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
                         return true;
                     }
-                    ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(target.getUniqueId());
-                    boolean pvpbanned = arenaPlayer.pvpBan();
+                    DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
+                    boolean pvpbanned = doublePlayer.pvpBan();
                     if (pvpbanned) {
-                        arenaPlayer.addLog("Banned from PVPing by " + sender.getName());
+                        doublePlayer.addLog("Banned from PVPing by " + sender.getName());
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.banned")).replace("%player%", target.getName())));
                     } else {
-                        arenaPlayer.addLog("Unbanned from PVPing by " + sender.getName());
+                        doublePlayer.addLog("Unbanned from PVPing by " + sender.getName());
                         sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned")).replace("%player%", target.getName())));
                     }
                 }

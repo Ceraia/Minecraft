@@ -11,11 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
-public class ArenaPlayer {
+public class DoublePlayer {
 
     private final Double plugin;
     private final UUID uuid;
     private final String name;
+    private final String password;
     private int draws;
     private boolean pvpbanned;
     private int wins;
@@ -27,7 +28,22 @@ public class ArenaPlayer {
     private long lastFought;
 
 
-    public ArenaPlayer(Double plugin, String name, UUID uuid, int elo, boolean arenabanned, boolean pvpbanned, int wins, int losses, int draws, List<String> logs, long lastFought, File configFile) {
+    public DoublePlayer(
+            Double plugin,
+            String name,
+            UUID uuid,
+            int elo,
+            boolean arenabanned,
+            boolean pvpbanned,
+            int wins,
+            int losses,
+            int draws,
+            List<String> logs,
+            long lastFought,
+            String password,
+            File configFile
+
+    ) {
         this.plugin = plugin;
 
         this.name = name;
@@ -40,6 +56,7 @@ public class ArenaPlayer {
         this.draws = draws;
         this.logs = logs;
         this.lastFought = lastFought;
+        this.password = password;
         this.configFile = configFile;
     }
 
@@ -141,17 +158,6 @@ public class ArenaPlayer {
         }
     }
 
-    public void addDraw(){
-        draws++;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("draws", draws);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void addLog(String string){
         logs.add(string);
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -167,12 +173,27 @@ public class ArenaPlayer {
         this.lastFought = lastFought;
     }
 
-    public long lastFought() {
-        return lastFought;
+    public void setPassword(String password) {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("password", password);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void decayElo() {
-        int decay = (int) (elo * 0.05);
-        setElo(elo - decay);
+    public String getPassword() {
+        return password;
+    }
+
+    public void resetPassword() {
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("password", "12345");
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

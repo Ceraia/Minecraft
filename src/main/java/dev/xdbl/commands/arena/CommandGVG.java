@@ -1,4 +1,4 @@
-package dev.xdbl.commands;
+package dev.xdbl.commands.arena;
 
 import dev.xdbl.Double;
 import net.kyori.adventure.text.Component;

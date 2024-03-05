@@ -1,7 +1,7 @@
-package dev.xdbl.commands;
+package dev.xdbl.commands.arena;
 
 import dev.xdbl.Double;
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -42,16 +42,16 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         }
 
         // Return the player's profile
-        ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(player.getUniqueId());
+        DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(player.getUniqueId());
         plugin.getConfig().getStringList("messages.profile").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s
                 .replace("%player%", player.getName())
-                .replace("%elo%", String.valueOf(arenaPlayer.getElo()))
-                .replace("%wins%", String.valueOf(arenaPlayer.wins()))
-                .replace("%losses%", String.valueOf(arenaPlayer.losses()))
-                .replace("%draws%", String.valueOf(arenaPlayer.draws()))
-                .replace("%games%", String.valueOf(arenaPlayer.wins() + arenaPlayer.losses()))
-                .replace("%pvpbanned%", arenaPlayer.pvpBanned() ? "<red>Yes" : "<green>No")
-                .replace("%arenabanned%", arenaPlayer.arenaBanned() ? "<red>Yes" : "<green>No"))));
+                .replace("%elo%", String.valueOf(doublePlayer.getElo()))
+                .replace("%wins%", String.valueOf(doublePlayer.wins()))
+                .replace("%losses%", String.valueOf(doublePlayer.losses()))
+                .replace("%draws%", String.valueOf(doublePlayer.draws()))
+                .replace("%games%", String.valueOf(doublePlayer.wins() + doublePlayer.losses()))
+                .replace("%pvpbanned%", doublePlayer.pvpBanned() ? "<red>Yes" : "<green>No")
+                .replace("%arenabanned%", doublePlayer.arenaBanned() ? "<red>Yes" : "<green>No"))));
 
 
 

@@ -1,8 +1,7 @@
 package dev.xdbl.managers;
 
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.Double;
-import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,10 +23,10 @@ public class EloScoreboardManager {
 
         // Get all online players and set their score to their Elo rating
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(onlinePlayer.getUniqueId());
+            DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(onlinePlayer.getUniqueId());
 
-            objectivePlayerList.getScore(onlinePlayer.getName()).setScore(arenaPlayer.getElo());
-            objectiveBelowName.getScore(onlinePlayer.getName()).setScore(arenaPlayer.getElo());
+            objectivePlayerList.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
+            objectiveBelowName.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
             objectivePlayerList.setDisplaySlot(DisplaySlot.PLAYER_LIST);
             objectiveBelowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
 

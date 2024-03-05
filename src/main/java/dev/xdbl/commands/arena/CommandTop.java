@@ -1,7 +1,7 @@
-package dev.xdbl.commands;
+package dev.xdbl.commands.arena;
 
 import dev.xdbl.Double;
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -42,7 +42,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
 
         top.add(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.scoreboard.top"))));
 
-        plugin.getPlayerManager().getArenaPlayers().stream().sorted(Comparator.comparingInt(ArenaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
+        plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(DoublePlayer::getElo).reversed()).limit(10).forEach(ap -> {
             String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
             int elo = ap.getElo();
 

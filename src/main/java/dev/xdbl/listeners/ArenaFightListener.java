@@ -10,8 +10,6 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockDamageEvent;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -194,7 +192,7 @@ public class ArenaFightListener implements Listener {
         int winChance = plugin.getPlayerManager().CalculateWinChance(winnerUUID, loserUUID);
 
         // Announce the winner and the win chance in chat
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getArenaPlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaManager().getArena(loser).getName()))
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getDoublePlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaManager().getArena(loser).getName()))
 
         );
 

@@ -1,9 +1,9 @@
-package dev.xdbl.commands;
+package dev.xdbl.commands.arena;
 
 import dev.xdbl.managers.InviteManager;
 import dev.xdbl.Double;
 import dev.xdbl.types.Arena;
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -39,8 +39,8 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         }
 
         // Check if the sender is pvpbanned
-        ArenaPlayer arenaPlayer = plugin.getPlayerManager().getArenaPlayer(((Player) sender).getUniqueId());
-        if (arenaPlayer.pvpBanned()) {
+        DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId());
+        if (doublePlayer.pvpBanned()) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_invite")))
             );
@@ -51,7 +51,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             Player p = (Player) sender;
 
             // Check if the player is banned
-            if (plugin.getPlayerManager().getArenaPlayer(p.getUniqueId()).pvpBanned()) {
+            if (plugin.getPlayerManager().getDoublePlayer(p.getUniqueId()).pvpBanned()) {
                 sender.sendMessage(
                         MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_accept")))
                 );

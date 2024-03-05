@@ -1,6 +1,6 @@
 package dev.xdbl.listeners;
 
-import dev.xdbl.types.ArenaPlayer;
+import dev.xdbl.types.DoublePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,19 +10,19 @@ public class PlayerEventListener extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
-    private final ArenaPlayer arenaPlayer;
+    private final DoublePlayer doublePlayer;
 
-    public PlayerEventListener(Player player, ArenaPlayer arenaPlayer) {
+    public PlayerEventListener(Player player, DoublePlayer doublePlayer) {
         this.player = player;
-        this.arenaPlayer = arenaPlayer;
+        this.doublePlayer = doublePlayer;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public ArenaPlayer getArenaPlayer() {
-        return arenaPlayer;
+    public DoublePlayer getArenaPlayer() {
+        return doublePlayer;
     }
 
     @Override
@@ -33,4 +33,5 @@ public class PlayerEventListener extends Event {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
 }
