@@ -21,8 +21,10 @@ public class CommandVersion implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Running <white>Double <green>v" + plugin.getPluginMeta().getVersion() + " <green>by <white>Axodouble"));
-    return true;
+        sender.sendMessage(
+            MiniMessage.miniMessage().deserialize("<green>Running <white>Double <green>v" + plugin.getPluginMeta().getVersion() + " <green>by <white>Axodouble")
+        );
+        return true;
     }
 
     @Override
