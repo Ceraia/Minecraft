@@ -131,9 +131,10 @@ public class SpellsListener implements Listener {
                 snowball.getWorld().createExplosion(snowball.getLocation(), 80, true, false); // Adjust power as needed
 
                 // Get the blocks in the affected area
-                int radius = 40; // Adjust as needed
+                float radius = 35; // Adjust as needed however no bigger than 40 has been tested which is already very large
 
-                int remTree = radius * 5;
+
+                int remTree = (int) (radius * 5);
 
                 // Remove all trees and leaves in the affected area
                 for (int x = -remTree; x <= remTree; x++) {
@@ -150,12 +151,16 @@ public class SpellsListener implements Listener {
                                 if(block.getType() == Material.BAMBOO || block.getType() == Material.SHORT_GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.VINE ) {
                                     block.setType(Material.FIRE);
                                 }
+                                if(block.getType() == Material.SNOW || block.getType() == Material.POWDER_SNOW || block.getType() == Material.SNOW_BLOCK || block.getType() == Material.ICE || block.getType() == Material.PACKED_ICE || block.getType() == Material.BLUE_ICE || block.getType() == Material.FROSTED_ICE) {
+                                    block.setType(Material.AIR);
+                                }
                                 if(block.getType() == Material.GRASS_BLOCK || block.getType() == Material.DIRT || block.getType() == Material.COARSE_DIRT || block.getType() == Material.PODZOL || block.getType() == Material.DIRT_PATH || block.getType() == Material.MYCELIUM || block.getType() == Material.SNOW_BLOCK) {
                                     // Choose random number if the block should be converted to course dirt or other "ruined" blocks
                                     int random = (int) (Math.random() * 100);
-                                    if(random < 40) block.setType(Material.COARSE_DIRT);
+                                    if(random < 30) block.setType(Material.COARSE_DIRT);
+                                    else if(random < 40) block.setType(Material.MUD);
                                     else if(random < 50) {
-                                        block.setType(Material.SOUL_SAND);
+                                        block.setType(Material.NETHERRACK);
                                         Block blockFire = snowball.getLocation().clone().add(x, (y + 1), z).getBlock();
                                         if(blockFire.getType() == Material.AIR) blockFire.setType(Material.FIRE);
                                     }
@@ -171,9 +176,9 @@ public class SpellsListener implements Listener {
                 }
 
                 // Do the explosion
-                for (int x = -radius; x <= radius; x++) {
-                    for (int y = -radius; y <= radius; y++) {
-                        for (int z = -radius; z <= radius; z++) {
+                for (int x = (int) -radius; x <= radius; x++) {
+                    for (int y = (int) -radius; y <= radius; y++) {
+                        for (int z = (int) -radius; z <= radius; z++) {
                             if (Math.sqrt(x * x + y * y + z * z) <= radius) {
                                 Block block = snowball.getLocation().clone().add(x, y, z).getBlock();
                                 if ((block.getType() != Material.AIR)
@@ -187,9 +192,9 @@ public class SpellsListener implements Listener {
                                     FallingBlock fallingBlock = snowball.getWorld().spawnFallingBlock(block.getLocation(), block.getBlockData());
                                     // Apply velocity to simulate launch effect
                                     fallingBlock.setVelocity(new Vector(
-                                            (Math.random() - 0.5) * 2 * 2,
-                                            Math.random() + 1.2,
-                                            (Math.random() - 0.5) * 2 * 2
+                                            (Math.random() - 0.5) * (radius / 20) * 2, // Random x velocity between -radius/20 and radius/20
+                                            Math.random() * ((radius / 100) * 3) + 1.2, // Random y velocity between 1.2 and (1.2 + radius/100 * 3)
+                                            (Math.random() - 0.5) * (radius / 20) * 2 // Random z velocity between -radius/20 and radius/20
                                     ));
                                     // Remove the original block
                                     block.setType(Material.AIR);
