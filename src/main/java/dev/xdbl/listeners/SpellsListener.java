@@ -154,7 +154,11 @@ public class SpellsListener implements Listener {
                                     // Choose random number if the block should be converted to course dirt or other "ruined" blocks
                                     int random = (int) (Math.random() * 100);
                                     if(random < 40) block.setType(Material.COARSE_DIRT);
-                                    else if(random < 50) block.setType(Material.SOUL_SAND);
+                                    else if(random < 50) {
+                                        block.setType(Material.SOUL_SAND);
+                                        Block blockFire = snowball.getLocation().clone().add(x, (y + 1), z).getBlock();
+                                        if(blockFire.getType == Material.AIR) blockFire.setType(Material.FIRE)
+                                    }
                                     else if(random < 60) block.setType(Material.DIRT_PATH);
                                     else if(random < 70) block.setType(Material.GRAVEL);
                                     else if(random < 80) block.setType(Material.PODZOL);
