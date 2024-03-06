@@ -14,13 +14,13 @@ public class Faction {
     private final String name;
     private File configFile;
 
-    private List<UUID> members;
+    private List<String> members;
 
     public Faction(
             Double plugin,
             UUID uuid,
             String name,
-            List<UUID> members,
+            List<String> members,
             File configFile
     ) {
         this.plugin = plugin;
@@ -38,16 +38,22 @@ public class Faction {
         return this.name;
     }
 
-    public List<UUID> getMembers(){
+    public List<String> getMembers(){
         return this.members;
     }
 
-    public void addMember(UUID uuid){
-        this.members.add(uuid);
+    public void addMember(String name){
+        // If members is null, create a new list
+        if (this.members == null){
+            this.members = new ArrayList<String>();
+        }
+        this.members.add(name);
+
+        this.saveFaction();
     }
 
-    public void removeMember(UUID uuid){
-        this.members.remove(uuid);
+    public void removeMember(String name){
+        this.members.remove(name);
     }
 
     public boolean saveFaction(){
@@ -64,6 +70,7 @@ public class Faction {
             // Update or set the values
             config.set("name", name);
             config.set("id", uuid.toString());
+
             config.set("members", members);
 
             config.save(configFile);

@@ -33,14 +33,17 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/users").mkdirs();
         new File(getDataFolder(), "data/factions").mkdirs();
 
+        // Managers
+        this.factionManager = new FactionManager(this);
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.eloScoreBoardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
-        this.factionManager = new FactionManager(this);
+
         this.arenaSelectGUI = new ArenaSelectGUI(this);
         this.commandGVG = new CommandGVG(this);
 
+        // Command
         CommandPVP commandPVP = new CommandPVP(this);
         CommandArena commandArena = new CommandArena(this);
         CommandMod commandMod = new CommandMod(this);
@@ -49,6 +52,7 @@ public class Double extends JavaPlugin {
         CommandVersion commandVersion = new CommandVersion(this);
         CommandFaction commandFaction = new CommandFaction(this);
 
+        // Listeners
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
         new PlayerInventoryListener(this);
@@ -56,6 +60,7 @@ public class Double extends JavaPlugin {
         new ArenaExplodeListener(this);
         new SpellsListener(this);
 
+        // PvP Commands
         Objects.requireNonNull(getCommand("pvp")).setExecutor(commandPVP);
         Objects.requireNonNull(getCommand("arena")).setExecutor(commandArena);
         Objects.requireNonNull(getCommand("gvg")).setExecutor(commandGVG);
@@ -64,14 +69,18 @@ public class Double extends JavaPlugin {
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
 
+        // System Misc
         Objects.requireNonNull(getCommand("mod")).setExecutor(commandMod);
         Objects.requireNonNull(getCommand("version")).setExecutor(commandVersion);
 
+        // Faction Commands
         Objects.requireNonNull(getCommand("faction")).setExecutor(commandFaction);
     }
 
     public void onDisable() {
         metrics.shutdown();
+        playerManager.savePlayers();
+        factionManager.saveFactions();
     }
 
     public ArenaManager getArenaManager() {

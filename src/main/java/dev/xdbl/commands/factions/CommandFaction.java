@@ -1,24 +1,18 @@
 package dev.xdbl.commands.factions;
 
 import dev.xdbl.Double;
-import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.types.Faction;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.SmallFireball;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandFaction implements CommandExecutor, TabCompleter {
 
@@ -30,20 +24,27 @@ public class CommandFaction implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        switch (args[1]){
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Only players can use this command");
+            return true;
+        }
+
+        switch (args[0]){
             case "add" -> {
-                switch (args[2]){
+                switch (args[1]){
                     case "faction" -> {
-                        Faction faction = plugin.getFactionManager().newFaction(args[3]);
+                        plugin.getLogger().info("faction addition called");
+                        Faction faction = plugin.getFactionManager().newFaction(args[2]);
+                        faction.addMember(player.getName());
                         faction.saveFaction();
                     }
                     case "member" -> {
-
+                        plugin.getLogger().info("member addition called");
                     }
                 }
             }
             case "remove" -> {
-                switch (args[2]){
+                switch (args[1]){
                     case "faction" -> {
                         plugin.getLogger().info("faction removal not supported");
                     }

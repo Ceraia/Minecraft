@@ -16,8 +16,8 @@ public class DoublePlayer {
     private final Double plugin;
     private final UUID uuid;
     private final String name;
-    private final UUID faction;
-    private int draws;
+    private UUID faction;
+    private final int draws;
     private boolean pvpbanned;
     private int wins;
     private int losses;
@@ -62,6 +62,9 @@ public class DoublePlayer {
 
     public UUID getUUID() {
         return uuid;
+    }
+    public String getName() {
+        return name;
     }
 
     public int getElo() {
@@ -169,11 +172,42 @@ public class DoublePlayer {
         }
     }
 
+    public void savePlayer(){
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("elo", elo);
+        config.set("arenabanned", arenabanned);
+        config.set("pvpbanned", pvpbanned);
+        config.set("wins", wins);
+        config.set("losses", losses);
+        config.set("logs", logs);
+        config.set("uuid", uuid.toString());
+        if(faction == null){
+            config.set("faction", null);
+        } else {
+            config.set("faction", faction.toString());
+        }
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setLastFought(long lastFought) {
         this.lastFought = lastFought;
     }
 
     public Faction getFaction() {
         return plugin.getFactionManager().getFaction(faction);
+    }
+    public void setFaction(UUID faction) {
+        this.faction = faction;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("faction", faction.toString());
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

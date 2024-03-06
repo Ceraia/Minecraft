@@ -30,8 +30,8 @@ public class PlayerManager {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
             UUID faction = null;
-            if (config.getString("faction") == null){
-                faction = UUID.fromString(config.getString("faction"));
+            if (config.getString("faction") != null){
+                faction = UUID.fromString(config.getString("faction", null));
             }
 
             DoublePlayer doublePlayer = new DoublePlayer(
@@ -128,6 +128,7 @@ public class PlayerManager {
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
             config.set("uuid", null);
+            config.set("faction", null);
 
             config.save(configFile);
 
@@ -159,5 +160,21 @@ public class PlayerManager {
             }
         }
         return null;
+    }
+
+    public DoublePlayer getPlayer(String name) {
+        for (DoublePlayer doublePlayer : doublePlayers) {
+            if (doublePlayer.getName().equalsIgnoreCase(name)) {
+                return doublePlayer;
+            }
+        }
+        return null;
+    }
+
+    public void savePlayers(){
+        plugin.getLogger().info("Saving players...");
+        for(DoublePlayer doublePlayer : doublePlayers){
+            doublePlayer.savePlayer();
+        }
     }
 }
