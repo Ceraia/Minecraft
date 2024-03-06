@@ -1,7 +1,7 @@
 package dev.xdbl;
 
 import dev.xdbl.commands.arena.*;
-import dev.xdbl.commands.auth.CommandLogin;
+import dev.xdbl.commands.factions.CommandFaction;
 import dev.xdbl.commands.system.CommandMod;
 import dev.xdbl.commands.system.CommandVersion;
 import dev.xdbl.listeners.*;
@@ -22,6 +22,7 @@ public class Double extends JavaPlugin {
     private PlayerManager playerManager;
     Metrics metrics;
     private EloScoreboardManager eloScoreBoardManager;
+    private FactionManager factionManager;
 
     public void onEnable() {
         metrics = new Metrics(this, 20303);
@@ -30,22 +31,23 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
+        new File(getDataFolder(), "data/factions").mkdirs();
 
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.eloScoreBoardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
-
+        this.factionManager = new FactionManager(this);
         this.arenaSelectGUI = new ArenaSelectGUI(this);
-
         this.commandGVG = new CommandGVG(this);
+
         CommandPVP commandPVP = new CommandPVP(this);
         CommandArena commandArena = new CommandArena(this);
         CommandMod commandMod = new CommandMod(this);
         CommandTop commandTop = new CommandTop(this);
         CommandProfile commandProfile = new CommandProfile(this);
         CommandVersion commandVersion = new CommandVersion(this);
-        CommandLogin commandLogin = new CommandLogin(this);
+        CommandFaction commandFaction = new CommandFaction(this);
 
         new PlayerEloChangeListener(this);
         new ArenaFightListener(this);
@@ -53,7 +55,6 @@ public class Double extends JavaPlugin {
         new ArenaBlockListener(this);
         new ArenaExplodeListener(this);
         new SpellsListener(this);
-        new PlayerAuthListener(this);
 
         Objects.requireNonNull(getCommand("pvp")).setExecutor(commandPVP);
         Objects.requireNonNull(getCommand("arena")).setExecutor(commandArena);
@@ -66,7 +67,7 @@ public class Double extends JavaPlugin {
         Objects.requireNonNull(getCommand("mod")).setExecutor(commandMod);
         Objects.requireNonNull(getCommand("version")).setExecutor(commandVersion);
 
-        Objects.requireNonNull(getCommand("login")).setExecutor(commandLogin);
+        Objects.requireNonNull(getCommand("faction")).setExecutor(commandFaction);
     }
 
     public void onDisable() {
@@ -91,6 +92,10 @@ public class Double extends JavaPlugin {
 
     public CommandGVG getGroupManager() {
         return commandGVG;
+    }
+
+    public FactionManager getFactionManager() {
+        return factionManager;
     }
 
 }

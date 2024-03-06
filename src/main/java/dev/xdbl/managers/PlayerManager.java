@@ -29,6 +29,11 @@ public class PlayerManager {
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
+            UUID faction = null;
+            if (config.getString("faction") == null){
+                faction = UUID.fromString(config.getString("faction"));
+            }
+
             DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
@@ -41,7 +46,7 @@ public class PlayerManager {
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
-                    config.getString("password", "12345"),
+                    faction,
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -60,12 +65,12 @@ public class PlayerManager {
             }
         }
 
-//        // If the player is not in the list, create a new ArenaPlayer
-//        DoublePlayer newPlayer = createNewDoublePlayer(playerUUID);
-//        doublePlayers.add(newPlayer);
-//
-//        return newPlayer;
-        return null;
+        // If the player is not in the list, create a new ArenaPlayer
+        DoublePlayer newPlayer = createNewDoublePlayer(playerUUID);
+        doublePlayers.add(newPlayer);
+
+        return newPlayer;
+//        return null;
     }
 
     public void PlayerKill(UUID playerKiller, UUID playerVictim) {
@@ -107,7 +112,7 @@ public class PlayerManager {
         return lossChance;
     }
 
-    private DoublePlayer createNewDoublePlayer(UUID playerUUID, String password) {
+    private DoublePlayer createNewDoublePlayer(UUID playerUUID) {
         File configFile = new File(plugin.getDataFolder(), "data/users/" + playerUUID + ".yml");
         try {
             configFile.createNewFile();
@@ -122,6 +127,7 @@ public class PlayerManager {
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
+            config.set("uuid", null);
 
             config.save(configFile);
 
@@ -137,7 +143,7 @@ public class PlayerManager {
                     0,
                     new ArrayList<String>(),
                     (int) (System.currentTimeMillis() / 1000L),
-                    password,
+                    null,
                     configFile
             );
         } catch (IOException e) {

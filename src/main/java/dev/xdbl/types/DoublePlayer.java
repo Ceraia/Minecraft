@@ -16,7 +16,7 @@ public class DoublePlayer {
     private final Double plugin;
     private final UUID uuid;
     private final String name;
-    private final String password;
+    private final UUID faction;
     private int draws;
     private boolean pvpbanned;
     private int wins;
@@ -40,7 +40,7 @@ public class DoublePlayer {
             int draws,
             List<String> logs,
             long lastFought,
-            String password,
+            UUID faction,
             File configFile
 
     ) {
@@ -56,7 +56,7 @@ public class DoublePlayer {
         this.draws = draws;
         this.logs = logs;
         this.lastFought = lastFought;
-        this.password = password;
+        this.faction = faction;
         this.configFile = configFile;
     }
 
@@ -173,27 +173,7 @@ public class DoublePlayer {
         this.lastFought = lastFought;
     }
 
-    public void setPassword(String password) {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("password", password);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void resetPassword() {
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("password", "12345");
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public Faction getFaction() {
+        return plugin.getFactionManager().getFaction(faction);
     }
 }
