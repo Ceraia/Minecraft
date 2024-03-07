@@ -170,8 +170,6 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
-
-
         Arena arena = plugin.getArenaManager().getArena(e.getPlayer());
 
         // Check in which team the player is

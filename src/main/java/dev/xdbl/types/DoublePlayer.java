@@ -174,13 +174,15 @@ public class DoublePlayer {
 
     public void savePlayer(){
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("name", name);
+        config.set("uuid", uuid.toString());
         config.set("elo", elo);
         config.set("arenabanned", arenabanned);
         config.set("pvpbanned", pvpbanned);
         config.set("wins", wins);
         config.set("losses", losses);
         config.set("logs", logs);
-        config.set("uuid", uuid.toString());
+
         if(faction == null){
             config.set("faction", null);
         } else {

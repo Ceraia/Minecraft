@@ -48,6 +48,7 @@ public class Faction {
             this.members = new ArrayList<String>();
         }
         this.members.add(name);
+        this.plugin.getPlayerManager().getDoublePlayer(name).setFaction(this.uuid);
 
         this.saveFaction();
     }

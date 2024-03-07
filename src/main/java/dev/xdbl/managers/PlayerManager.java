@@ -10,6 +10,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static org.bukkit.Bukkit.getName;
+
 public class PlayerManager {
 
     private final Double plugin;
@@ -37,7 +39,7 @@ public class PlayerManager {
             DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
-                    UUID.fromString(file.getName().split("\\.")[0]),
+                    UUID.fromString(Objects.requireNonNull(config.getString("uuid"))),//UUID.fromString(file.getName().split("\\.")[0]),
                     config.getInt("elo", 1500),
                     config.getBoolean("arenabanned", false),
                     config.getBoolean("pvpbanned", false),
@@ -65,13 +67,24 @@ public class PlayerManager {
             }
         }
 
-        // If the player is not in the list, create a new ArenaPlayer
         DoublePlayer newPlayer = createNewDoublePlayer(playerUUID);
         doublePlayers.add(newPlayer);
 
         return newPlayer;
-//        return null;
     }
+    public DoublePlayer getDoublePlayer(String playerName) {
+        // Check if the player is already in the list
+        for (DoublePlayer doublePlayer : doublePlayers) {
+            if (doublePlayer.getName().equals(playerName)) {
+                return doublePlayer;
+            }
+        }
+
+        DoublePlayer newPlayer = createNewDoublePlayer(Objects.requireNonNull(Bukkit.getPlayer(playerName)).getUniqueId());
+        doublePlayers.add(newPlayer);
+        return newPlayer;
+    }
+
 
     public void PlayerKill(UUID playerKiller, UUID playerVictim) {
         DoublePlayer killer = getDoublePlayer(playerKiller);
@@ -113,7 +126,8 @@ public class PlayerManager {
     }
 
     private DoublePlayer createNewDoublePlayer(UUID playerUUID) {
-        File configFile = new File(plugin.getDataFolder(), "data/users/" + playerUUID + ".yml");
+        String playerName = Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName();
+        File configFile = new File(plugin.getDataFolder(), "data/users/" + playerName + ".yml");
         try {
             configFile.createNewFile();
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
@@ -121,13 +135,14 @@ public class PlayerManager {
             // Set default values or load from other sources as needed
             int defaultElo = 1500;
 
+            config.set("name", playerName);
+            config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
             config.set("arenabanned", false);
             config.set("pvpbanned", false);
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
-            config.set("uuid", null);
             config.set("faction", null);
 
             config.save(configFile);
