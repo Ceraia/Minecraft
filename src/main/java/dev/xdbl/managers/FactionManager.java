@@ -26,12 +26,10 @@ public class FactionManager {
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            UUID uuid = UUID.fromString(config.getString("id"));
-            String name = config.getString("name");
 
             List<String> members = new ArrayList<String>(config.getStringList("members"));
 
-            Faction faction = new Faction(plugin, uuid, name, members, file);
+            Faction faction = new Faction(plugin, config.getString("id"), config.getString("name"), members, file);
             factions.add(faction);
         }
 
@@ -41,18 +39,9 @@ public class FactionManager {
         return factions;
     }
 
-    public Faction getFaction(UUID uuid) {
+    public Faction getFaction(String id) {
         for (Faction faction : factions) {
-            if (faction.getUUID() == uuid) {
-                return faction;
-            }
-        }
-        return null;
-    }
-
-    public Faction getFaction(String name) {
-        for (Faction faction : factions) {
-            if (faction.getName().equalsIgnoreCase(name)) {
+            if (Objects.equals(faction.getId(), id)) {
                 return faction;
             }
         }
@@ -63,7 +52,7 @@ public class FactionManager {
         List<String> members = null;
         File file = new File(plugin.getDataFolder(), "data/factions/" + name + ".yml");
 
-        return new Faction(plugin, UUID.randomUUID(), name, members, file);
+        return new Faction(plugin, name, name, members, file);
     }
 
     public void removeFaction(Faction faction) {

@@ -16,7 +16,7 @@ public class DoublePlayer {
     private final Double plugin;
     private final UUID uuid;
     private final String name;
-    private UUID faction;
+    private String faction;
     private final int draws;
     private boolean pvpbanned;
     private int wins;
@@ -40,7 +40,7 @@ public class DoublePlayer {
             int draws,
             List<String> logs,
             long lastFought,
-            UUID faction,
+            String faction,
             File configFile
 
     ) {
@@ -182,12 +182,8 @@ public class DoublePlayer {
         config.set("wins", wins);
         config.set("losses", losses);
         config.set("logs", logs);
+        config.set("faction", faction);
 
-        if(faction == null){
-            config.set("faction", null);
-        } else {
-            config.set("faction", faction.toString());
-        }
         try {
             config.save(configFile);
         } catch (IOException e) {
@@ -202,10 +198,10 @@ public class DoublePlayer {
     public Faction getFaction() {
         return plugin.getFactionManager().getFaction(faction);
     }
-    public void setFaction(UUID faction) {
+    public void setFaction(String faction) {
         this.faction = faction;
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("faction", faction.toString());
+        config.set("faction", faction);
         try {
             config.save(configFile);
         } catch (IOException e) {

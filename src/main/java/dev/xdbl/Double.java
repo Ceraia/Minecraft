@@ -59,6 +59,7 @@ public class Double extends JavaPlugin {
         new ArenaBlockListener(this);
         new ArenaExplodeListener(this);
         new SpellsListener(this);
+        new ReviveListener(this);
 
         // PvP Commands
         Objects.requireNonNull(getCommand("pvp")).setExecutor(commandPVP);

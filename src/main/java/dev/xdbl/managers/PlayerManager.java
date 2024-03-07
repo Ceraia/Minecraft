@@ -31,11 +31,6 @@ public class PlayerManager {
         for (File file : files) {
             FileConfiguration config = YamlConfiguration.loadConfiguration(file);
 
-            UUID faction = null;
-            if (config.getString("faction") != null){
-                faction = UUID.fromString(config.getString("faction", null));
-            }
-
             DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
@@ -48,7 +43,7 @@ public class PlayerManager {
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
-                    faction,
+                    config.getString("faction", "none"),
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -143,7 +138,7 @@ public class PlayerManager {
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
-            config.set("faction", null);
+            config.set("faction", "none");
 
             config.save(configFile);
 
@@ -159,7 +154,7 @@ public class PlayerManager {
                     0,
                     new ArrayList<String>(),
                     (int) (System.currentTimeMillis() / 1000L),
-                    null,
+                    "none",
                     configFile
             );
         } catch (IOException e) {

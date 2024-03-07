@@ -2,6 +2,7 @@ package dev.xdbl.types;
 
 import dev.xdbl.Double;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +11,7 @@ import java.util.*;
 public class Faction {
 
     private final Double plugin;
-    private final UUID uuid;
+    private final String id;
     private final String name;
     private File configFile;
 
@@ -18,20 +19,20 @@ public class Faction {
 
     public Faction(
             Double plugin,
-            UUID uuid,
+            String id,
             String name,
             List<String> members,
             File configFile
     ) {
         this.plugin = plugin;
         this.name = name;
-        this.uuid = uuid;
+        this.id = id;
         this.members = members;
         this.configFile = configFile;
     }
 
-    public UUID getUUID() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     public String getName(){
@@ -48,7 +49,7 @@ public class Faction {
             this.members = new ArrayList<String>();
         }
         this.members.add(name);
-        this.plugin.getPlayerManager().getDoublePlayer(name).setFaction(this.uuid);
+        this.plugin.getPlayerManager().getDoublePlayer(name).setFaction(id);
 
         this.saveFaction();
     }
@@ -70,7 +71,7 @@ public class Faction {
 
             // Update or set the values
             config.set("name", name);
-            config.set("id", uuid.toString());
+            config.set("id", id);
 
             config.set("members", members);
 
