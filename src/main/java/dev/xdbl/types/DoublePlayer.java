@@ -16,7 +16,7 @@ public class DoublePlayer {
     private final Double plugin;
     private final UUID uuid;
     private final String name;
-    private String faction;
+    private String kingdom;
     private final int draws;
     private boolean pvpbanned;
     private int wins;
@@ -26,6 +26,7 @@ public class DoublePlayer {
     private final List<String> logs;
     private int elo;
     private long lastFought;
+    private int rank;
 
 
     public DoublePlayer(
@@ -40,7 +41,8 @@ public class DoublePlayer {
             int draws,
             List<String> logs,
             long lastFought,
-            String faction,
+            String kingdom,
+            int rank,
             File configFile
 
     ) {
@@ -56,7 +58,8 @@ public class DoublePlayer {
         this.draws = draws;
         this.logs = logs;
         this.lastFought = lastFought;
-        this.faction = faction;
+        this.kingdom = kingdom;
+        this.rank = rank;
         this.configFile = configFile;
     }
 
@@ -183,7 +186,8 @@ public class DoublePlayer {
         config.set("wins", wins);
         config.set("losses", losses);
         config.set("logs", logs);
-        config.set("faction", faction);
+        config.set("kingdom", kingdom);
+        config.set("rank", 0);
 
         try {
             config.save(configFile);
@@ -196,14 +200,51 @@ public class DoublePlayer {
         this.lastFought = lastFought;
     }
 
-    public Kingdom getFaction() {
-        return plugin.getKingdomManager().getKingdom(faction);
+    public Kingdom getKingdom() {
+        return plugin.getKingdomManager().getKingdom(kingdom);
     }
 
-    public void setFaction(String faction) {
-        this.faction = faction;
+    public void setKingdom(String kingdom) {
+        this.kingdom = kingdom;
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("faction", faction);
+        config.set("kingdom", kingdom);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void setRank(int rank) {
+        this.rank = rank;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("rank", rank);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int getRank() {
+        return rank;
+    }
+
+    public void promote() {
+        rank++;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("rank", rank);
+        try {
+            config.save(configFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void demote() {
+        rank--;
+        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+        config.set("rank", rank);
         try {
             config.save(configFile);
         } catch (IOException e) {

@@ -27,7 +27,7 @@ public class CommandSit implements CommandExecutor, TabCompleter {
 
         Player player = (Player) sender;
 
-        plugin.getChairManager().sit(player, player.getLocation().add(0, -0.4, 0));
+        plugin.getChairManager().sit(player, player.getLocation().add(0, -0.3, 0));
         return true;
     }
 

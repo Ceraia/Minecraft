@@ -4,20 +4,24 @@ import dev.xdbl.Double;
 import dev.xdbl.types.Kingdom;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class KingdomManager {
     private final List<Kingdom> kingdoms = new ArrayList<>();
     private final Double plugin;
 
+    private Map<Player, Kingdom> invites;
+
     public KingdomManager(Double plugin) {
         this.plugin = plugin;
 
-        // Load arenas
+        // Initialize the invites map
+        this.invites = new HashMap<>();
+
+        // Load kingdoms
         File f = new File(plugin.getDataFolder(), "data/kingdoms");
         if (!f.exists()) {
             f.mkdirs();
@@ -37,6 +41,18 @@ public class KingdomManager {
 
     }
 
+    public List<Kingdom> getInvites(Player player) {
+        List<Kingdom> invites = new ArrayList<>();
+
+        for (Map.Entry<Player, Kingdom> entry : this.invites.entrySet()) {
+            if (entry.getKey().equals(player)) {
+                invites.add(entry.getValue());
+            }
+        }
+
+        return invites;
+    }
+
     public List<Kingdom> getKingdoms() {
         return kingdoms;
     }
@@ -50,11 +66,19 @@ public class KingdomManager {
         return null;
     }
 
+    public Kingdom getKingdom(Player player) {
+        return plugin.getPlayerManager().getDoublePlayer(player.getName()).getKingdom();
+    }
+
     public Kingdom newKingdom(String name) {
         List<String> members = null;
         File file = new File(plugin.getDataFolder(), "data/kingdoms/" + name + ".yml");
 
-        return new Kingdom(plugin, name, name, members, file);
+        String id = name.toLowerCase().replace(" ", "_");
+
+        Kingdom kingdom = new Kingdom(plugin, id, name, members, file);
+        kingdoms.add(kingdom);
+        return kingdom;
     }
 
     public void removeKingdom(Kingdom kingdom) {
@@ -66,5 +90,26 @@ public class KingdomManager {
         for (Kingdom kingdom : kingdoms) {
             kingdom.saveKingdom();
         }
+    }
+
+    public boolean invitePlayer(Player player, Kingdom kingdom) {
+        if (invites.containsKey(player)) {
+            return false;
+        }
+        invites.put(player, kingdom);
+        return true;
+    }
+
+    public boolean acceptInvite(Player player, Kingdom kingdom) {
+        if (!invites.containsKey(player)) {
+            return false;
+        }
+        kingdom.addMember(player.getName());
+        invites.remove(player);
+        return true;
+    }
+
+    public Map<Player, Kingdom> getInvites() {
+        return invites;
     }
 }

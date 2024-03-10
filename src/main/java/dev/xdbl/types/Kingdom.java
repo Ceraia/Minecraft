@@ -2,6 +2,7 @@ package dev.xdbl.types;
 
 import dev.xdbl.Double;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +13,7 @@ public class Kingdom {
 
     private final Double plugin;
     private final String id;
-    private final String name;
+    private String name;
     private File configFile;
 
     private List<String> members;
@@ -49,13 +50,103 @@ public class Kingdom {
             this.members = new ArrayList<String>();
         }
         this.members.add(name);
-        this.plugin.getPlayerManager().getDoublePlayer(name).setFaction(id);
+        this.plugin.getPlayerManager().getDoublePlayer(name).setKingdom(id);
 
         this.saveKingdom();
     }
 
-    public void removeMember(String name) {
+    public boolean removeMember(String name) {
+        if (!this.members.contains(name)) {
+            return false;
+        }
+        DoublePlayer doublePlayer = this.plugin.getPlayerManager().getDoublePlayer(name);
+        doublePlayer.setKingdom("none");
+        doublePlayer.setRank(0);
+        doublePlayer.savePlayer();
         this.members.remove(name);
+        this.saveKingdom();
+        return true;
+    }
+
+    public int promoteMember(String name) {
+        if (!this.members.contains(name)) {
+            return 5; // 5 is the code for "player not found"
+        }
+
+        DoublePlayer doublePlayer = this.plugin.getPlayerManager().getDoublePlayer(name);
+        doublePlayer.setRank(doublePlayer.getRank() + 1);
+        doublePlayer.savePlayer();
+        return doublePlayer.getRank();
+    }
+
+    public int demoteMember(String name) {
+        if (!this.members.contains(name)) {
+            return 5; // 5 is the code for "player not found"
+        }
+
+        DoublePlayer doublePlayer = this.plugin.getPlayerManager().getDoublePlayer(name);
+        doublePlayer.setRank(doublePlayer.getRank() - 1);
+        doublePlayer.savePlayer();
+        return doublePlayer.getRank();
+    }
+
+    public void setMemberRank(String name, int rank) {
+        if (!this.members.contains(name)) {
+            return;
+        }
+
+        DoublePlayer doublePlayer = this.plugin.getPlayerManager().getDoublePlayer(name);
+        doublePlayer.setRank(rank);
+        doublePlayer.savePlayer();
+    }
+
+    public boolean kickMember(String name) {
+        if (!this.members.contains(name)) {
+            return false;
+        }
+
+        this.removeMember(name);
+        return true;
+    }
+
+    public boolean disband() {
+        for (String member : this.members) {
+            this.removeMember(member);
+        }
+        this.plugin.getKingdomManager().removeKingdom(this);
+        this.configFile.delete();
+        return true;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean invitePlayer(String name) {
+        if (this.members.contains(name)) {
+            return false;
+        }
+
+        this.plugin.getKingdomManager().invitePlayer(this.plugin.getServer().getPlayer(name), this);
+        return true;
+    }
+
+    public boolean acceptInvite(Player player) {
+        if (!this.plugin.getKingdomManager().getInvites().containsKey(player)) {
+            return false;
+        }
+
+        this.addMember(player.getName());
+        this.plugin.getKingdomManager().getInvites().remove(player);
+        return true;
+    }
+
+    public int getMemberRank(String name) {
+        if (!this.members.contains(name)) {
+            return 5; // 5 is the code for "player not found"
+        }
+
+        return this.plugin.getPlayerManager().getDoublePlayer(name).getRank();
     }
 
     public boolean saveKingdom() {

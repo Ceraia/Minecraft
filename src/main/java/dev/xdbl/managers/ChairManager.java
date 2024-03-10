@@ -16,17 +16,16 @@ import java.util.List;
 
 public class ChairManager implements Listener {
 
-    private final Double plugin;
     public List<Chair> chairs;
 
     public ChairManager(Double plugin) {
-        this.plugin = plugin;
         this.chairs = new ArrayList<>();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
         // Check every tick if the player is still sitting on the chair
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            // Iterate through the chairs
             Iterator<Chair> iterator = chairs.iterator();
             while (iterator.hasNext()) {
                 Chair chair = iterator.next();
@@ -45,6 +44,34 @@ public class ChairManager implements Listener {
                 }
             }
         }, 0, 5);
+
+        Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            // Get all armorstands close to the player and check if they are in the chairs list
+            // If they are not, remove them
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                for (Entity entity : player.getNearbyEntities(15, 15, 15)) {
+                    if (entity instanceof ArmorStand) {
+                        boolean found = false;
+                        if (entity.getPassengers().size() > 0) {
+                            Player passenger = (Player) entity.getPassengers().get(0);
+                            this.chairs.add(new Chair(passenger, entity));
+                            continue;
+                        }
+                        for (Chair chair : chairs) {
+                            if (chair.getEntity().equals(entity)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            if (entity.getScoreboardTags().contains("chair")) {
+                                entity.remove();
+                            }
+                        }
+                    }
+                }
+            }
+        }, 0, 5 * 20);
     }
 
     public void sit(Player player, Location location) {
@@ -57,6 +84,7 @@ public class ChairManager implements Listener {
             armorStand.setSilent(true);
             armorStand.setHealth(20);
             armorStand.setAbsorptionAmount(1000);
+            armorStand.addScoreboardTag("chair");
             armorStand.teleport(location.add(0, -1.6, 0));
             armorStand.addPassenger(player);
         });
@@ -72,8 +100,10 @@ public class ChairManager implements Listener {
         if (e.getPlayer().isSneaking()) {
             return;
         }
+
         if (e.getClickedBlock().getType().toString().contains("STAIRS") || e.getClickedBlock().getType().toString().contains("SLAB")) {
-            sit(e.getPlayer(), e.getClickedBlock().getLocation().add(0.5, 0, 0.5));
+            e.setCancelled(true);
+            sit(e.getPlayer(), e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5));
         }
     }
 

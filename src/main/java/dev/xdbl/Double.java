@@ -9,6 +9,10 @@ import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
 import dev.xdbl.types.ArenaSelectGUI;
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,15 +29,22 @@ public class Double extends JavaPlugin {
     private EloScoreboardManager eloScoreBoardManager;
     private KingdomManager kingdomManager;
     private ChairManager chairManager;
+    private Economy economy;
+    private Permission permission;
+    private Chat chat;
 
     public void onEnable() {
+
         metrics = new Metrics(this, 20303);
 
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
-        new File(getDataFolder(), "data/factions").mkdirs();
+        new File(getDataFolder(), "data/kingdoms").mkdirs();
+
+        // Vault
+        setupChat();
 
         // Managers
         this.kingdomManager = new KingdomManager(this);
@@ -117,4 +128,13 @@ public class Double extends JavaPlugin {
         return chairManager;
     }
 
+    private boolean setupChat() {
+        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+        chat = rsp.getProvider();
+        return chat != null;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
 }

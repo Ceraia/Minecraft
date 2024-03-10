@@ -1,16 +1,17 @@
 package dev.xdbl.managers;
 
-import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.Double;
+import dev.xdbl.types.DoublePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-
-import static org.bukkit.Bukkit.getName;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 public class PlayerManager {
 
@@ -43,7 +44,8 @@ public class PlayerManager {
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
-                    config.getString("faction", "none"),
+                    config.getString("kingdom", "none"),
+                    config.getInt("rank", 0),
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -67,6 +69,7 @@ public class PlayerManager {
 
         return newPlayer;
     }
+
     public DoublePlayer getDoublePlayer(String playerName) {
         // Check if the player is already in the list
         for (DoublePlayer doublePlayer : doublePlayers) {
@@ -100,7 +103,7 @@ public class PlayerManager {
     }
 
 
-    public int CalculateWinChance(UUID playerKiller, UUID playerVictim){
+    public int CalculateWinChance(UUID playerKiller, UUID playerVictim) {
         DoublePlayer killer = getDoublePlayer(playerKiller);
         DoublePlayer victim = getDoublePlayer(playerVictim);
 
@@ -110,7 +113,7 @@ public class PlayerManager {
         return winChance;
     }
 
-    public int CalculateLossChance(UUID playerKiller, UUID playerVictim){
+    public int CalculateLossChance(UUID playerKiller, UUID playerVictim) {
         DoublePlayer killer = getDoublePlayer(playerKiller);
         DoublePlayer victim = getDoublePlayer(playerVictim);
 
@@ -138,7 +141,8 @@ public class PlayerManager {
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
-            config.set("faction", "none");
+            config.set("kingdom", "none");
+            config.set("rank", 0);
 
             config.save(configFile);
 
@@ -155,6 +159,7 @@ public class PlayerManager {
                     new ArrayList<String>(),
                     (int) (System.currentTimeMillis() / 1000L),
                     "none",
+                    0,
                     configFile
             );
         } catch (IOException e) {
@@ -181,9 +186,9 @@ public class PlayerManager {
         return null;
     }
 
-    public void savePlayers(){
+    public void savePlayers() {
         plugin.getLogger().info("Saving players...");
-        for(DoublePlayer doublePlayer : doublePlayers){
+        for (DoublePlayer doublePlayer : doublePlayers) {
             doublePlayer.savePlayer();
         }
     }
