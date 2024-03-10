@@ -132,7 +132,7 @@ messages:
     totems_disabled: '<red>Totems disabled!'
     problem_saving_inventories: '<red>Problem saving inventories'
     end: '<green>Fight ended! Winner: %winner%, teleporting in %time% seconds'
-    end_global: '<green>%winner% just slaughtered %loser% in the %arena% arena with a win chance of %winchance%%!'
+    end_global: '<green>%winner% just killed %loser% in the %arena% arena with a win chance of %winchance%%!'
   profile:
     - '<yellow><bold>Profile of %player%'
     - '<yellow><bold>ELO: <green>%elo%'
