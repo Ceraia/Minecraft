@@ -1,7 +1,7 @@
-package dev.xdbl.commands.factions;
+package dev.xdbl.commands.kingdoms;
 
 import dev.xdbl.Double;
-import dev.xdbl.types.Faction;
+import dev.xdbl.types.Kingdom;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CommandFaction implements CommandExecutor, TabCompleter {
+public class CommandKingdom implements CommandExecutor, TabCompleter {
 
     private final Double plugin;
 
-    public CommandFaction(Double plugin) {
+    public CommandKingdom(Double plugin) {
         this.plugin = plugin;
     }
 
@@ -29,14 +29,14 @@ public class CommandFaction implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        switch (args[0]){
+        switch (args[0]) {
             case "add" -> {
-                switch (args[1]){
-                    case "faction" -> {
-                        plugin.getLogger().info("faction addition called");
-                        Faction faction = plugin.getFactionManager().newFaction(args[2]);
-                        faction.addMember(player.getName());
-                        faction.saveFaction();
+                switch (args[1]) {
+                    case "kingdom" -> {
+                        plugin.getLogger().info("kingdom addition called");
+                        Kingdom kingdom = plugin.getKingdomManager().newKingdom(args[2]);
+                        kingdom.addMember(player.getName());
+                        kingdom.saveKingdom();
                     }
                     case "member" -> {
                         plugin.getLogger().info("member addition called");
@@ -44,8 +44,8 @@ public class CommandFaction implements CommandExecutor, TabCompleter {
                 }
             }
             case "remove" -> {
-                switch (args[1]){
-                    case "faction" -> {
+                switch (args[1]) {
+                    case "kingdom" -> {
                         plugin.getLogger().info("faction removal not supported");
                     }
                     case "member" -> {
@@ -73,22 +73,24 @@ public class CommandFaction implements CommandExecutor, TabCompleter {
             List<String> tabOptions = new ArrayList<>();
 
             tabOptions.add("member");
-            tabOptions.add("faction");
+            tabOptions.add("kingdom");
 
             return tabOptions;
         }
         if (args.length == 3) {
             List<String> tabOptions = new ArrayList<>();
 
-            if(Objects.equals(args[2], "member"))
+            if (Objects.equals(args[2], "member")) {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     tabOptions.add(player.getName());
                 }
+            }
 
-            if(Objects.equals(args[2], "faction"))
-                for (Faction faction : plugin.getFactionManager().getFactions()) {
-                    tabOptions.add(faction.getName());
+            if (Objects.equals(args[2], "kingdom")) {
+                for (Kingdom kingdom : plugin.getKingdomManager().getKingdoms()) {
+                    tabOptions.add(kingdom.getName());
                 }
+            }
 
             return tabOptions;
         }

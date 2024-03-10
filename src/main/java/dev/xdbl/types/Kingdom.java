@@ -2,13 +2,13 @@ package dev.xdbl.types;
 
 import dev.xdbl.Double;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Faction {
+public class Kingdom {
 
     private final Double plugin;
     private final String id;
@@ -17,7 +17,7 @@ public class Faction {
 
     private List<String> members;
 
-    public Faction(
+    public Kingdom(
             Double plugin,
             String id,
             String name,
@@ -35,32 +35,32 @@ public class Faction {
         return id;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public List<String> getMembers(){
+    public List<String> getMembers() {
         return this.members;
     }
 
-    public void addMember(String name){
+    public void addMember(String name) {
         // If members is null, create a new list
-        if (this.members == null){
+        if (this.members == null) {
             this.members = new ArrayList<String>();
         }
         this.members.add(name);
         this.plugin.getPlayerManager().getDoublePlayer(name).setFaction(id);
 
-        this.saveFaction();
+        this.saveKingdom();
     }
 
-    public void removeMember(String name){
+    public void removeMember(String name) {
         this.members.remove(name);
     }
 
-    public boolean saveFaction(){
+    public boolean saveKingdom() {
         try {
-            configFile = new File(plugin.getDataFolder(), "data/factions/" + name + ".yml");
+            configFile = new File(plugin.getDataFolder(), "data/kingdoms/" + name + ".yml");
 
             // Check if the file already exists
             if (!configFile.exists()) {
@@ -82,7 +82,8 @@ public class Faction {
         }
         return true;
     }
-    public File getConfigFile(){
+
+    public File getConfigFile() {
         return this.configFile;
     }
 }

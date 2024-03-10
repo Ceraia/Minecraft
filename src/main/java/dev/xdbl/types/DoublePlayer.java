@@ -2,14 +2,14 @@ package dev.xdbl.types;
 
 import dev.xdbl.Double;
 import dev.xdbl.listeners.PlayerEventListener;
-
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class DoublePlayer {
 
@@ -63,6 +63,7 @@ public class DoublePlayer {
     public UUID getUUID() {
         return uuid;
     }
+
     public String getName() {
         return name;
     }
@@ -87,7 +88,7 @@ public class DoublePlayer {
         }
     }
 
-    public boolean pvpBan(){
+    public boolean pvpBan() {
         pvpbanned = !pvpbanned;
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("pvpbanned", pvpbanned);
@@ -103,7 +104,7 @@ public class DoublePlayer {
         return pvpbanned;
     }
 
-    public boolean arenaBan(){
+    public boolean arenaBan() {
         arenabanned = !arenabanned;
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("arenabanned", arenabanned);
@@ -161,7 +162,7 @@ public class DoublePlayer {
         }
     }
 
-    public void addLog(String string){
+    public void addLog(String string) {
         logs.add(string);
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("logs", logs);
@@ -172,7 +173,7 @@ public class DoublePlayer {
         }
     }
 
-    public void savePlayer(){
+    public void savePlayer() {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("name", name);
         config.set("uuid", uuid.toString());
@@ -195,9 +196,10 @@ public class DoublePlayer {
         this.lastFought = lastFought;
     }
 
-    public Faction getFaction() {
-        return plugin.getFactionManager().getFaction(faction);
+    public Kingdom getFaction() {
+        return plugin.getKingdomManager().getKingdom(faction);
     }
+
     public void setFaction(String faction) {
         this.faction = faction;
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);

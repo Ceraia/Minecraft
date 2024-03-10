@@ -64,9 +64,9 @@ public class ArenaSelectGUI implements Listener {
             ItemMeta meta = itemStack.getItemMeta();
             meta.displayName(
                     MiniMessage.miniMessage().deserialize(
-                    Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
-                    .replace("%arena_name%", a.getName())
-                    .replace("%arena_owner%", a.getOwner())
+                            Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
+                                    .replace("%arena_name%", a.getName())
+                                    .replace("%arena_owner%", a.getOwner())
                     )
             );
 
@@ -74,7 +74,6 @@ public class ArenaSelectGUI implements Listener {
             for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
                 lore.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", a.getName())
                         .replace("%arena_owner%", a.getOwner())
-                        .replace("%totems%", a.totems ? "<green>enabled</green>" : "<red>disabled</red>")
                 ));
             }
 
@@ -95,7 +94,7 @@ public class ArenaSelectGUI implements Listener {
         inviter.openInventory(inv);
     }
 
-    public void openTotemEnabled(Player inviter, Arena arena){ // Let the player select whether to enable or disable totems in the fight
+    public void openTotemEnabled(Player inviter, Arena arena) { // Let the player select whether to enable or disable totems in the fight
         int size = 9;
 
         Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name"))));

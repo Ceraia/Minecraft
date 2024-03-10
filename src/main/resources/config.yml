@@ -1,23 +1,4 @@
-rewards:
-
-rewards-lose:
-
-# If command is used, fill command with command that will be executed by console
-# If location is used, fill location with location
-spawn_teleport:
-  use: 'prior' # 'command' or 'location' or 'prior'
-  command: 'tp %player%'
-  location:
-    world: 'world'
-    x: 0.0
-    y: 0.0
-    z: 0.0
-
 elo-scoreboard: true # Whether to enable the scoreboard for player rankings.
-
-cooldown:
-  before: 5 # seconds
-  after: 5 # seconds
 
 messages:
   bad_usage: '<red>Invalid usage'

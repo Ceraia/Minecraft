@@ -38,7 +38,11 @@ commands:
   version:
     description: Show the plugin version
     usage: /version
-  faction:
-    description: Faction related commands
-    usage: /faction
-    permission: xdbl.faction
+  kingdom:
+    description: Kingdom related commands
+    usage: /kingdom
+    permission: xdbl.kingdom
+  sit:
+    description: Sit command
+    usage: /sit
+    permission: xdbl.sit

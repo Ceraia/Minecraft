@@ -1,7 +1,7 @@
 package dev.xdbl.types;
 
-import dev.xdbl.Utils;
 import dev.xdbl.Double;
+import dev.xdbl.Utils;
 import dev.xdbl.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -97,13 +97,6 @@ public class Arena {
             saveArena();
         }
     }
-    public int getTimer() {
-        return timer;
-    }
-
-    public void setTimer(int timer) {
-        this.timer = timer;
-    }
 
     public ArenaState getState() {
         return state;
@@ -194,7 +187,6 @@ public class Arena {
         boolean end = false;
 
 
-
         List<Player> winners = new ArrayList<>();
         List<Player> losers = new ArrayList<>();
 
@@ -242,7 +234,7 @@ public class Arena {
                     MiniMessage.miniMessage().deserialize(
                             plugin.getConfig().getString("messages.fight.end")
                                     .replace("%winner%", winners.stream().map(Player::getName).collect(Collectors.joining(", ")))
-                                    .replace("%time%", String.valueOf(plugin.getConfig().getInt("cooldown.after")))
+                                    .replace("%time%", String.valueOf(5))
                     )
             );
 
@@ -279,24 +271,18 @@ public class Arena {
                 for (Player pl : winners) {
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addWin();
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
-                    for (String command : plugin.getConfig().getStringList("rewards")) {
-                        pl.performCommand(command.replace("%player%", pl.getName()));
-                    }
                 }
 
                 // Reward losers
                 for (Player pl : losers) {
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addLoss();
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
-                    for (String command : plugin.getConfig().getStringList("rewards_lose")) {
-                        pl.performCommand(command.replace("%player%", pl.getName()));
-                    }
                 }
 
                 thisArena.setState(ArenaState.WAITING);
                 reset();
             }
-        }.runTaskLater(plugin, plugin.getConfig().getInt("cooldown.after") * 20L);
+        }.runTaskLater(plugin, 5 * 20L);
     }
 
     public void start(InviteManager.Invite invite, List<Player> players) {
@@ -359,7 +345,7 @@ public class Arena {
         this.setState(Arena.ArenaState.STARTING);
 
         AtomicInteger i = new AtomicInteger(
-                plugin.getConfig().getInt("cooldown.before") + 1
+                5 + 1
         );
 
         Arena thisArena = this;
@@ -378,13 +364,13 @@ public class Arena {
                         pl.showTitle(title);
                     } else {
                         pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
-                                plugin.getConfig().getString("messages.fight.starting")
-                                        .replace("%time%", String.valueOf(i.get() - 1))
-                        ), MiniMessage.miniMessage().deserialize(
+                                        plugin.getConfig().getString("messages.fight.starting")
+                                                .replace("%time%", String.valueOf(i.get() - 1))
+                                ), MiniMessage.miniMessage().deserialize(
                                         Objects.requireNonNull(plugin.getArenaManager().getArena(pl).totems ?
                                                 plugin.getConfig().getString("messages.fight.totems_enabled")
                                                 : plugin.getConfig().getString("messages.fight.totems_disabled"))
-                        )
+                                )
                         ));
                     }
                 }

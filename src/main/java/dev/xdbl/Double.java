@@ -1,9 +1,10 @@
 package dev.xdbl;
 
 import dev.xdbl.commands.arena.*;
-import dev.xdbl.commands.factions.CommandFaction;
-import dev.xdbl.commands.system.CommandMod;
-import dev.xdbl.commands.system.CommandVersion;
+import dev.xdbl.commands.kingdoms.CommandKingdom;
+import dev.xdbl.commands.misc.CommandMod;
+import dev.xdbl.commands.misc.CommandSit;
+import dev.xdbl.commands.misc.CommandVersion;
 import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
@@ -22,7 +23,8 @@ public class Double extends JavaPlugin {
     private PlayerManager playerManager;
     Metrics metrics;
     private EloScoreboardManager eloScoreBoardManager;
-    private FactionManager factionManager;
+    private KingdomManager kingdomManager;
+    private ChairManager chairManager;
 
     public void onEnable() {
         metrics = new Metrics(this, 20303);
@@ -34,11 +36,12 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/factions").mkdirs();
 
         // Managers
-        this.factionManager = new FactionManager(this);
+        this.kingdomManager = new KingdomManager(this);
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.eloScoreBoardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
+        this.chairManager = new ChairManager(this);
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
         this.commandGVG = new CommandGVG(this);
@@ -50,7 +53,8 @@ public class Double extends JavaPlugin {
         CommandTop commandTop = new CommandTop(this);
         CommandProfile commandProfile = new CommandProfile(this);
         CommandVersion commandVersion = new CommandVersion(this);
-        CommandFaction commandFaction = new CommandFaction(this);
+        CommandKingdom commandKingdom = new CommandKingdom(this);
+        CommandSit commandSit = new CommandSit(this);
 
         // Listeners
         new PlayerEloChangeListener(this);
@@ -70,18 +74,19 @@ public class Double extends JavaPlugin {
         Objects.requireNonNull(getCommand("profile")).setExecutor(commandProfile);
         Objects.requireNonNull(getCommand("stats")).setExecutor(commandProfile);
 
-        // System Misc
+        // Misc
         Objects.requireNonNull(getCommand("mod")).setExecutor(commandMod);
         Objects.requireNonNull(getCommand("version")).setExecutor(commandVersion);
+        Objects.requireNonNull(getCommand("sit")).setExecutor(commandSit);
 
-        // Faction Commands
-        Objects.requireNonNull(getCommand("faction")).setExecutor(commandFaction);
+        // Kingdom Commands
+        Objects.requireNonNull(getCommand("kingdom")).setExecutor(commandKingdom);
     }
 
     public void onDisable() {
         metrics.shutdown();
         playerManager.savePlayers();
-        factionManager.saveFactions();
+        kingdomManager.saveKingdoms();
     }
 
     public ArenaManager getArenaManager() {
@@ -104,8 +109,12 @@ public class Double extends JavaPlugin {
         return commandGVG;
     }
 
-    public FactionManager getFactionManager() {
-        return factionManager;
+    public KingdomManager getKingdomManager() {
+        return kingdomManager;
+    }
+
+    public ChairManager getChairManager() {
+        return chairManager;
     }
 
 }

@@ -1,7 +1,7 @@
-package dev.xdbl.commands.system;
+package dev.xdbl.commands.misc;
 
-import dev.xdbl.types.DoublePlayer;
 import dev.xdbl.Double;
+import dev.xdbl.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -105,7 +105,9 @@ public class CommandMod implements CommandExecutor, TabCompleter {
         }
         if (args.length == 2) {
             List<String> tabOptions = new ArrayList<>();
-            if (args[1].equalsIgnoreCase("ban")) tabOptions.add("pvp");
+            if (args[1].equalsIgnoreCase("ban")) {
+                tabOptions.add("pvp");
+            }
             tabOptions.add("arena");
             return tabOptions;
         }
