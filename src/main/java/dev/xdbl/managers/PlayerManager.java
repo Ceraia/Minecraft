@@ -35,6 +35,7 @@ public class PlayerManager {
             DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
+                    config.getString("marriedname", null),
                     UUID.fromString(Objects.requireNonNull(config.getString("uuid"))),//UUID.fromString(file.getName().split("\\.")[0]),
                     config.getInt("elo", 1500),
                     config.getBoolean("arenabanned", false),
@@ -131,9 +132,11 @@ public class PlayerManager {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
             // Set default values or load from other sources as needed
+
             int defaultElo = 1500;
 
             config.set("name", playerName);
+            config.set("marriedname", null);
             config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
             config.set("arenabanned", false);
@@ -149,6 +152,7 @@ public class PlayerManager {
             return new DoublePlayer(
                     plugin,
                     Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName(),
+                    null,
                     playerUUID,
                     defaultElo,
                     false,

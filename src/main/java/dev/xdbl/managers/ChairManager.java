@@ -45,6 +45,7 @@ public class ChairManager implements Listener {
             }
         }, 0, 5);
 
+        // Check every 5 seconds if there are any chairs that are not in the list
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             // Get all armorstands close to the player and check if they are in the chairs list
             // If they are not, remove them
@@ -101,9 +102,11 @@ public class ChairManager implements Listener {
             return;
         }
 
+        Player player = e.getPlayer();
+
         if (e.getClickedBlock().getType().toString().contains("STAIRS") || e.getClickedBlock().getType().toString().contains("SLAB")) {
             e.setCancelled(true);
-            sit(e.getPlayer(), e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5));
+            sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5));
         }
     }
 
@@ -129,4 +132,5 @@ public class ChairManager implements Listener {
             chairs.remove(this);
         }
     }
+
 }

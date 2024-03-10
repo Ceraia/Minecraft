@@ -2,9 +2,7 @@ package dev.xdbl;
 
 import dev.xdbl.commands.arena.*;
 import dev.xdbl.commands.kingdoms.CommandKingdom;
-import dev.xdbl.commands.misc.CommandMod;
-import dev.xdbl.commands.misc.CommandSit;
-import dev.xdbl.commands.misc.CommandVersion;
+import dev.xdbl.commands.misc.*;
 import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
@@ -12,7 +10,6 @@ import dev.xdbl.types.ArenaSelectGUI;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -32,6 +29,7 @@ public class Double extends JavaPlugin {
     private Economy economy;
     private Permission permission;
     private Chat chat;
+    private MarriageManager marriageManager;
 
     public void onEnable() {
 
@@ -43,9 +41,6 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/users").mkdirs();
         new File(getDataFolder(), "data/kingdoms").mkdirs();
 
-        // Vault
-        setupChat();
-
         // Managers
         this.kingdomManager = new KingdomManager(this);
         this.arenaManager = new ArenaManager(this);
@@ -53,6 +48,7 @@ public class Double extends JavaPlugin {
         this.eloScoreBoardManager = new EloScoreboardManager(this);
         this.inviteManager = new InviteManager();
         this.chairManager = new ChairManager(this);
+        this.marriageManager = new MarriageManager(this);
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
         this.commandGVG = new CommandGVG(this);
@@ -66,6 +62,8 @@ public class Double extends JavaPlugin {
         CommandVersion commandVersion = new CommandVersion(this);
         CommandKingdom commandKingdom = new CommandKingdom(this);
         CommandSit commandSit = new CommandSit(this);
+        CommandMarry commandMarry = new CommandMarry(this);
+        CommandAccept commandAccept = new CommandAccept(this);
 
         // Listeners
         new PlayerEloChangeListener(this);
@@ -92,6 +90,10 @@ public class Double extends JavaPlugin {
 
         // Kingdom Commands
         Objects.requireNonNull(getCommand("kingdom")).setExecutor(commandKingdom);
+
+        // Marriage Commands
+        Objects.requireNonNull(getCommand("marry")).setExecutor(commandMarry);
+        Objects.requireNonNull(getCommand("accept")).setExecutor(commandAccept);
     }
 
     public void onDisable() {
@@ -128,13 +130,7 @@ public class Double extends JavaPlugin {
         return chairManager;
     }
 
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-        return chat != null;
-    }
-
-    public Chat getChat() {
-        return chat;
+    public MarriageManager getMarriageManager() {
+        return marriageManager;
     }
 }

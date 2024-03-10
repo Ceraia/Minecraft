@@ -27,11 +27,13 @@ public class DoublePlayer {
     private int elo;
     private long lastFought;
     private int rank;
+    private String marriedname;
 
 
     public DoublePlayer(
             Double plugin,
             String name,
+            String marriedname,
             UUID uuid,
             int elo,
             boolean arenabanned,
@@ -49,6 +51,7 @@ public class DoublePlayer {
         this.plugin = plugin;
 
         this.name = name;
+        this.marriedname = marriedname;
         this.uuid = uuid;
         this.elo = elo;
         this.arenabanned = arenabanned;
@@ -77,18 +80,7 @@ public class DoublePlayer {
 
     public void setElo(int elo) {
         this.elo = elo;
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("elo", elo);
-        try {
-            // Trigger the custom event when Elo changes
-            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
-            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
-
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public boolean pvpBan() {
@@ -109,18 +101,13 @@ public class DoublePlayer {
 
     public boolean arenaBan() {
         arenabanned = !arenabanned;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("arenabanned", arenabanned);
-        try {
-            // Trigger the custom event when Elo changes
-            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
-            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
-
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        this.savePlayer();
+        if (arenabanned) {
+            return true;
+        } else {
+            return false;
         }
-        return arenabanned;
+
     }
 
     public boolean pvpBanned() {
@@ -145,40 +132,23 @@ public class DoublePlayer {
 
     public void addWin() {
         wins++;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("wins", wins);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public void addLoss() {
         losses++;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("losses", losses);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public void addLog(String string) {
         logs.add(string);
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("logs", logs);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public void savePlayer() {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("name", name);
+        config.set("married", marriedname);
         config.set("uuid", uuid.toString());
         config.set("elo", elo);
         config.set("arenabanned", arenabanned);
@@ -206,24 +176,12 @@ public class DoublePlayer {
 
     public void setKingdom(String kingdom) {
         this.kingdom = kingdom;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("kingdom", kingdom);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public void setRank(int rank) {
         this.rank = rank;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("rank", rank);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public int getRank() {
@@ -232,23 +190,33 @@ public class DoublePlayer {
 
     public void promote() {
         rank++;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("rank", rank);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
     }
 
     public void demote() {
         rank--;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("rank", rank);
-        try {
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
+    }
+
+    public void divorce() {
+        marriedname = null;
+        this.savePlayer();
+    }
+
+    public void marry(String name) {
+        marriedname = name;
+        this.savePlayer();
+    }
+
+    public String getMarriedName() {
+        return marriedname;
+    }
+
+    public boolean isMarried() {
+        return marriedname != null;
+    }
+
+    public String getPartner() {
+        return marriedname;
     }
 }

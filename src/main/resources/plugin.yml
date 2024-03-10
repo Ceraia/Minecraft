@@ -46,3 +46,15 @@ commands:
     description: Sit command
     usage: /sit
     permission: xdbl.sit
+  marry:
+    description: Marry command
+    usage: /marry <player>
+    permission: xdbl.marry
+  divorce:
+    description: Divorce command
+    usage: /divorce
+    permission: xdbl.marry
+  accept:
+    description: Accept command
+    usage: /accept
+    permission: xdbl.accept
