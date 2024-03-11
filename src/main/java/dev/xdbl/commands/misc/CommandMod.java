@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandMod implements CommandExecutor, TabCompleter {
 
@@ -20,6 +21,7 @@ public class CommandMod implements CommandExecutor, TabCompleter {
 
     public CommandMod(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("mod")).setExecutor(this);
     }
 
     @Override

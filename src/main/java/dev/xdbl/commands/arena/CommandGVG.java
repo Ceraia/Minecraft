@@ -26,6 +26,7 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
     public CommandGVG(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(this.plugin.getCommand("gvg")).setExecutor(this);
     }
 
     @Override

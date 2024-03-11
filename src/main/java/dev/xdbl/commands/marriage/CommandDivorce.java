@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandDivorce implements CommandExecutor, TabCompleter {
 
@@ -19,6 +20,7 @@ public class CommandDivorce implements CommandExecutor, TabCompleter {
 
     public CommandDivorce(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("divorce")).setExecutor(this);
     }
 
     @Override

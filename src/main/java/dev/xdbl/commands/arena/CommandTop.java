@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandTop implements CommandExecutor, TabCompleter {
@@ -23,6 +24,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
 
     public CommandTop(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(this.plugin.getCommand("top")).setExecutor(this);
     }
 
     @Override

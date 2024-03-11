@@ -20,6 +20,7 @@ public class CommandKingdom implements CommandExecutor, TabCompleter {
 
     public CommandKingdom(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(this.plugin.getCommand("kingdom")).setExecutor(this);
     }
 
     @Override

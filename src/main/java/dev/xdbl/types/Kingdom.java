@@ -149,7 +149,7 @@ public class Kingdom {
         return this.plugin.getPlayerManager().getDoublePlayer(name).getRank();
     }
 
-    public boolean saveKingdom() {
+    public void saveKingdom() {
         try {
             configFile = new File(plugin.getDataFolder(), "data/kingdoms/" + name + ".yml");
 
@@ -169,9 +169,7 @@ public class Kingdom {
             config.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
     public File getConfigFile() {

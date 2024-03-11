@@ -24,6 +24,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
     public CommandArena(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(this.plugin.getCommand("arena")).setExecutor(this);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandSit implements CommandExecutor, TabCompleter {
 
@@ -17,15 +18,14 @@ public class CommandSit implements CommandExecutor, TabCompleter {
 
     public CommandSit(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("sit")).setExecutor(this);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player)) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player player)) {
             return true;
         }
-
-        Player player = (Player) sender;
 
         plugin.getChairManager().sit(player, player.getLocation().add(0, -0.3, 0));
         return true;

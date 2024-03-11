@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandMarry implements CommandExecutor, TabCompleter {
 
@@ -18,6 +19,7 @@ public class CommandMarry implements CommandExecutor, TabCompleter {
 
     public CommandMarry(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("marry")).setExecutor(this);
     }
 
     @Override

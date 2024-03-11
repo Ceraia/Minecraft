@@ -21,6 +21,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
 
     public CommandProfile(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(this.plugin.getCommand("profile")).setExecutor(this);
     }
 
     @Override

@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandPVP implements CommandExecutor, TabCompleter {
 
@@ -23,6 +24,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
     public CommandPVP(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("pvp")).setExecutor(this);
     }
 
     @Override

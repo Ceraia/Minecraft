@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CommandVersion implements CommandExecutor, TabCompleter {
 
@@ -17,6 +18,7 @@ public class CommandVersion implements CommandExecutor, TabCompleter {
 
     public CommandVersion(Double plugin) {
         this.plugin = plugin;
+        Objects.requireNonNull(plugin.getCommand("version")).setExecutor(this);
     }
 
     @Override
