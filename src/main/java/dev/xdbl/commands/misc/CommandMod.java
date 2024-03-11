@@ -13,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class CommandMod implements CommandExecutor, TabCompleter {
 
@@ -26,7 +25,7 @@ public class CommandMod implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!sender.hasPermission("xdbl.mod")) {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
+            this.plugin.noPermission((Player) sender);
             return true;
         }
 
@@ -61,32 +60,32 @@ public class CommandMod implements CommandExecutor, TabCompleter {
 
                 if (args[1].equalsIgnoreCase("arena")) {
                     if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"));
                         return true;
                     }
                     DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
                     boolean arenabanned = doublePlayer.arenaBan();
                     if (arenabanned) {
                         doublePlayer.addLog("Banned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.banned")).replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Banned from creation of arenas by " + sender.getName()));
                     } else {
                         doublePlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.unbanned")).replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Unbanned from creation of arenas by " + sender.getName()));
                     }
                 }
                 if (args[1].equalsIgnoreCase("pvp")) {
                     if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"));
                         return true;
                     }
                     DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
                     boolean pvpbanned = doublePlayer.pvpBan();
                     if (pvpbanned) {
                         doublePlayer.addLog("Banned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.banned")).replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Banned from PVPing by " + sender.getName()));
                     } else {
                         doublePlayer.addLog("Unbanned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned")).replace("%player%", target.getName())));
+                        sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Unbanned from PVPing by " + sender.getName()));
                     }
                 }
             }
@@ -132,6 +131,13 @@ public class CommandMod implements CommandExecutor, TabCompleter {
     }
 
     private void ModHelp(CommandSender sender) {
-        plugin.getConfig().getStringList("messages.mod.help").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s)));
+        sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                """
+                        <yellow><bold>Mod Help
+                        <gray>/mod ban pvp <player>
+                        <gray>/mod ban arena <player>
+                        <gray>/mod remove pvp <player>
+                        <gray>/mod remove arena <player>"""
+        ));
     }
 }

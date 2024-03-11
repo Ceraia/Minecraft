@@ -26,7 +26,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!sender.hasPermission("xdbl.pvp")) {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
             return true;
         }
 
@@ -34,7 +34,7 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             player = Bukkit.getPlayer(args[0]);
             if (player == null) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.bad_usage"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("<red>Invalid usage"))));
                 return true;
             }
         } else {
@@ -43,17 +43,17 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
 
         // Return the player's profile
         DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(player.getUniqueId());
-        plugin.getConfig().getStringList("messages.profile").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s
-                .replace("%player%", player.getName())
-                .replace("%elo%", String.valueOf(doublePlayer.getElo()))
-                .replace("%wins%", String.valueOf(doublePlayer.wins()))
-                .replace("%losses%", String.valueOf(doublePlayer.losses()))
-                .replace("%draws%", String.valueOf(doublePlayer.draws()))
-                .replace("%games%", String.valueOf(doublePlayer.wins() + doublePlayer.losses()))
-                .replace("%pvpbanned%", doublePlayer.pvpBanned() ? "<red>Yes" : "<green>No")
-                .replace("%arenabanned%", doublePlayer.arenaBanned() ? "<red>Yes" : "<green>No"))));
-
-
+        sender.sendMessage(MiniMessage.miniMessage().deserialize(
+                """
+                        <yellow><bold>Profile of %player%
+                        <yellow><bold>ELO: <green>%elo%
+                        <yellow><bold>Games: <green>%games%
+                        <yellow><bold>Wins: <green>%wins%
+                        <yellow><bold>Losses: <green>%losses%
+                        <yellow><bold>PVP-Banned: <green>%pvpbanned%
+                        <yellow><bold>Arena-Banned: <green>%arenabanned%
+                        """
+        ));
 
         return true;
     }

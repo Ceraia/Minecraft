@@ -1,7 +1,6 @@
 package dev.xdbl.commands.arena;
 
 import dev.xdbl.Double;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -31,13 +30,19 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        if(!sender.hasPermission("xdbl.gvg")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
+        if (!sender.hasPermission("xdbl.gvg")) {
+            this.plugin.noPermission((Player) sender);
             return true;
         }
 
         if (args.length == 0) {
-            plugin.getConfig().getStringList("messages.gvg.help").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s)));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("""
+                            <red>Usage: /gvg invite <player>
+                            /gvg accept
+                            /gvg leave
+                            /gvg kick <player>
+                            /gvg fight <player>
+                    """));
             return true;
         }
 
@@ -45,12 +50,12 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
         if (args[0].equalsIgnoreCase("invite")) {
             if (playersByGroup.containsKey(player) && !groups.containsKey(player)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.dont_have_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already in a group"));
                 return true;
             }
 
             if (args.length == 1) {
-                badUsage(sender);
+                plugin.badUsage((Player) sender);
                 return true;
             }
 
@@ -67,57 +72,48 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
                 if (playersByGroup.containsKey(target)) {
                     assert target != null;
-                    sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.already_in_group"))
-                            .replace("%player%", target.getName())));
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " is already in a group"));
                     return true;
                 }
             }
 
             if (targets.contains(player)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.cant_invite_yourself"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You cannot invite yourself"));
                 return true;
             }
 
             if (notOnline.size() > 0) {
                 System.out.println(notOnline);
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.player_offline"))
-                        .replace("%player%", String.join(", ", notOnline))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player(s) " + String.join(", ", notOnline) + " are not online"));
                 return true;
             }
 
             for (Player target : targets) {
-                Component message = Objects.requireNonNull(
-                        MiniMessage.miniMessage().deserialize(
-                                Objects.requireNonNull(
-                                        plugin.getConfig().getString("messages.gvg.invite.invite_message")
-                                ).replace("%inviter%", player.getName()
-                                )
-                        )
-                );
-                target.sendMessage(message);
+                target.sendMessage(MiniMessage.miniMessage().deserialize(
+                        "You have been invited to a group by " + player.getName() + "\n" +
+                                "<green>/gvg accept</green> to accept the invite"
+                ));
 
                 invites.put(target, player);
             }
 
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.invite_sent"))
-                    .replace("%player%", targets.stream().map(Player::getName).collect(Collectors.joining(", ")))));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Invites sent to " + targets.stream().map(Player::getName).collect(Collectors.joining(", "))));
             return true;
-        }
-        else if (args[0].equalsIgnoreCase("accept")) {
+        } else if (args[0].equalsIgnoreCase("accept")) {
             Player inviter = invites.get(player);
 
             if (inviter == null || !inviter.isOnline()) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.accept.invite_not_found"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>No invites found"));
                 return true;
             }
 
             if (playersByGroup.containsKey(inviter) && !groups.containsKey(inviter)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.accept.invite_not_found"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + inviter.getName() + " is already in a group"));
                 return true;
             }
 
             if (playersByGroup.containsKey(player)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.accept.you_already_in_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already in a group"));
                 return true;
             }
 
@@ -131,84 +127,77 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
             groups.put(inviter, group);
 
             playersByGroup.put(player, inviter);
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.accept.accepted"))));
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Invite accepted"));
             for (Player pl : group) {
-                pl.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.accept.invite_accepted"))
-                        .replace("%player%", player.getName())));
+                pl.sendMessage(MiniMessage.miniMessage().deserialize("<green>Player " + player.getName() + " has joined the group"));
             }
             return true;
-        }
-        else if (args[0].equalsIgnoreCase("leave")) {
+        } else if (args[0].equalsIgnoreCase("leave")) {
             leaveGang(player);
-        }
-        else if (args[0].equalsIgnoreCase("kick")) {
+        } else if (args[0].equalsIgnoreCase("kick")) {
             if (!groups.containsKey(player)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.kick.not_in_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"));
                 return true;
             }
 
             if (args.length == 1) {
-                badUsage(sender);
+                plugin.badUsage((Player) sender);
                 return true;
             }
 
             Player target = plugin.getServer().getPlayer(args[1]);
             if (target == null) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.player_offline"))
-                        .replace("%player%", args[1])));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + args[1] + " is not online"));
                 return true;
             }
 
             List<Player> group = groups.get(player);
 
             if (!group.contains(target)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.kick.player_not_in_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " is not in your group"));
                 return true;
             }
 
             group.remove(target);
             playersByGroup.remove(target);
 
-            target.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.kick.you_kicked"))));
+            target.sendMessage(MiniMessage.miniMessage().deserialize("<red>You have been kicked from the group by " + player.getName()));
 
             if (group.size() <= 1) {
 
                 groups.get(player).forEach(p -> {
-                    player.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.you_left"))));
+                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Group has been disbanded"));
                     playersByGroup.remove(p);
                     groups.remove(player);
                 });
 
                 groups.remove(player);
             } else {
-                group.forEach(p -> p.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.kicked"))
-                        .replace("%player%", target.getName()))));
+                group.forEach(p -> p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " has been kicked from the group by " + player.getName())));
             }
             return true;
-        }
-        else if (args[0].equalsIgnoreCase("fight")) {
+        } else if (args[0].equalsIgnoreCase("fight")) {
             String playerName = args[1];
             Player invited = Bukkit.getPlayer(playerName);
 
             if (invited == null) {
                 sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.player_offline"))
-                                .replace("%player%", playerName)));
+                        MiniMessage.miniMessage().deserialize("<red>Player " + playerName + " is not online"));
                 return true;
             }
 
             if (invited == player) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.invite.invite_yourself"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You cannot fight yourself"));
                 return true;
             }
 
             if (!groups.containsKey(player)) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.not_in_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"));
                 return true;
             }
 
             if (!groups.containsKey(invited) || (groups.get(player).contains(invited) || groups.get(invited).contains(player))) {
-                sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.player_not_in_group"))));
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + playerName + " is not in a group"));
                 return true;
             }
 
@@ -219,14 +208,12 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args){
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (args.length == 1) {
             return Arrays.asList("invite", "accept", "leave", "kick", "fight");
-        }
-        else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
             return getPlayersByGroup((Player) sender).stream().map(Player::getName).collect(Collectors.toList());
-        }
-        else if (args.length == 2 && (args[0].equalsIgnoreCase("invite") ||args[0].equalsIgnoreCase("fight"))) {
+        } else if (args.length == 2 && (args[0].equalsIgnoreCase("invite") || args[0].equalsIgnoreCase("fight"))) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
         }
 
@@ -235,7 +222,7 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
     private void leaveGang(Player player) {
         if (!playersByGroup.containsKey(player)) {
-            player.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.not_in_group"))));
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"));
             return;
         }
 
@@ -244,24 +231,19 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
         if (group != null || group.size() <= 2) {
             group.forEach(pl -> {
-                pl.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.you_left"))));
+                pl.sendMessage(MiniMessage.miniMessage().deserialize("<red>Group has been disbanded"));
                 playersByGroup.remove(pl);
             });
 
             groups.remove(owner);
         } else {
-            group.forEach(p -> player.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.gvg.leave.player_left_group"))
-                    .replace("%player%", player.getName()))));
+            group.forEach(p -> player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + player.getName() + " has left the group")));
 
             group.remove(player);
             groups.put(owner, group);
 
             playersByGroup.remove(player);
         }
-    }
-
-    private void badUsage(CommandSender sender) {
-        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.bad_usage"))));
     }
 
     public List<Player> getPlayersByGroup(Player player) {

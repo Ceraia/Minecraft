@@ -116,7 +116,9 @@ public class ArenaFightListener implements Listener {
 
             InviteManager.Invite invite = plugin.getInviteManager().invites.get(player);
 
-            if (invite == null) invite = plugin.getInviteManager().selectingInvites.get(killer);
+            if (invite == null) {
+                invite = plugin.getInviteManager().selectingInvites.get(killer);
+            }
 
             if (invite != null) {
                 if (arena.totems) {
@@ -151,7 +153,6 @@ public class ArenaFightListener implements Listener {
         if (killer != null) {
             matchEnd(e.getEntity(), killer);
         }
-
 
 
         e.getEntity().spigot().respawn();
@@ -189,10 +190,8 @@ public class ArenaFightListener implements Listener {
         // Get the win chance
         int winChance = plugin.getPlayerManager().CalculateWinChance(winnerUUID, loserUUID);
 
-        // Announce the winner and the win chance in chat
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getDoublePlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaManager().getArena(loser).getName()))
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green>" + winner.getName() + " just killed " + loser.getName() + " in the " + plugin.getArenaManager().getArena(loser).getName() + " arena with a win chance of " + winChance + "%!"));
 
-        );
 
         // Handle ELO calculations
         plugin.getPlayerManager().PlayerKill(winnerUUID, loserUUID);

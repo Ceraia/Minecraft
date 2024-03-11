@@ -18,23 +18,15 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class ArenaSelectGUI implements Listener {
-    private static Component INVENTORY_NAME_ARENAS;
-    private static Component INVENTORY_NAME_TOTEMS;
+    private static Component INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize("Select an arena");
+    private static Component INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize("Select totems");
     private final Double plugin;
     private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
     public ArenaSelectGUI(Double plugin) {
         this.plugin = plugin;
 
-        INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
-        INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name")));
-
         Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
-
-    public void reloadConfig() {
-        INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
-        INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name")));
     }
 
     public void openArenaList(Player inviter, Player invited) { // Let the player select what arena to fight in
@@ -51,31 +43,25 @@ public class ArenaSelectGUI implements Listener {
         int size = Math.max(9, (arenas.size() + 8) / 9 * 9);
 
         // Create the inventory
-        Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name"))));
+        Inventory inv = Bukkit.createInventory(null, size, INVENTORY_NAME_ARENAS);
 
         // Create a map of the slot and the arena
         Map<Integer, Arena> arenasSelectSlots = new HashMap<>();
 
         int i = 0; // Slot
         for (Arena a : arenas.stream().filter(a -> a.getState() == Arena.ArenaState.WAITING).toList()) { // Filter out arenas that are not ready
-            ItemStack itemStack = new ItemStack(Objects.requireNonNull(Material.getMaterial(
-                    Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.item"))
-            ))); // Create the itemstack
+            ItemStack itemStack = new ItemStack(Material.ENDER_EYE); // Create the itemstack
             ItemMeta meta = itemStack.getItemMeta();
             meta.displayName(
                     MiniMessage.miniMessage().deserialize(
-                            Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
-                                    .replace("%arena_name%", a.getName())
-                                    .replace("%arena_owner%", a.getOwner())
+                            "<green>%arena_name%</green>"
                     )
             );
 
             List<Component> lore = new ArrayList<>();
-            for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
-                lore.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", a.getName())
-                        .replace("%arena_owner%", a.getOwner())
-                ));
-            }
+            lore.add(MiniMessage.miniMessage().deserialize(
+                    "<gray>Owner: %arena_owner%"
+            ));
 
             meta.lore(lore);
 
@@ -97,23 +83,19 @@ public class ArenaSelectGUI implements Listener {
     public void openTotemEnabled(Player inviter, Arena arena) { // Let the player select whether to enable or disable totems in the fight
         int size = 9;
 
-        Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name"))));
+        Inventory inv = Bukkit.createInventory(null, size, INVENTORY_NAME_TOTEMS);
 
-        ItemStack itemStackEnable = new ItemStack(Objects.requireNonNull(Material.getMaterial(
-                Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.enable.item"))
-        ))); // Create the itemstack
+        ItemStack itemStackEnable = new ItemStack(Material.GREEN_STAINED_GLASS_PANE); // Create the itemstack
         ItemMeta metaEnable = itemStackEnable.getItemMeta();
 
         metaEnable.displayName(
                 MiniMessage.miniMessage().deserialize(
-                        Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.enable.name"))
+                        "<green>Enable totems</green>"
                 )
         );
 
         List<Component> loreEnable = new ArrayList<>();
-        for (String s : plugin.getConfig().getStringList("messages.totem_select_gui.items.enable.lore")) {
-            loreEnable.add(MiniMessage.miniMessage().deserialize(s));
-        }
+        loreEnable.add(MiniMessage.miniMessage().deserialize("<gray>Click to enable totems in the fight"));
 
         metaEnable.lore(loreEnable);
 
@@ -121,20 +103,17 @@ public class ArenaSelectGUI implements Listener {
 
         inv.setItem(1, itemStackEnable);
 
-        ItemStack itemStackDisable = new ItemStack(Objects.requireNonNull(Material.getMaterial(
-                Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.disable.item"))
-        ))); // Create the itemstack
+        ItemStack itemStackDisable = new ItemStack(Material.RED_STAINED_GLASS_PANE); // Create the itemstack
         ItemMeta metaDisable = itemStackDisable.getItemMeta();
         metaDisable.displayName(
                 MiniMessage.miniMessage().deserialize(
-                        Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.items.disable.name"))
+                        "<red>Disable totems</red>"
                 )
         );
 
         List<Component> loreDisable = new ArrayList<>();
-        for (String s : plugin.getConfig().getStringList("messages.totem_select_gui.items.disable.lore")) {
-            loreDisable.add(MiniMessage.miniMessage().deserialize(s));
-        }
+        loreDisable.add(MiniMessage.miniMessage().deserialize("<gray>Click to disable totems in the fight"));
+
 
         metaDisable.lore(loreDisable);
 
@@ -143,24 +122,19 @@ public class ArenaSelectGUI implements Listener {
         inv.setItem(7, itemStackDisable);
 
         // Set the center slot to the arena that was selected
-        ItemStack itemStackArena = new ItemStack(Objects.requireNonNull(Material.getMaterial(
-                Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.item"))
-        ))); // Create the itemstack
+        ItemStack itemStackArena = new ItemStack(Material.ENDER_EYE); // Create the itemstack
 
         ItemMeta metaArena = itemStackArena.getItemMeta();
         metaArena.displayName(
-                MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_item.name"))
-                        .replace("%arena_name%", arena.getName())
-                        .replace("%arena_owner%", arena.getOwner()))
-
+                MiniMessage.miniMessage().deserialize(
+                        "<green>%arena_name%</green>"
+                )
         );
 
         List<Component> loreArena = new ArrayList<>();
-        for (String s : plugin.getConfig().getStringList("messages.arena_select_gui.arena_item.lore")) {
-            loreArena.add(MiniMessage.miniMessage().deserialize(s.replace("%arena_name%", arena.getName())
-                    .replace("%arena_owner%", arena.getOwner())
-            ));
-        }
+        loreArena.add(MiniMessage.miniMessage().deserialize(
+                "<gray>Owner: %arena_owner%"
+        ));
 
         metaArena.lore(loreArena);
 
@@ -191,8 +165,10 @@ public class ArenaSelectGUI implements Listener {
 
             if (arena == null || arena.getState() != Arena.ArenaState.WAITING) { // Somehow arena doesn't work, purely debug
                 inviter.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.arena_not_ready"))))
-                ;
+                        MiniMessage.miniMessage().deserialize(
+                                "<red>That arena is not available at the moment. Please try again later."
+                        )
+                );
                 return;
             }
 
@@ -214,18 +190,23 @@ public class ArenaSelectGUI implements Listener {
             arena.totems = slot == 1;
 
             inviter.sendMessage(
-                    MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.invite_sent"))
-                            .replace("%player%", invite.invited.getName())))
-            ; // Send the invite confirmation message
+                    MiniMessage.miniMessage().deserialize(
+                            "<green>Totems have been " + (slot == 1 ? "enabled" : "disabled") + " for the fight."
+                    )
+            ); // Send the invite confirmation message
 
-            String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.invite_message"))
-                    .replace("%inviter%", inviter.getName())
-                    .replace("%arena_name%", arena.getName())
-                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
-                    .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>");
-            // Get the invite message from the config and replace the placeholders
+            String totemsEnabled = arena.totems ? "<green>enabled</green>" : "<red>disabled</red>";
 
-            Objects.requireNonNull(plugin.getServer().getPlayer(invite.invited.getUniqueId())).sendMessage(MiniMessage.miniMessage().deserialize(invite_message));// Send the actual message
+            Objects.requireNonNull(plugin.getServer().getPlayer(invite.invited.getUniqueId()))
+                    .sendMessage(
+                            MiniMessage.miniMessage().deserialize(
+                                    "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with "
+                                            + inviter.getName() + " in " + arena.getName() +
+                                            ", totems are "
+                                            + totemsEnabled + " you have a "
+                                            + plugin.getPlayerManager().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId())
+                                            + "% chance of winning!"
+                            ));// Send the actual message
 
 
             invite.arena = arena;

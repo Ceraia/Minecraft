@@ -1,7 +1,7 @@
 package dev.xdbl.commands.arena;
 
-import dev.xdbl.managers.InviteManager;
 import dev.xdbl.Double;
+import dev.xdbl.managers.InviteManager;
 import dev.xdbl.types.Arena;
 import dev.xdbl.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 public class CommandPVP implements CommandExecutor, TabCompleter {
 
@@ -28,8 +27,8 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if(!sender.hasPermission("xdbl.pvp")){
-            sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.no_permission"))));
+        if (!sender.hasPermission("xdbl.pvp")) {
+            this.plugin.noPermission((Player) sender);
             return true;
         }
 
@@ -42,7 +41,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId());
         if (doublePlayer.pvpBanned()) {
             sender.sendMessage(
-                    MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_invite")))
+                    MiniMessage.miniMessage().deserialize("<red>You are banned from PvP!")
             );
             return true;
         }
@@ -53,7 +52,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             // Check if the player is banned
             if (plugin.getPlayerManager().getDoublePlayer(p.getUniqueId()).pvpBanned()) {
                 sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_accept")))
+                        MiniMessage.miniMessage().deserialize("<red>This player is banned from PvP!")
                 );
                 return true;
             }
@@ -62,7 +61,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
             if (invite == null) {
                 sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.invite_not_found")))
+                        MiniMessage.miniMessage().deserialize("<red>You don't have any invites!")
                 );
                 plugin.getInviteManager().invites.remove(p);
                 return true;
@@ -70,14 +69,14 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
             if (!invite.invited.isOnline() || !invite.inviter.isOnline()) {
                 sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.other_player_offline")))
+                        MiniMessage.miniMessage().deserialize("<red>Player not found!")
                 );
                 return true;
             }
 
-            if(invite.accepted){
+            if (invite.accepted) {
                 sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.invite_already_accepted")))
+                        MiniMessage.miniMessage().deserialize("<red>You already accepted this invite!")
                 );
                 return true;
             }
@@ -87,7 +86,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             )) {
                 for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                     pl.sendMessage(
-                            MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.arena_not_ready")))
+                            MiniMessage.miniMessage().deserialize("<red>Arena not found!")
                     );
                 }
                 plugin.getInviteManager().invites.remove(p);
@@ -103,7 +102,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (group1 == null || group2 == null) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.group.group_not_found")))
+                                MiniMessage.miniMessage().deserialize("<red>Group not found!")
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -113,7 +112,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (group1.size() < 2 || group2.size() < 2) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.group.group_too_small")))
+                                MiniMessage.miniMessage().deserialize("<red>Group must have at least 2 players!")
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -137,7 +136,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 if (!allPlayersAreReady) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                         pl.sendMessage(
-                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.group.someone_already_in_fight"))
+                                MiniMessage.miniMessage().deserialize("<red>One or more players are already in an arena!")
                         );
                     }
                     plugin.getInviteManager().invites.remove(p);
@@ -170,7 +169,6 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         // reload for op
         if (playerName.equalsIgnoreCase("reload") && sender.isOp()) {
             plugin.reloadConfig();
-            plugin.getArenaSelectGUI().reloadConfig();
             sender.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<green>Reloaded!")
             );
@@ -181,7 +179,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
         if (invited == null) {
             sender.sendMessage(
-                    MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.player_offline")))
+                    MiniMessage.miniMessage().deserialize("<red>Player not found!")
             );
             return true;
         } // If the player is offline, return
@@ -190,7 +188,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
 
         if (inviter == invited) {
             sender.sendMessage(
-                    MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.invite.invite_self")))
+                    MiniMessage.miniMessage().deserialize("<red>You can't invite yourself!")
             );
             return true;
         } // If the inviter is the same as the invited, return
@@ -218,6 +216,10 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
     }
 
     private void pvpHelp(CommandSender sender) {
-        plugin.getConfig().getStringList("messages.pvp.help").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s)));
+        sender.sendMessage(MiniMessage.miniMessage().deserialize("""
+                <gray>Usage: /pvp <player>
+                <gray>Usage: /pvp accept
+                <gray>Usage: /pvp reload
+                """));
     }
 }

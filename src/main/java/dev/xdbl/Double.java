@@ -2,14 +2,21 @@ package dev.xdbl;
 
 import dev.xdbl.commands.arena.*;
 import dev.xdbl.commands.kingdoms.CommandKingdom;
-import dev.xdbl.commands.misc.*;
+import dev.xdbl.commands.marriage.CommandAccept;
+import dev.xdbl.commands.marriage.CommandDivorce;
+import dev.xdbl.commands.marriage.CommandMarry;
+import dev.xdbl.commands.misc.CommandMod;
+import dev.xdbl.commands.misc.CommandSit;
+import dev.xdbl.commands.misc.CommandVersion;
 import dev.xdbl.listeners.*;
 import dev.xdbl.managers.*;
 import dev.xdbl.misc.Metrics;
 import dev.xdbl.types.ArenaSelectGUI;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.milkbowl.vault.chat.Chat;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -64,6 +71,7 @@ public class Double extends JavaPlugin {
         CommandSit commandSit = new CommandSit(this);
         CommandMarry commandMarry = new CommandMarry(this);
         CommandAccept commandAccept = new CommandAccept(this);
+        CommandDivorce commandDivorce = new CommandDivorce(this);
 
         // Listeners
         new PlayerEloChangeListener(this);
@@ -94,6 +102,7 @@ public class Double extends JavaPlugin {
         // Marriage Commands
         Objects.requireNonNull(getCommand("marry")).setExecutor(commandMarry);
         Objects.requireNonNull(getCommand("accept")).setExecutor(commandAccept);
+        Objects.requireNonNull(getCommand("divorce")).setExecutor(commandDivorce);
     }
 
     public void onDisable() {
@@ -132,5 +141,13 @@ public class Double extends JavaPlugin {
 
     public MarriageManager getMarriageManager() {
         return marriageManager;
+    }
+
+    public void badUsage(Player player) {
+        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
+    }
+
+    public void noPermission(Player player) {
+        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You don't have permission to execute this command"));
     }
 }

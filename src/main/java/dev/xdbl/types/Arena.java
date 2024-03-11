@@ -232,9 +232,12 @@ public class Arena {
 
             pl.sendMessage(
                     MiniMessage.miniMessage().deserialize(
-                            plugin.getConfig().getString("messages.fight.end")
-                                    .replace("%winner%", winners.stream().map(Player::getName).collect(Collectors.joining(", ")))
-                                    .replace("%time%", String.valueOf(5))
+                            "<green>" + winners.stream().map(Player::getName).collect(Collectors.joining(", "))
+                                    + " just killed " + losers.stream().map(Player::getName).collect(Collectors.joining(", "))
+                                    + " in the "
+                                    + this.getName()
+                                    + " arena with a win chance of "
+                                    + plugin.getPlayerManager().CalculateWinChance(winners.get(0).getUniqueId(), losers.get(0).getUniqueId()) + "%!"
                     )
             );
 
@@ -316,7 +319,7 @@ public class Arena {
             for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
                 pl.sendMessage(
                         MiniMessage.miniMessage().deserialize(
-                                Objects.requireNonNull(plugin.getConfig().getString("messages.fight.problem_saving_inventories"))
+                                "<red>Problem saving inventories, nothing was deleted!"
                         )
                 );
             }
@@ -356,20 +359,21 @@ public class Arena {
                         pl.showTitle(Title.title(Component.empty(), Component.empty()));
                     } else if (i.get() == 1) {
                         Title title = Title.title(
-                                MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.started")
-                                        .replace("%time%", String.valueOf(i.get() - 1))),
+                                MiniMessage.miniMessage().deserialize(
+                                        "<green>Starting in " + (i.get() - 1)
+                                ),
                                 Component.empty()
                         );
 
                         pl.showTitle(title);
                     } else {
                         pl.showTitle(Title.title(MiniMessage.miniMessage().deserialize(
-                                        plugin.getConfig().getString("messages.fight.starting")
-                                                .replace("%time%", String.valueOf(i.get() - 1))
+                                        "<green>" + (i.get() - 1)
                                 ), MiniMessage.miniMessage().deserialize(
                                         Objects.requireNonNull(plugin.getArenaManager().getArena(pl).totems ?
-                                                plugin.getConfig().getString("messages.fight.totems_enabled")
-                                                : plugin.getConfig().getString("messages.fight.totems_disabled"))
+                                                "<red>Totems have been enabled for the fight." :
+                                                "<green>Totems have been disabled for the fight."
+                                        )
                                 )
                         ));
                     }
