@@ -126,6 +126,7 @@ public class MarriageManager implements Listener {
                 if (((Player) event.getRightClicked()).getPlayer().getName().equals(doublePlayer.getMarriedName())) {
                     // Spawn a bunch of hearts
                     spawnHeartsAroundPlayer(player);
+                    spawnHeartsAroundPlayer(event.getPlayer());
                 }
             }
         }
@@ -136,12 +137,13 @@ public class MarriageManager implements Listener {
         World world = player.getWorld();
         Location playerLocation = player.getLocation();
 
-        // Spawn hearts particles around the player
-        for (int i = 0; i < 10; i++) {
+        // Choose a random number between 2 to 5 for the amount of hearts to spawn
+        int heartsToSpawn = (int) (Math.random() * 3) + 2;
+        for (int i = 0; i < heartsToSpawn; i++) {
             double angle = Math.random() * Math.PI * 2;
             double radius = 0.5; // Adjust this value as needed
             double x = playerLocation.getX() + Math.cos(angle) * radius;
-            double y = playerLocation.getY() + 1.5; // Adjust the Y offset as needed
+            double y = playerLocation.getY() + (float) (Math.random() * 0.3) + 1.5; // Adjust the Y offset as needed
             double z = playerLocation.getZ() + Math.sin(angle) * radius;
 
             Location particleLocation = new Location(world, x, y, z);
