@@ -101,6 +101,10 @@ public class ChairManager implements Listener {
         if (e.getPlayer().isSneaking()) {
             return;
         }
+        // Only sit if right click was clicked
+        if (e.getAction().isLeftClick()) {
+            return;
+        }
 
         Player player = e.getPlayer();
 

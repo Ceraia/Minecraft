@@ -2,8 +2,6 @@ package dev.xdbl;
 
 import dev.xdbl.commands.arena.*;
 import dev.xdbl.commands.kingdoms.CommandKingdom;
-import dev.xdbl.commands.marriage.CommandAccept;
-import dev.xdbl.commands.marriage.CommandDivorce;
 import dev.xdbl.commands.marriage.CommandMarry;
 import dev.xdbl.commands.misc.CommandMod;
 import dev.xdbl.commands.misc.CommandSit;
@@ -28,7 +26,7 @@ public class Double extends JavaPlugin {
     Metrics metrics;
     private KingdomManager kingdomManager;
     private ChairManager chairManager;
-    private MarriageManager marriageManager;
+    private CommandMarry marriageManager;
 
     public void onEnable() {
         metrics = new Metrics(this, 20303);
@@ -45,7 +43,7 @@ public class Double extends JavaPlugin {
         this.playerManager = new PlayerManager(this);
         this.inviteManager = new InviteManager();
         this.chairManager = new ChairManager(this);
-        this.marriageManager = new MarriageManager(this);
+        this.marriageManager = new CommandMarry(this);
         new EloScoreboardManager(this);
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
@@ -60,9 +58,6 @@ public class Double extends JavaPlugin {
         new CommandVersion(this);
         new CommandKingdom(this);
         new CommandSit(this);
-        new CommandMarry(this);
-        new CommandAccept(this);
-        new CommandDivorce(this);
 
         // Listeners
         new PlayerEloChangeListener(this);
@@ -108,7 +103,7 @@ public class Double extends JavaPlugin {
         return chairManager;
     }
 
-    public MarriageManager getMarriageManager() {
+    public CommandMarry getMarriageManager() {
         return marriageManager;
     }
 
