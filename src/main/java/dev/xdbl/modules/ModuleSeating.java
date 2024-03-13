@@ -1,25 +1,35 @@
-package dev.xdbl.managers;
+package dev.xdbl.modules;
 
 import dev.xdbl.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
-public class ChairManager implements Listener {
+public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
+    private final Double plugin;
     public List<Chair> chairs;
 
-    public ChairManager(Double plugin) {
+    public ModuleSeating(Double plugin) {
+        this.plugin = plugin;
         this.chairs = new ArrayList<>();
+
+        Objects.requireNonNull(plugin.getCommand("sit")).setExecutor(this);
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
@@ -73,6 +83,21 @@ public class ChairManager implements Listener {
                 }
             }
         }, 0, 5 * 20);
+    }
+
+    @Override
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player player)) {
+            return true;
+        }
+
+        sit(player, player.getLocation().add(0, -0.3, 0));
+        return true;
+    }
+
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        return new ArrayList<>();
     }
 
     public void sit(Player player, Location location) {
@@ -136,5 +161,4 @@ public class ChairManager implements Listener {
             chairs.remove(this);
         }
     }
-
 }

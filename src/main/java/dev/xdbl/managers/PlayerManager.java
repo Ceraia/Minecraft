@@ -2,9 +2,15 @@ package dev.xdbl.managers;
 
 import dev.xdbl.Double;
 import dev.xdbl.types.DoublePlayer;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,6 +107,26 @@ public class PlayerManager {
         // Set new Elo ratings
         killer.setElo(newEloKiller);
         victim.setElo(newEloVictim);
+
+        // Update scoreboard
+
+        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+        Scoreboard scoreboardDefault = scoreboardManager.getNewScoreboard();
+        Objective objectivePlayerList = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", "dummy", MiniMessage.miniMessage().deserialize("Top Arena Players"));
+        Objective objectiveBelowName = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", "dummy", MiniMessage.miniMessage().deserialize("<green>ELO"));
+
+        // Get all online players and set their score to their Elo rating
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(onlinePlayer.getUniqueId());
+
+            objectivePlayerList.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
+            objectiveBelowName.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
+            objectivePlayerList.setDisplaySlot(DisplaySlot.PLAYER_LIST);
+            objectiveBelowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
+
+            onlinePlayer.setScoreboard(scoreboardDefault);
+        }
+
     }
 
 

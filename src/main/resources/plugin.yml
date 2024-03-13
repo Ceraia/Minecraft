@@ -58,3 +58,8 @@ commands:
     description: Accept command
     usage: /accept
     permission: xdbl.accept
+  jump:
+    description: Jump command
+    usage: /jump
+    permission: xdbl.jump
+    aliases: [ j ]

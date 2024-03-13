@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -30,7 +29,9 @@ public class SpellsListener implements Listener {
     // Check if the player is casting a spell by right clicking with a book
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
-        if (event.getItem() == null) return;
+        if (event.getItem() == null) {
+            return;
+        }
         if (event.getItem().getType() == Material.BOOK) {
             Player p = event.getPlayer();
             if (p.getInventory().getItemInMainHand().getType() == Material.BOOK) {
@@ -73,7 +74,7 @@ public class SpellsListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event) {
         // Log the UUID in the console
         System.out.println(event.getPlayer().getUniqueId());
     }
@@ -152,30 +153,39 @@ public class SpellsListener implements Listener {
                                 if (block.getType() == Material.OAK_LOG || block.getType() == Material.BIRCH_LOG || block.getType() == Material.SPRUCE_LOG || block.getType() == Material.JUNGLE_LOG || block.getType() == Material.ACACIA_LOG || block.getType() == Material.DARK_OAK_LOG) {
                                     block.setType(Material.FIRE);
                                 }
-                                if(block.getType() == Material.OAK_LEAVES|| block.getType() == Material.BIRCH_LEAVES || block.getType() == Material.SPRUCE_LEAVES || block.getType() == Material.JUNGLE_LEAVES || block.getType() == Material.ACACIA_LEAVES || block.getType() == Material.DARK_OAK_LEAVES) {
+                                if (block.getType() == Material.OAK_LEAVES || block.getType() == Material.BIRCH_LEAVES || block.getType() == Material.SPRUCE_LEAVES || block.getType() == Material.JUNGLE_LEAVES || block.getType() == Material.ACACIA_LEAVES || block.getType() == Material.DARK_OAK_LEAVES) {
                                     block.setType(Material.FIRE);
                                 }
-                                if(block.getType() == Material.BAMBOO || block.getType() == Material.SHORT_GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.VINE ) {
+                                if (block.getType() == Material.BAMBOO || block.getType() == Material.SHORT_GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.VINE) {
                                     block.setType(Material.FIRE);
                                 }
-                                if(block.getType() == Material.SNOW || block.getType() == Material.POWDER_SNOW || block.getType() == Material.SNOW_BLOCK || block.getType() == Material.ICE || block.getType() == Material.PACKED_ICE || block.getType() == Material.BLUE_ICE || block.getType() == Material.FROSTED_ICE) {
+                                if (block.getType() == Material.SNOW || block.getType() == Material.POWDER_SNOW || block.getType() == Material.SNOW_BLOCK || block.getType() == Material.ICE || block.getType() == Material.PACKED_ICE || block.getType() == Material.BLUE_ICE || block.getType() == Material.FROSTED_ICE) {
                                     block.setType(Material.AIR);
                                 }
-                                if(block.getType() == Material.GRASS_BLOCK || block.getType() == Material.DIRT || block.getType() == Material.COARSE_DIRT || block.getType() == Material.PODZOL || block.getType() == Material.DIRT_PATH || block.getType() == Material.MYCELIUM || block.getType() == Material.SNOW_BLOCK) {
+                                if (block.getType() == Material.GRASS_BLOCK || block.getType() == Material.DIRT || block.getType() == Material.COARSE_DIRT || block.getType() == Material.PODZOL || block.getType() == Material.DIRT_PATH || block.getType() == Material.MYCELIUM || block.getType() == Material.SNOW_BLOCK) {
                                     // Choose random number if the block should be converted to course dirt or other "ruined" blocks
                                     int random = (int) (Math.random() * 100);
-                                    if(random < 30) block.setType(Material.COARSE_DIRT);
-                                    else if(random < 40) block.setType(Material.MUD);
-                                    else if(random < 50) {
+                                    if (random < 30) {
+                                        block.setType(Material.COARSE_DIRT);
+                                    } else if (random < 40) {
+                                        block.setType(Material.MUD);
+                                    } else if (random < 50) {
                                         block.setType(Material.NETHERRACK);
                                         Block blockFire = snowball.getLocation().clone().add(x, (y + 1), z).getBlock();
-                                        if(blockFire.getType() == Material.AIR) blockFire.setType(Material.FIRE);
+                                        if (blockFire.getType() == Material.AIR) {
+                                            blockFire.setType(Material.FIRE);
+                                        }
+                                    } else if (random < 60) {
+                                        block.setType(Material.DIRT_PATH);
+                                    } else if (random < 70) {
+                                        block.setType(Material.GRAVEL);
+                                    } else if (random < 80) {
+                                        block.setType(Material.PODZOL);
+                                    } else if (random < 90) {
+                                        block.setType(Material.MANGROVE_ROOTS);
+                                    } else if (random < 100) {
+                                        block.setType(Material.MUDDY_MANGROVE_ROOTS);
                                     }
-                                    else if(random < 60) block.setType(Material.DIRT_PATH);
-                                    else if(random < 70) block.setType(Material.GRAVEL);
-                                    else if(random < 80) block.setType(Material.PODZOL);
-                                    else if(random < 90) block.setType(Material.MANGROVE_ROOTS);
-                                    else if(random < 100) block.setType(Material.MUDDY_MANGROVE_ROOTS);
                                 }
                             }
                         }
@@ -189,10 +199,12 @@ public class SpellsListener implements Listener {
                             if (Math.sqrt(x * x + y * y + z * z) <= radius) {
                                 Block block = snowball.getLocation().clone().add(x, y, z).getBlock();
                                 if ((block.getType() != Material.AIR)
-                                        &&(block.getType() != Material.BEDROCK)
-                                        &&(block.getType() != Material.AIR)
+                                        && (block.getType() != Material.BEDROCK)
+                                        && (block.getType() != Material.AIR)
                                 ) {
-                                    if((block.getType() == Material.WATER)) block.setType(Material.AIR);
+                                    if ((block.getType() == Material.WATER)) {
+                                        block.setType(Material.AIR);
+                                    }
 
 
                                     // Spawn falling block entities at the location of each block

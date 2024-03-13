@@ -1,4 +1,4 @@
-package dev.xdbl.commands.marriage;
+package dev.xdbl.modules;
 
 import dev.xdbl.Double;
 import dev.xdbl.types.DoublePlayer;
@@ -20,24 +20,28 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
+public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
 
     private final Double plugin;
 
-    private Map<Player, Player> invites = new HashMap<>();
+    private final Map<Player, Player> invites = new HashMap<>();
 
-    public CommandMarry(Double plugin) {
+    public ModuleMarriage(Double plugin) {
         this.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand("marry")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("accept")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("divorce")).setExecutor(this);
 
+        Objects.requireNonNull(plugin.getCommand("marry")).setTabCompleter(this);
+        Objects.requireNonNull(plugin.getCommand("accept")).setTabCompleter(this);
+        Objects.requireNonNull(plugin.getCommand("divorce")).setTabCompleter(this);
+
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player player)) {
             return true;
         }
@@ -55,7 +59,7 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
 
-                plugin.getMarriageManager().divorce(player);
+                plugin.getMarriageModule().divorce(player);
 
             }
             case "marry" -> {
@@ -70,7 +74,7 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
 
-                plugin.getMarriageManager().invite(player, target);
+                plugin.getMarriageModule().invite(player, target);
             }
             case "accept" -> {
                 if (args.length == 0) {
@@ -84,7 +88,7 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
 
-                plugin.getMarriageManager().accept(target, player);
+                plugin.getMarriageModule().accept(target, player);
             }
         }
 
@@ -104,12 +108,12 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
         return players;
     }
 
-    public int invite(Player target, Player sender) {
+    public void invite(Player target, Player sender) {
         if (this.plugin.getPlayerManager().getDoublePlayer(sender.getUniqueId()).isMarried()) {
-            return 1;
+            return;
         }
         if (this.plugin.getPlayerManager().getDoublePlayer(target.getUniqueId()).isMarried()) {
-            return 2;
+            return;
         }
 
         this.invites.put(target, sender);
@@ -118,18 +122,17 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
                         "<green>" + sender.getName() + " has invited " + target.getName() + " to marry them!"
                 )
         );
-        return 3;
     }
 
-    public int accept(Player target, Player sender) {
+    public void accept(Player target, Player sender) {
         if (this.plugin.getPlayerManager().getDoublePlayer(sender.getUniqueId()).isMarried()) {
-            return 1;
+            return;
         }
         if (this.plugin.getPlayerManager().getDoublePlayer(target.getUniqueId()).isMarried()) {
-            return 2;
+            return;
         }
         if (!this.invites.containsKey(target) || !this.invites.get(target).equals(sender)) {
-            return 3;
+            return;
         }
 
         this.plugin.getServer().sendMessage(
@@ -142,7 +145,6 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
         doubleTarget.marry(doubleSender.getName());
         doubleSender.marry(doubleTarget.getName());
         this.invites.remove(target);
-        return 4;
     }
 
     public int decline(Player target, Player sender) {
@@ -198,7 +200,7 @@ public class CommandMarry implements CommandExecutor, TabCompleter, Listener {
 
             DoublePlayer doublePlayer = this.plugin.getPlayerManager().getDoublePlayer(event.getPlayer().getUniqueId());
             if (doublePlayer.isMarried()) {
-                if (((Player) event.getRightClicked()).getPlayer().getName().equals(doublePlayer.getMarriedName())) {
+                if (Objects.requireNonNull(((Player) event.getRightClicked()).getPlayer()).getName().equals(doublePlayer.getMarriedName())) {
                     // Spawn a bunch of hearts
                     spawnHeartsAroundPlayer(player);
                     spawnHeartsAroundPlayer(event.getPlayer());

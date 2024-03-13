@@ -18,8 +18,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class ArenaSelectGUI implements Listener {
-    private static Component INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize("Select an arena");
-    private static Component INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize("Select totems");
+    private static final Component INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize("Select an arena");
+    private static final Component INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize("Select totems");
     private final Double plugin;
     private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
@@ -29,7 +29,8 @@ public class ArenaSelectGUI implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    public void openArenaList(Player inviter, Player invited) { // Let the player select what arena to fight in
+    public void openArenaList(Player inviter, Player invited) {
+        // Let the player select what arena to fight in
         // Add the player invitee and inviter
         InviteManager.Invite invite = new InviteManager.Invite(inviter, invited);
 
@@ -49,18 +50,18 @@ public class ArenaSelectGUI implements Listener {
         Map<Integer, Arena> arenasSelectSlots = new HashMap<>();
 
         int i = 0; // Slot
-        for (Arena a : arenas.stream().filter(a -> a.getState() == Arena.ArenaState.WAITING).toList()) { // Filter out arenas that are not ready
+        for (Arena arena : arenas.stream().filter(a -> a.getState() == Arena.ArenaState.WAITING).toList()) { // Filter out arenas that are not ready
             ItemStack itemStack = new ItemStack(Material.ENDER_EYE); // Create the itemstack
             ItemMeta meta = itemStack.getItemMeta();
             meta.displayName(
                     MiniMessage.miniMessage().deserialize(
-                            "<green>%arena_name%</green>"
+                            "<green>" + arena.getName() + "</green>"
                     )
             );
 
             List<Component> lore = new ArrayList<>();
             lore.add(MiniMessage.miniMessage().deserialize(
-                    "<gray>Owner: %arena_owner%"
+                    "<gray>Owner: " + arena.getOwner()
             ));
 
             meta.lore(lore);
@@ -68,7 +69,7 @@ public class ArenaSelectGUI implements Listener {
             itemStack.setItemMeta(meta);
 
             inv.setItem(i, itemStack);
-            arenasSelectSlots.put(i, a);
+            arenasSelectSlots.put(i, arena);
 
             i++;
         }
@@ -127,13 +128,13 @@ public class ArenaSelectGUI implements Listener {
         ItemMeta metaArena = itemStackArena.getItemMeta();
         metaArena.displayName(
                 MiniMessage.miniMessage().deserialize(
-                        "<green>%arena_name%</green>"
+                        "<green>" + arena.getName() + "</green>"
                 )
         );
 
         List<Component> loreArena = new ArrayList<>();
         loreArena.add(MiniMessage.miniMessage().deserialize(
-                "<gray>Owner: %arena_owner%"
+                "<gray>Owner: " + arena.getOwner()
         ));
 
         metaArena.lore(loreArena);

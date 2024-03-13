@@ -63,7 +63,7 @@ public class ArenaManager {
         }
         return null;
     }
-    
+
 
     public void addArena(Arena arena) {
         arenas.add(arena);

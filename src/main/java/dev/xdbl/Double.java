@@ -1,14 +1,17 @@
 package dev.xdbl;
 
-import dev.xdbl.commands.arena.*;
 import dev.xdbl.commands.kingdoms.CommandKingdom;
-import dev.xdbl.commands.marriage.CommandMarry;
-import dev.xdbl.commands.misc.CommandMod;
-import dev.xdbl.commands.misc.CommandSit;
-import dev.xdbl.commands.misc.CommandVersion;
-import dev.xdbl.listeners.*;
-import dev.xdbl.managers.*;
-import dev.xdbl.misc.Metrics;
+import dev.xdbl.listeners.PlayerInventoryListener;
+import dev.xdbl.listeners.ReviveListener;
+import dev.xdbl.listeners.SpellsListener;
+import dev.xdbl.managers.ArenaManager;
+import dev.xdbl.managers.InviteManager;
+import dev.xdbl.managers.KingdomManager;
+import dev.xdbl.managers.PlayerManager;
+import dev.xdbl.modules.ModuleArena;
+import dev.xdbl.modules.ModuleMarriage;
+import dev.xdbl.modules.ModuleSeating;
+import dev.xdbl.modules.ModuleSystem;
 import dev.xdbl.types.ArenaSelectGUI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
@@ -21,16 +24,14 @@ public class Double extends JavaPlugin {
     private ArenaManager arenaManager;
     private InviteManager inviteManager;
     private ArenaSelectGUI arenaSelectGUI;
-    private CommandGVG commandGVG;
     private PlayerManager playerManager;
-    Metrics metrics;
     private KingdomManager kingdomManager;
-    private ChairManager chairManager;
-    private CommandMarry marriageManager;
+    private ModuleSeating moduleSeating;
+    private ModuleMarriage moduleMarriage;
+    private ModuleArena moduleArena;
+    private ModuleSystem moduleSystem;
 
     public void onEnable() {
-        metrics = new Metrics(this, 20303);
-
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/items").mkdirs();
@@ -42,35 +43,24 @@ public class Double extends JavaPlugin {
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.inviteManager = new InviteManager();
-        this.chairManager = new ChairManager(this);
-        this.marriageManager = new CommandMarry(this);
-        new EloScoreboardManager(this);
+
+        // Modules
+        this.moduleSeating = new ModuleSeating(this);
+        this.moduleMarriage = new ModuleMarriage(this);
+        this.moduleArena = new ModuleArena(this);
+        this.moduleSystem = new ModuleSystem(this);
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
-        this.commandGVG = new CommandGVG(this);
 
         // Command
-        new CommandPVP(this);
-        new CommandArena(this);
-        new CommandMod(this);
-        new CommandTop(this);
-        new CommandProfile(this);
-        new CommandVersion(this);
         new CommandKingdom(this);
-        new CommandSit(this);
 
-        // Listeners
-        new PlayerEloChangeListener(this);
-        new ArenaFightListener(this);
         new PlayerInventoryListener(this);
-        new ArenaBlockListener(this);
-        new ArenaExplodeListener(this);
         new SpellsListener(this);
         new ReviveListener(this);
     }
 
     public void onDisable() {
-        metrics.shutdown();
         playerManager.savePlayers();
         kingdomManager.saveKingdoms();
     }
@@ -91,27 +81,28 @@ public class Double extends JavaPlugin {
         return arenaSelectGUI;
     }
 
-    public CommandGVG getGroupManager() {
-        return commandGVG;
-    }
-
     public KingdomManager getKingdomManager() {
         return kingdomManager;
     }
 
-    public ChairManager getChairManager() {
-        return chairManager;
+    public ModuleMarriage getMarriageModule() {
+        return moduleMarriage;
     }
 
-    public CommandMarry getMarriageManager() {
-        return marriageManager;
+    public ModuleSeating getSeatingModule() {
+        return moduleSeating;
     }
+
+    public ModuleArena getArenaModule() {
+        return moduleArena;
+    }
+
 
     public void badUsage(Player player) {
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
+        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage."));
     }
 
     public void noPermission(Player player) {
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You don't have permission to execute this command"));
+        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You don't have permission to execute this command."));
     }
 }
