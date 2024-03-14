@@ -52,13 +52,13 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
         Objects.requireNonNull(this.plugin.getCommand("arena")).setExecutor(this);
         Objects.requireNonNull(this.plugin.getCommand("pvp")).setExecutor(this);
         Objects.requireNonNull(this.plugin.getCommand("gvg")).setExecutor(this);
-        Objects.requireNonNull(this.plugin.getCommand("top")).setExecutor(this);
+        Objects.requireNonNull(this.plugin.getCommand("leaderboard")).setExecutor(this);
         Objects.requireNonNull(this.plugin.getCommand("profile")).setExecutor(this);
 
         Objects.requireNonNull(this.plugin.getCommand("arena")).setTabCompleter(this);
         Objects.requireNonNull(this.plugin.getCommand("pvp")).setTabCompleter(this);
         Objects.requireNonNull(this.plugin.getCommand("gvg")).setTabCompleter(this);
-        Objects.requireNonNull(this.plugin.getCommand("top")).setTabCompleter(this);
+        Objects.requireNonNull(this.plugin.getCommand("leaderboard")).setTabCompleter(this);
         Objects.requireNonNull(this.plugin.getCommand("profile")).setTabCompleter(this);
     }
 
@@ -491,47 +491,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
                 return true;
             }
-            case "top" -> {
-                if (!sender.hasPermission("xdbl.pvp")) {
-                    this.plugin.noPermission((Player) sender);
-                    return true;
-                }
-
-                Player p = (Player) sender;
-
-                // Create and show a string list of the top 10 players with the highest elo
-                List<Component> top = new ArrayList<>();
-                AtomicInteger i = new AtomicInteger();
-                i.set(1);
-
-                top.add(MiniMessage.miniMessage().deserialize("<yellow><bold>Top 10 players with the highest ELO:"));
-
-                plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(DoublePlayer::getElo).reversed()).limit(10).forEach(ap -> {
-                    String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
-                    int elo = ap.getElo();
-
-                    String medal; // Default medal color for players outside the top 3
-
-                    // Check for 1st, 2nd, and 3rd place
-                    if (i.get() == 1) {
-                        medal = "<gold>"; // Gold for 1st place
-                    } else if (i.get() == 2) {
-                        medal = "<#C0C0C0>"; // Silver for 2nd place
-                    } else if (i.get() == 3) {
-                        medal = "<#cd7f32>"; // Bronze for 3rd place
-                    } else {
-                        medal = "<white>"; // Default medal color for players outside the top 3
-                    }
-
-                    top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
-                    i.getAndIncrement();
-                });
-
-                // Send the top 10 players with the highest elo to the player
-                top.forEach(p::sendMessage);
-
-
-            }
+            case "top", "leaderboard" -> leaderboard(sender);
             case "profile" -> {
                 if (!sender.hasPermission("xdbl.pvp")) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
@@ -1176,5 +1136,40 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
             onlinePlayer.setScoreboard(scoreboardDefault);
         }
+    }
+
+    public void leaderboard(CommandSender sender) {
+        Player p = (Player) sender;
+
+        // Create and show a string list of the top 10 players with the highest elo
+        List<Component> top = new ArrayList<>();
+        AtomicInteger i = new AtomicInteger();
+        i.set(1);
+
+        top.add(MiniMessage.miniMessage().deserialize("<yellow><bold>Top 10 players with the highest ELO:"));
+
+        plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(DoublePlayer::getElo).reversed()).limit(10).forEach(ap -> {
+            String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
+            int elo = ap.getElo();
+
+            String medal; // Default medal color for players outside the top 3
+
+            // Check for 1st, 2nd, and 3rd place
+            if (i.get() == 1) {
+                medal = "<gold>"; // Gold for 1st place
+            } else if (i.get() == 2) {
+                medal = "<#C0C0C0>"; // Silver for 2nd place
+            } else if (i.get() == 3) {
+                medal = "<#cd7f32>"; // Bronze for 3rd place
+            } else {
+                medal = "<white>"; // Default medal color for players outside the top 3
+            }
+
+            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+            i.getAndIncrement();
+        });
+
+        // Send the top 10 players with the highest elo to the player
+        top.forEach(p::sendMessage);
     }
 }

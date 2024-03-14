@@ -20,6 +20,7 @@ import java.util.*;
 public class ArenaSelectGUI implements Listener {
     private static final Component INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize("Select an arena");
     private static final Component INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize("Select totems");
+    private static final Component INVENTORY_NAME_RANKED = MiniMessage.miniMessage().deserialize("Select whether to play ranked or not");
     private final Double plugin;
     private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
@@ -142,6 +143,66 @@ public class ArenaSelectGUI implements Listener {
         inviter.openInventory(inv);
     }
 
+    public void openRanked(Player inviter, Arena arena, Boolean totems) {
+        int size = 9;
+
+        Inventory inv = Bukkit.createInventory(null, size, INVENTORY_NAME_RANKED);
+
+        ItemStack itemStackEnable = new ItemStack(Material.GREEN_STAINED_GLASS_PANE); // Create the itemstack
+        ItemMeta metaEnable = itemStackEnable.getItemMeta();
+
+        metaEnable.displayName(
+                MiniMessage.miniMessage().deserialize(
+                        "<green>Enable ranked</green>"
+                )
+        );
+
+        List<Component> loreEnable = new ArrayList<>();
+        loreEnable.add(MiniMessage.miniMessage().deserialize("<gray>Click to enable ranked in the fight"));
+
+        metaEnable.lore(loreEnable);
+
+        itemStackEnable.setItemMeta(metaEnable);
+
+        inv.setItem(1, itemStackEnable);
+
+        ItemStack itemStackDisable = new ItemStack(Material.RED_STAINED_GLASS_PANE); // Create the itemstack
+        ItemMeta metaDisable = itemStackDisable.getItemMeta();
+        metaDisable.displayName(
+                MiniMessage.miniMessage().deserialize(
+                        "<red>Disable ranked</red>"
+                )
+        );
+
+        List<Component> loreDisable = new ArrayList<>();
+        loreDisable.add(MiniMessage.miniMessage().deserialize("<gray>Click to disable ranked in the fight"));
+
+        metaDisable.lore(loreDisable);
+
+        itemStackDisable.setItemMeta(metaDisable);
+
+        inv.setItem(7, itemStackDisable);
+
+        // Set the center slot to the arena that was selected
+        ItemStack itemStackArena = new ItemStack(Material.ENDER_EYE); // Create the itemstack
+
+        ItemMeta metaArena = itemStackArena.getItemMeta();
+        metaArena.displayName(
+                MiniMessage.miniMessage().deserialize(
+                        "<green>" + arena.getName() + "</green>"
+                )
+        );
+
+        List<Component> loreArena = new ArrayList<>();
+        loreArena.add(MiniMessage.miniMessage().deserialize(
+                "<gray>Owner: " + arena.getOwner()
+        ));
+
+        metaArena.lore(loreArena);
+
+        inviter.openInventory(inv);
+    }
+
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         if (e.getCurrentItem() == null || e.getCurrentItem().getType() == Material.AIR) {
@@ -216,6 +277,26 @@ public class ArenaSelectGUI implements Listener {
             plugin.getInviteManager().invites.put(invite.invited, invite); // Put the invite in the invites map
 
             inviter.closeInventory(); // Close the inventory
+        }
+        if (Objects.equals(e.getView().title().toString(), INVENTORY_NAME_RANKED.toString())) {
+            e.setCancelled(true); // The inventory name is from the plugin, so cancel the event
+
+            int slot = e.getSlot();
+
+            // Get the invite from the selectingInvites map
+            InviteManager.Invite invite = plugin.getInviteManager().selectingInvites.get(inviter);
+
+            // Get the arena from the invite
+            Arena arena = invite.arena;
+
+            // Set the totems in the invite
+            arena.totems = slot == 1;
+
+            inviter.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<green>Totems have been " + (slot == 1 ? "enabled" : "disabled") + " for the fight."
+                    )
+            );
         }
     }
 }

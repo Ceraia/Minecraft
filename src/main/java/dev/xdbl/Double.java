@@ -1,6 +1,5 @@
 package dev.xdbl;
 
-import dev.xdbl.commands.kingdoms.CommandKingdom;
 import dev.xdbl.listeners.PlayerInventoryListener;
 import dev.xdbl.listeners.ReviveListener;
 import dev.xdbl.listeners.SpellsListener;
@@ -8,10 +7,7 @@ import dev.xdbl.managers.ArenaManager;
 import dev.xdbl.managers.InviteManager;
 import dev.xdbl.managers.KingdomManager;
 import dev.xdbl.managers.PlayerManager;
-import dev.xdbl.modules.ModuleArena;
-import dev.xdbl.modules.ModuleMarriage;
-import dev.xdbl.modules.ModuleSeating;
-import dev.xdbl.modules.ModuleSystem;
+import dev.xdbl.modules.*;
 import dev.xdbl.types.ArenaSelectGUI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
@@ -30,6 +26,7 @@ public class Double extends JavaPlugin {
     private ModuleMarriage moduleMarriage;
     private ModuleArena moduleArena;
     private ModuleSystem moduleSystem;
+    private ModuleKingdom moduleKingdom;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -49,11 +46,10 @@ public class Double extends JavaPlugin {
         this.moduleMarriage = new ModuleMarriage(this);
         this.moduleArena = new ModuleArena(this);
         this.moduleSystem = new ModuleSystem(this);
+        this.moduleKingdom = new ModuleKingdom(this);
 
         this.arenaSelectGUI = new ArenaSelectGUI(this);
 
-        // Command
-        new CommandKingdom(this);
 
         new PlayerInventoryListener(this);
         new SpellsListener(this);
@@ -89,6 +85,10 @@ public class Double extends JavaPlugin {
         return moduleMarriage;
     }
 
+    public ModuleKingdom getModuleKingdom() {
+        return moduleKingdom;
+    }
+
     public ModuleSeating getSeatingModule() {
         return moduleSeating;
     }
@@ -96,7 +96,6 @@ public class Double extends JavaPlugin {
     public ModuleArena getArenaModule() {
         return moduleArena;
     }
-
 
     public void badUsage(Player player) {
         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage."));

@@ -19,14 +19,11 @@ commands:
     description: Moderation commands
     usage: /mod <ban> <arena|pvp> <player>
     permission: xdbl.mod
-  top:
-    description: Show the top fighters in the server
-    usage: /top
-    permission: xdbl.pvp
   leaderboard:
     description: Show the top fighters in the server
-    usage: /top
+    usage: /leaderboard
     permission: xdbl.pvp
+    aliases: [ top ]
   profile:
     description: Show your profile
     usage: /profile

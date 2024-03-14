@@ -1,4 +1,4 @@
-package dev.xdbl.commands.kingdoms;
+package dev.xdbl.modules;
 
 import dev.xdbl.Double;
 import dev.xdbl.types.Kingdom;
@@ -8,23 +8,29 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class CommandKingdom implements CommandExecutor, TabCompleter {
+public class ModuleKingdom implements CommandExecutor, TabCompleter, Listener {
 
     private final Double plugin;
 
-    public CommandKingdom(Double plugin) {
+    public ModuleKingdom(Double plugin) {
         this.plugin = plugin;
+
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         Objects.requireNonNull(this.plugin.getCommand("kingdom")).setExecutor(this);
+        Objects.requireNonNull(this.plugin.getCommand("kingdom")).setTabCompleter(this);
     }
 
+
     @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("Only players can use this command");
             return true;
@@ -256,12 +262,11 @@ public class CommandKingdom implements CommandExecutor, TabCompleter {
             }
         }
 
-
         return true;
     }
 
     @Override
-    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length == 1) {
             List<String> tabOptions = new ArrayList<>();
 

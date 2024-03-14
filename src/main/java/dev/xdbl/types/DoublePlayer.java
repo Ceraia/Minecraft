@@ -1,8 +1,6 @@
 package dev.xdbl.types;
 
 import dev.xdbl.Double;
-import dev.xdbl.listeners.PlayerEventListener;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -85,28 +83,14 @@ public class DoublePlayer {
 
     public boolean pvpBan() {
         pvpbanned = !pvpbanned;
-        FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-        config.set("pvpbanned", pvpbanned);
-        try {
-            // Trigger the custom event when Elo changes
-            PlayerEventListener eloChangeEvent = new PlayerEventListener(Bukkit.getPlayer(uuid), this);
-            Bukkit.getServer().getPluginManager().callEvent(eloChangeEvent);
-
-            config.save(configFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.savePlayer();
         return pvpbanned;
     }
 
     public boolean arenaBan() {
         arenabanned = !arenabanned;
         this.savePlayer();
-        if (arenabanned) {
-            return true;
-        } else {
-            return false;
-        }
+        return arenabanned;
 
     }
 
