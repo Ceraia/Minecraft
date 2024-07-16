@@ -21,7 +21,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
       - name: Build with Gradle Wrapper
-        run: ./gradlew build
+        run: ./gradlew build --info --stacktrace
       - name: List build directory after build
         run: ls -R build
 
@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: List build/libs directory
-        run: ls -R build/libs
+        run: ls -R build/libs || echo "build/libs directory does not exist"
       - name: Get JAR filename
         id: get_jar_filename
         run: |
