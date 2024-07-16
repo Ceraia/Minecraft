@@ -31,7 +31,6 @@ jobs:
 
   update:
     needs: build
-    if: github.ref == 'refs/heads/master'
     runs-on: self-hosted
     steps:
       - name: Get JAR filename
@@ -43,13 +42,12 @@ jobs:
           webhook-url: {{ secrets.WEBHOOK }}
           filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           content: |
-            New `BLEEDING_EDGE` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
+            New `Nightly` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
             This will contain the absolute latest changes and will not be stable.
             ```${{ github.event.head_commit.message }}```
 
   release:
     needs: [build, update]
-    if: github.ref == 'refs/heads/master' &&  contains(github.event.head_commit.message, 'plugin changes')
     runs-on: self-hosted
     steps:
       - name: Get JAR filename
