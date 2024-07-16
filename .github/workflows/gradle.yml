@@ -33,7 +33,7 @@ jobs:
       - name: Upload release to Discord
         uses: tsickert/discord-webhook@v5.3.0
         with:
-          webhook-url: {{ secrets.WEBHOOK }}
+          webhook-url: ${{ secrets.WEBHOOK }}
           filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           content: |
             New `Nightly` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
