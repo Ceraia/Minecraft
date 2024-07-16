@@ -4,19 +4,12 @@ on:
   push:
     branches:
       - "*"
-    paths-ignore:
-      - "*.md"
-  pull_request:
-    branches:
-      - "master"
-    paths-ignore:
-      - "*.md"
 
 jobs:
   build:
-    runs-on: self-hosted
     permissions:
       contents: read
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Set up JDK 17
@@ -47,8 +40,8 @@ jobs:
             ```${{ github.event.head_commit.message }}```
 
   release:
-    needs: [build, update]
-    runs-on: self-hosted
+    needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Get JAR filename
         id: get_jar_filename
@@ -77,21 +70,3 @@ jobs:
           asset_path: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_name: ${{ steps.get_jar_filename.outputs.jar_filename }}.jar
           asset_content_type: application/java-archive
-
-  notify:
-    needs: [build, release]
-    runs-on: self-hosted
-    if: failure()
-    steps:
-      - name: Notify Discord
-        uses: tsickert/discord-webhook@v5.3.0
-        with:
-          webhook-url: https://discord.com/api/webhooks/1213433915793080340/lZdRlF5LmRfEqvGlemvYPcsqxekEiUaB9JOINAumwoZCY5KqpgKAB6o3tjW5yjnK3xYq
-          content: |
-            Build or release failed for ${{ github.repository }}
-            Commit: ${{ github.sha }}
-            ${{ github.event.head_commit.message }}
-            ${{ job.status }}
-            ${{ job.conclusion }}
-            ${{ job.steps[*].conclusion }}
-            ${{ job.steps[*].name }}
