@@ -633,7 +633,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
     @EventHandler
     public void onEntityExplode(EntityExplodeEvent e) {
         Player source = null;
-        if (e.getEntityType().equals(EntityType.PRIMED_TNT)) {
+        if (e.getEntityType().equals(EntityType.TNT)) {
             TNTPrimed tnt = (TNTPrimed) e.getEntity();
             Entity entity = tnt.getSource();
             if (!(entity instanceof Player)) {
@@ -784,7 +784,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
             }
 
             // If the damage is caused by a tnt
-            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.PRIMED_TNT) {
+            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.TNT) {
                 plugin.getLogger().info("TNT");
                 if (event.getDamager().customName() != null) {
                 }
