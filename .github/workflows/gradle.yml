@@ -22,15 +22,23 @@ jobs:
         uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
       - name: Build with Gradle Wrapper
         run: ./gradlew build
+      - name: List build directory
+        run: ls -R build
 
   update:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: List build/libs directory
+        run: ls -R build/libs
       - name: Get JAR filename
         id: get_jar_filename
         run: |
           jar_file=$(find build/libs -name '*.jar' -print -quit)
+          if [ -z "$jar_file" ]; then
+            echo "No JAR file found in build/libs directory"
+            exit 1
+          fi
           echo "JAR file found: $jar_file"
           jar_filename=$(basename "$jar_file")
           echo "JAR filename: $jar_filename"
@@ -44,4 +52,3 @@ jobs:
             New `Nightly` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
             This will contain the absolute latest changes and will not be stable.
             ```${{ github.event.head_commit.message }}```
-
