@@ -35,7 +35,7 @@ jobs:
           echo "JAR file found: $jar_file"
           jar_filename=$(basename "$jar_file")
           echo "JAR filename: $jar_filename"
-          echo "::set-output name=jar_filename::$jar_filename"
+          echo "name=$jar_filename" >> $GITHUB_OUTPUT
       - name: Upload release to Discord
         uses: tsickert/discord-webhook@v5.3.0
         with:
