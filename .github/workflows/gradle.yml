@@ -29,13 +29,19 @@ jobs:
     steps:
       - name: Get JAR filename
         id: get_jar_filename
-        run: echo "::set-output name=jar_filename::$(basename $(find build/libs -name '*.jar') .jar)"
+        run: |
+          jar_file=$(find build/libs -name '*.jar' -print -quit)
+          echo "JAR file found: $jar_file"
+          jar_filename=$(basename "$jar_file")
+          echo "JAR filename: $jar_filename"
+          echo "::set-output name=jar_filename::$jar_filename"
       - name: Upload release to Discord
         uses: tsickert/discord-webhook@v5.3.0
         with:
           webhook-url: ${{ secrets.WEBHOOK }}
-          filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}.jar
+          filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}
           content: |
             New `Nightly` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
             This will contain the absolute latest changes and will not be stable.
             ```${{ github.event.head_commit.message }}```
+
