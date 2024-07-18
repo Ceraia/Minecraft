@@ -60,3 +60,11 @@ commands:
     usage: /jump
     permission: xdbl.jump
     aliases: [ j ]
+  day:
+    description: Day command
+    usage: /day
+    permission: xdbl.time
+  night:
+    description: Night command
+    usage: /night
+    permission: xdbl.time

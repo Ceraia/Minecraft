@@ -30,6 +30,8 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
         Objects.requireNonNull(plugin.getCommand("jump")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("mod")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("version")).setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand("day")).setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand("night")).setExecutor(this);
     }
 
     @Override
@@ -120,6 +122,18 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 sender.sendMessage(
                         MiniMessage.miniMessage().deserialize("<green>Running <white>Double <green>v" + plugin.getPluginMeta().getVersion() + " <green>by <white>Axodouble")
                 );
+                return true;
+            }
+            case "day" -> {
+                if (sender instanceof Player) {
+                    ((Player) sender).getWorld().setTime(0);
+                }
+                return true;
+            }
+            case "night" -> {
+                if (sender instanceof Player) {
+                    ((Player) sender).getWorld().setTime(13000);
+                }
                 return true;
             }
         }

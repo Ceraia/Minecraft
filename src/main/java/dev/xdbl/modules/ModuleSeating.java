@@ -44,8 +44,11 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
                     chair.getEntity().remove();
 
                     Player player = chair.getPlayer();
-                    // If the player is not sitting on anything, teleport them 1 block up
-                    player.teleport(player.getLocation().add(0, 1, 0));
+
+                    // If the player is not sitting on anything, teleport them 0.5 blocks up
+                    if(chair.isBlock()) {
+                        player.teleport(player.getLocation().add(0, .5, 0));
+                    }
                 } else {
                     // Rotate the chair to the player's direction
                     Player player = chair.getPlayer();
@@ -65,7 +68,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
                         boolean found = false;
                         if (entity.getPassengers().size() > 0) {
                             Player passenger = (Player) entity.getPassengers().get(0);
-                            this.chairs.add(new Chair(passenger, entity));
+                            this.chairs.add(new Chair(passenger, entity, false));
                             continue;
                         }
                         for (Chair chair : chairs) {
@@ -91,7 +94,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
 
-        sit(player, player.getLocation().add(0, -0.3, 0));
+        sit(player, player.getLocation().add(0, -0.3, 0), false);
         return true;
     }
 
@@ -100,7 +103,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
         return new ArrayList<>();
     }
 
-    public void sit(Player player, Location location) {
+    public void sit(Player player, Location location, Boolean block) {
         ArmorStand entity = player.getWorld().spawn(location, ArmorStand.class, armorStand -> {
             armorStand.setInvisible(true);
             armorStand.setGravity(false);
@@ -115,7 +118,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
             armorStand.addPassenger(player);
         });
 
-        chairs.add(new Chair(player, entity));
+        chairs.add(new Chair(player, entity, block));
     }
 
     @EventHandler
@@ -135,17 +138,19 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
         if (e.getClickedBlock().getType().toString().contains("STAIRS") || e.getClickedBlock().getType().toString().contains("SLAB")) {
             e.setCancelled(true);
-            sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5));
+            sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5), true);
         }
     }
 
     public class Chair {
         private final Player player;
+        private final Boolean block;
         private final Entity entity;
 
-        public Chair(Player player, Entity entity) {
+        public Chair(Player player, Entity entity, Boolean block) {
             this.player = player;
             this.entity = entity;
+            this.block = block;
         }
 
         public Player getPlayer() {
@@ -154,6 +159,10 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
         public Entity getEntity() {
             return entity;
+        }
+
+        public Boolean isBlock() {
+            return block;
         }
 
         public void remove() {
