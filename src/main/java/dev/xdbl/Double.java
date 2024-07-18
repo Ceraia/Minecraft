@@ -1,7 +1,6 @@
 package dev.xdbl;
 
 import dev.xdbl.listeners.PlayerInventoryListener;
-import dev.xdbl.listeners.ReviveListener;
 import dev.xdbl.listeners.SpellsListener;
 import dev.xdbl.managers.ArenaManager;
 import dev.xdbl.managers.InviteManager;
@@ -48,12 +47,12 @@ public class Double extends JavaPlugin {
         this.moduleSystem = new ModuleSystem(this);
         this.moduleKingdom = new ModuleKingdom(this);
 
+        // GUIs
         this.arenaSelectGUI = new ArenaSelectGUI(this);
 
-
+        // Listeners
         new PlayerInventoryListener(this);
         new SpellsListener(this);
-        new ReviveListener(this);
     }
 
     public void onDisable() {
