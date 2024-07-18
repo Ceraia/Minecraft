@@ -68,3 +68,7 @@ commands:
     description: Night command
     usage: /night
     permission: xdbl.time
+  discord:
+    description: Discord command
+    usage: /discord
+    permission: xdbl.discord

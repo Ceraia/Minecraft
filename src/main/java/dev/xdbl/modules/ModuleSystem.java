@@ -32,6 +32,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
         Objects.requireNonNull(plugin.getCommand("version")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("day")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("night")).setExecutor(this);
+        Objects.requireNonNull(plugin.getCommand("discord")).setExecutor(this);
     }
 
     @Override
@@ -142,6 +143,10 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 if (sender instanceof Player) {
                     ((Player) sender).getWorld().setTime(13000);
                 }
+                return true;
+            }
+            case "discord" -> {
+                sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Click <white><click:copy_to_clipboard:"+ plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE") +"><hover:show_text:"+plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE")+">this</click></white> to copy the Discord link, or click here: <white>"+ plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE")));
                 return true;
             }
         }
