@@ -44,6 +44,5 @@ public class PlayerInventoryListener implements Listener {
         }
 
         e.setCancelled(true);
-
     }
 }

@@ -26,7 +26,7 @@ public class SpellsListener implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    // Check if the player is casting a spell by right clicking with a book
+    // Check if the player is casting a spell by right-clicking with a book
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
         if (event.getItem() == null) {
