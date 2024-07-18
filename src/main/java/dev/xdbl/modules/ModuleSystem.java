@@ -125,12 +125,20 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "day" -> {
+                if (!sender.hasPermission("xdbl.time")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
                 if (sender instanceof Player) {
                     ((Player) sender).getWorld().setTime(0);
                 }
                 return true;
             }
             case "night" -> {
+                if (!sender.hasPermission("xdbl.time")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
                 if (sender instanceof Player) {
                     ((Player) sender).getWorld().setTime(13000);
                 }
@@ -183,6 +191,9 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void jump(Player player) {
+        if (!player.hasPermission("xdbl.jump")) {
+            this.plugin.noPermission(player);
+        }
         // Get the block the player is looking at even if it is out of reach
         Block block = player.getTargetBlockExact(1000);
 

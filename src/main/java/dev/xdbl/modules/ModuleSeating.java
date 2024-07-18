@@ -1,6 +1,7 @@
 package dev.xdbl.modules;
 
 import dev.xdbl.Double;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -15,10 +16,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
@@ -129,6 +127,14 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
         if (e.getPlayer().isSneaking()) {
             return;
         }
+        if(!chairs.isEmpty()) {
+            for (Chair chair : chairs) {
+                if (chair.getPlayer().equals(e.getPlayer())) {
+                   return;
+                }
+            }
+        }
+
         // Only sit if right click was clicked
         if (e.getAction().isLeftClick()) {
             return;
