@@ -102,6 +102,12 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void sit(Player player, Location location, Boolean block) {
+        // Check if the player is mid-air
+        if (player.getLocation().add(0, -1, 0).getBlock().getType().isAir()) {
+            return;
+        }
+
+        // Seat the player
         ArmorStand entity = player.getWorld().spawn(location, ArmorStand.class, armorStand -> {
             armorStand.setInvisible(true);
             armorStand.setGravity(false);
