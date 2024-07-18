@@ -42,6 +42,6 @@ jobs:
           webhook-url: ${{ secrets.WEBHOOK }}
           filename: build/libs/${{ steps.get_jar_filename.outputs.jar_filename }}
           content: |
-            New `Nightly` build: ${{ steps.get_jar_filename.outputs.jar_filename }}
+            New Nightly build: `${{ steps.get_jar_filename.outputs.jar_filename }}`
             This will contain the absolute latest changes and will not be stable.
             ```${{ github.event.head_commit.message }}```
