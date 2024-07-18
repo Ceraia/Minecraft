@@ -102,7 +102,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void sit(Player player, Location location, Boolean block) {
-        // Check if the player is mid-air
+        // Check if the player is midair
         if (player.getLocation().add(0, -1, 0).getBlock().getType().isAir()) {
             return;
         }
