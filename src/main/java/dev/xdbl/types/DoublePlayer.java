@@ -41,8 +41,6 @@ public class DoublePlayer {
             int draws,
             List<String> logs,
             long lastFought,
-            String kingdom,
-            int rank,
             File configFile
 
     ) {
@@ -140,8 +138,6 @@ public class DoublePlayer {
         config.set("wins", wins);
         config.set("losses", losses);
         config.set("logs", logs);
-        config.set("kingdom", kingdom);
-        config.set("rank", 0);
 
         try {
             config.save(configFile);
@@ -152,10 +148,6 @@ public class DoublePlayer {
 
     public void setLastFought(long lastFought) {
         this.lastFought = lastFought;
-    }
-
-    public Kingdom getKingdom() {
-        return plugin.getKingdomManager().getKingdom(kingdom);
     }
 
     public void setKingdom(String kingdom) {

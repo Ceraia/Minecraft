@@ -730,7 +730,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
         }
 
         // If the damager and the player are in different arenas, return
-        if (((isInArena(damager) && !isInArena(player)) || (!isInArena(damager) && isInArena(player))) || !Objects.equals(plugin.getArenaManager().getArena(damager).getName(), plugin.getArenaManager().getArena(player).getName())) {
+        if (((isInArena(damager) && !isInArena(player)) && (!isInArena(damager) && isInArena(player))) && !Objects.equals(plugin.getArenaManager().getArena(damager).getName(), plugin.getArenaManager().getArena(player).getName())) {
             e.setCancelled(true);
             return;
         }
@@ -770,27 +770,6 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
             return;
         }
 
-        // Get player that hurt the player
-        if (e instanceof EntityDamageByEntityEvent event) {
-            // If the damage is caused by a player
-            if (event.getDamager() instanceof Player) {
-                plugin.getLogger().info("Player");
-            }
-            // If the damage is caused by a projectile
-            else if (event.getDamager() instanceof org.bukkit.entity.Projectile projectile) {
-                plugin.getLogger().info("Arrow");
-                if (projectile.getShooter() instanceof Player) {
-                }
-            }
-
-            // If the damage is caused by a tnt
-            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.TNT) {
-                plugin.getLogger().info("TNT");
-                if (event.getDamager().customName() != null) {
-                }
-            }
-        }
-
         Arena arena = plugin.getArenaManager().getArena(victim);
 
         double healthAfter = victim.getHealth() - e.getFinalDamage();
@@ -805,6 +784,13 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 }
             }
 
+            // #TODO: Fix ELO only being calculated when the player dies directly by another player
+            if (e instanceof EntityDamageByEntityEvent) {
+                if((((EntityDamageByEntityEvent) e).getDamager() instanceof Player killer)) {
+                    // Do ELO calculations
+                    calculateElo(victim, killer);
+                }
+            }
 
             e.setCancelled(true);
             victim.setHealth(victim.getHealthScale());
@@ -828,7 +814,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
             killer = Bukkit.getPlayer(Objects.requireNonNull(Objects.requireNonNull(e.getEntity().getLastDamageCause()).getEntity().customName()).toString());
         }
         if (killer != null) {
-            matchEnd(e.getEntity(), killer);
+            calculateElo(e.getEntity(), killer);
         }
 
 
@@ -863,14 +849,14 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
         // Check in which team the player is
         if (arena.getTeam1().contains(e.getPlayer())) {
-            matchEnd(e.getPlayer(), arena.getTeam2().get(0));
+            calculateElo(e.getPlayer(), arena.getTeam2().get(0));
         } else {
-            matchEnd(e.getPlayer(), arena.getTeam1().get(0));
+            calculateElo(e.getPlayer(), arena.getTeam1().get(0));
         }
         updateScoreboard();
     }
 
-    private void matchEnd(Player loser, Player winner) {
+    private void calculateElo(Player loser, Player winner) {
         UUID winnerUUID = winner.getUniqueId();
         UUID loserUUID = loser.getUniqueId();
 

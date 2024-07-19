@@ -51,8 +51,6 @@ public class PlayerManager {
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
                     config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
-                    config.getString("kingdom", "none"),
-                    config.getInt("rank", 0),
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -170,8 +168,6 @@ public class PlayerManager {
             config.set("wins", 0);
             config.set("losses", 0);
             config.set("logs", new ArrayList<String>());
-            config.set("kingdom", "none");
-            config.set("rank", 0);
 
             config.save(configFile);
 
@@ -188,8 +184,6 @@ public class PlayerManager {
                     0,
                     new ArrayList<String>(),
                     (int) (System.currentTimeMillis() / 1000L),
-                    "none",
-                    0,
                     configFile
             );
         } catch (IOException e) {

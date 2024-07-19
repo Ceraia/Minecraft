@@ -4,7 +4,6 @@ import dev.xdbl.listeners.PlayerInventoryListener;
 import dev.xdbl.listeners.SpellsListener;
 import dev.xdbl.managers.ArenaManager;
 import dev.xdbl.managers.InviteManager;
-import dev.xdbl.managers.KingdomManager;
 import dev.xdbl.managers.PlayerManager;
 import dev.xdbl.modules.*;
 import dev.xdbl.types.ArenaSelectGUI;
@@ -20,44 +19,46 @@ public class Double extends JavaPlugin {
     private InviteManager inviteManager;
     private ArenaSelectGUI arenaSelectGUI;
     private PlayerManager playerManager;
-    private KingdomManager kingdomManager;
     private ModuleSeating moduleSeating;
     private ModuleMarriage moduleMarriage;
     private ModuleArena moduleArena;
     private ModuleSystem moduleSystem;
-    private ModuleKingdom moduleKingdom;
 
     public void onEnable() {
         saveDefaultConfig();
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
-        new File(getDataFolder(), "data/kingdoms").mkdirs();
 
-        // Managers
-        this.kingdomManager = new KingdomManager(this);
+        /*---------------------------------*/
+        /*       Registering Managers      */
+        /*---------------------------------*/
         this.arenaManager = new ArenaManager(this);
         this.playerManager = new PlayerManager(this);
         this.inviteManager = new InviteManager();
 
-        // Modules
+        /*---------------------------------*/
+        /*             Modules             */
+        /*---------------------------------*/
         this.moduleSeating = new ModuleSeating(this);
         this.moduleMarriage = new ModuleMarriage(this);
         this.moduleArena = new ModuleArena(this);
         this.moduleSystem = new ModuleSystem(this);
-        this.moduleKingdom = new ModuleKingdom(this);
 
-        // GUIs
+        /*---------------------------------*/
+        /*               GUIs              */
+        /*---------------------------------*/
         this.arenaSelectGUI = new ArenaSelectGUI(this);
 
-        // Listeners
+        /*---------------------------------*/
+        /*            Listeners            */
+        /*---------------------------------*/
         new PlayerInventoryListener(this);
         new SpellsListener(this);
     }
 
     public void onDisable() {
         playerManager.savePlayers();
-        kingdomManager.saveKingdoms();
     }
 
     public ArenaManager getArenaManager() {
@@ -76,16 +77,8 @@ public class Double extends JavaPlugin {
         return arenaSelectGUI;
     }
 
-    public KingdomManager getKingdomManager() {
-        return kingdomManager;
-    }
-
     public ModuleMarriage getMarriageModule() {
         return moduleMarriage;
-    }
-
-    public ModuleKingdom getModuleKingdom() {
-        return moduleKingdom;
     }
 
     public ModuleSeating getSeatingModule() {
@@ -94,6 +87,10 @@ public class Double extends JavaPlugin {
 
     public ModuleArena getArenaModule() {
         return moduleArena;
+    }
+
+    public ModuleSystem getSystemModule() {
+        return moduleSystem;
     }
 
     public void badUsage(Player player) {
