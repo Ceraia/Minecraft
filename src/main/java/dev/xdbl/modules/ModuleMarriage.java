@@ -108,7 +108,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
         return players;
     }
 
-    public void invite(Player target, Player sender) {
+    public void invite(Player sender, Player target) {
         if (this.plugin.getPlayerManager().getDoublePlayer(sender.getUniqueId()).isMarried()) {
             return;
         }

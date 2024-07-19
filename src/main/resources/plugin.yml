@@ -72,3 +72,7 @@ commands:
     description: Discord command
     usage: /discord
     permission: xdbl.discord
+  race:
+    description: A command to change your race
+    usage: /race
+    permission: xdbl.races

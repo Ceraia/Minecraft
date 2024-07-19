@@ -150,30 +150,6 @@ public class DoublePlayer {
         this.lastFought = lastFought;
     }
 
-    public void setKingdom(String kingdom) {
-        this.kingdom = kingdom;
-        this.savePlayer();
-    }
-
-    public void setRank(int rank) {
-        this.rank = rank;
-        this.savePlayer();
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public void promote() {
-        rank++;
-        this.savePlayer();
-    }
-
-    public void demote() {
-        rank--;
-        this.savePlayer();
-    }
-
     public void divorce() {
         marriedname = null;
         this.savePlayer();

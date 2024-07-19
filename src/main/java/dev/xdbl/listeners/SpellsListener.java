@@ -27,57 +27,50 @@ public class SpellsListener implements Listener {
     }
 
     // Check if the player is casting a spell by right-clicking with a book
-    @EventHandler
-    public void onPlayerRightClick(PlayerInteractEvent event) {
-        if (event.getItem() == null) {
-            return;
-        }
-        if (event.getItem().getType() == Material.BOOK) {
-            Player p = event.getPlayer();
-            if (p.getInventory().getItemInMainHand().getType() == Material.BOOK) {
-                String name = Objects.requireNonNull(p.getInventory().getItemInMainHand().getItemMeta()).getDisplayName();
-                switch (name) {
-                    case "Fireflies" -> {
-                        // Launch snowballs that light the person it hits on fire
-                        event.setCancelled(true);
-                        p.sendMessage("You casted Fireflies!");
-                        p.launchProjectile(SmallFireball.class);
-                    }
-                    case "Getauttahere" -> {
-                        event.setCancelled(true);
-                        Trident trident = p.launchProjectile(Trident.class);
-                        trident.setPickupStatus(Trident.PickupStatus.DISALLOWED); // Prevents Trident from being picked up
-                        trident.addScoreboardTag("getauttahere"); // Add a tag to the Trident to identify it later
-                        trident.addPassenger(p);
-                        p.sendMessage("You casted Getauttahere!");
-                    }
-                    case "Bidenblast" -> {
-                        event.setCancelled(true);
-                        for (int i = 0; i < 1; i++) {
-                            Arrow arrow = p.launchProjectile(Arrow.class);
-                            arrow.setVelocity(p.getLocation().getDirection().multiply(10));
-                            arrow.addScoreboardTag("explosive");
-                        }
-                    }
-                    case "Kamikazesheep" -> {
-                        event.setCancelled(true);
-                        p.launchProjectile(Snowball.class).addScoreboardTag("kamikazesheep");
-                        p.sendMessage("You casted Kamikazesheep!");
-                    }
-                    case "ThermonuclearDetonation" -> {
-                        event.setCancelled(true);
-                        p.launchProjectile(Snowball.class).addScoreboardTag("earfquake");
-                    }
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        // Log the UUID in the console
-        System.out.println(event.getPlayer().getUniqueId());
-    }
+//    @EventHandler
+//    public void onPlayerRightClick(PlayerInteractEvent event) {
+//        return;
+//        if (event.getItem() == null) return;
+//        if (event.getItem().getType() == Material.BOOK) {
+//            Player p = event.getPlayer();
+//            if (p.getInventory().getItemInMainHand().getType() == Material.BOOK) {
+//                String name = Objects.requireNonNull(p.getInventory().getItemInMainHand().getItemMeta()).getDisplayName();
+//                switch (name) {
+//                    case "Fireflies" -> {
+//                        // Launch snowballs that light the person it hits on fire
+//                        event.setCancelled(true);
+//                        p.sendMessage("You casted Fireflies!");
+//                        p.launchProjectile(SmallFireball.class);
+//                    }
+//                    case "Getauttahere" -> {
+//                        event.setCancelled(true);
+//                        Trident trident = p.launchProjectile(Trident.class);
+//                        trident.setPickupStatus(Trident.PickupStatus.DISALLOWED); // Prevents Trident from being picked up
+//                        trident.addScoreboardTag("getauttahere"); // Add a tag to the Trident to identify it later
+//                        trident.addPassenger(p);
+//                        p.sendMessage("You casted Getauttahere!");
+//                    }
+//                    case "Bidenblast" -> {
+//                        event.setCancelled(true);
+//                        for (int i = 0; i < 1; i++) {
+//                            Arrow arrow = p.launchProjectile(Arrow.class);
+//                            arrow.setVelocity(p.getLocation().getDirection().multiply(10));
+//                            arrow.addScoreboardTag("explosive");
+//                        }
+//                    }
+//                    case "Kamikazesheep" -> {
+//                        event.setCancelled(true);
+//                        p.launchProjectile(Snowball.class).addScoreboardTag("kamikazesheep");
+//                        p.sendMessage("You casted Kamikazesheep!");
+//                    }
+//                    case "ThermonuclearDetonation" -> {
+//                        event.setCancelled(true);
+//                        p.launchProjectile(Snowball.class).addScoreboardTag("earfquake");
+//                    }
+//                }
+//            }
+//        }
+//    }
 
     @EventHandler
     public void onEntityHit(ProjectileHitEvent event) {

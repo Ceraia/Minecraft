@@ -23,6 +23,7 @@ public class Double extends JavaPlugin {
     private ModuleMarriage moduleMarriage;
     private ModuleArena moduleArena;
     private ModuleSystem moduleSystem;
+    private ModuleRaces moduleRaces;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -44,6 +45,7 @@ public class Double extends JavaPlugin {
         this.moduleMarriage = new ModuleMarriage(this);
         this.moduleArena = new ModuleArena(this);
         this.moduleSystem = new ModuleSystem(this);
+        this.moduleRaces = new ModuleRaces(this);
 
         /*---------------------------------*/
         /*               GUIs              */
@@ -91,6 +93,10 @@ public class Double extends JavaPlugin {
 
     public ModuleSystem getSystemModule() {
         return moduleSystem;
+    }
+
+    public ModuleRaces getRacesModule() {
+        return moduleRaces;
     }
 
     public void badUsage(Player player) {
