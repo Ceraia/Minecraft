@@ -62,7 +62,7 @@ commands:
 permissions :
   double.discord:
     description: "Access to the /discord command that is set in the config.yml"
-    default: not op
+    default: true
   double.time:
     description: "Access to the /day and /night commands"
     default: op
@@ -78,35 +78,35 @@ permissions :
         default: op
   double.arena:
     description: "Access to the /arena command"
-    default: not op
+    default: true
   double.pvp:
     description: "Access to the /pvp command"
-    default: not op
+    default: true
   double.gvg:
     description: "Access to the /gvg command"
-    default: not op
+    default: true
   double.mod:
     description: "Access to the /mod command"
     default: op
   double.sit:
     description: "Access to the /sit command and to sit on blocks"
-    default: not op
+    default: true
   double.marry:
     description: "Access to the /marry, /accept and /divorce commands"
-    default: not op
+    default: true
   double.jump:
     description: "Access to the /jump command"
     default: op
   double.races:
     description: "Access to the /race command"
-    default: not op
+    default: true
     children:
       double.races.become:
         description: "Access to become a race with /race become <race>"
-        default: not op
+        default: true
       double.races.become.*:
         description: "Access to specific races"
-        default: not op
+        default: true
       double.races.reload:
         description: "Access to reload the races"
         default: op

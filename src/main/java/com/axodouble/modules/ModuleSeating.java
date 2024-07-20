@@ -136,6 +136,10 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
         if (e.getPlayer().isSneaking()) {
             return;
         }
+        if (!e.getPlayer().getInventory().getItemInMainHand().getType().isAir()) {
+            return;
+        }
+
         if(!chairs.isEmpty()) {
             for (Chair chair : chairs) {
                 if (chair.getPlayer().equals(e.getPlayer())) {
@@ -151,7 +155,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
         Player player = e.getPlayer();
 
-        if (e.getClickedBlock().getType().toString().contains("STAIRS") || e.getClickedBlock().getType().toString().contains("SLAB")) {
+        if (e.getClickedBlock().getType().toString().contains("STAIRS") || (e.getClickedBlock().getType().toString().contains("SLAB"))) {
             e.setCancelled(true);
             sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5), true);
         }

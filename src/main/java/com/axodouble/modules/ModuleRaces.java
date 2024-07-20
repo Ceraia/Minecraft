@@ -75,8 +75,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     }
                 }
 
-                if (selectedRace == null)
+                if (selectedRace == null) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Race not found!"));
+                    return true;
+                }
                 else {
                     if (!sender.hasPermission("double.races.become." + args[1]) &&
                             !sender.hasPermission("double.races.become.*")) {

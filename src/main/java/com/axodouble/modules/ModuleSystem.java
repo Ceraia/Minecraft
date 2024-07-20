@@ -128,6 +128,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 }
                 if (sender instanceof Player) {
                     ((Player) sender).getWorld().setTime(0);
+                    ((Player) sender).getWorld().setWeatherDuration(0);
                 }
                 return true;
             }
