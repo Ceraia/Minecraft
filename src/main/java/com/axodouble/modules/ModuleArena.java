@@ -1067,9 +1067,9 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
     private void pvpHelp(CommandSender sender) {
         sender.sendMessage(MiniMessage.miniMessage().deserialize("""
-                        < gray > Usage: /pvp<player>
-                <gray > Usage: /pvp accept
-                <gray > Usage: /pvp reload
+                <gray> Usage: /pvp<player>
+                <gray> Usage: /pvp accept
+                <gray> Usage: /pvp reload
                 """));
     }
 
