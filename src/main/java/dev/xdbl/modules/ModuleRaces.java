@@ -47,11 +47,20 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
         switch (args[0]) {
             case "reload" -> {
+                if (!sender.hasPermission("xdbl.races.reload")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
                 reloadRaces();
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Reloading races..."));
                 return true;
             }
             case "become" -> {
+                if (!sender.hasPermission("xdbl.races.become")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
+
                 if (args.length < 2) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Please specify what race you want to become."));
                 }
@@ -69,15 +78,24 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 if (selectedRace == null)
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Race not found!"));
                 else {
+                    if (!sender.hasPermission("xdbl.races.become." + args[1]) ||
+                            !sender.hasPermission("xdbl.races.become.*")) {
+                        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You do not have permission to become this race"));
+                        return true;
+                    }
                     selectedRace.apply(player);
                     player.sendMessage(
                             MiniMessage.miniMessage().deserialize(
                                     "<green>Succesfully changed your race to a <white>" + selectedRace.getName()
                             ));
+                    return true;
                 }
-                return true;
             }
             case "restore" -> {
+                if (!sender.hasPermission("xdbl.races.restore")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
                 // Restore all races
                 player.sendMessage(
                         MiniMessage.miniMessage().deserialize(

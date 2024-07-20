@@ -45,9 +45,14 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
+        if (!sender.hasPermission("xdbl.marry")) {
+            this.plugin.noPermission((Player) sender);
+            return true;
+        }
 
         switch (cmd.getName()) {
             case "divorce" -> {
+
                 if (args.length == 0) {
                     player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/divorce <player>"));
                     return true;

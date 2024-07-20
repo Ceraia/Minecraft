@@ -38,16 +38,11 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         switch (command.getName().toLowerCase()) {
-            case "jump" -> {
+            case "jump", "j" -> {
                 if (sender instanceof Player) {
                     jump((Player) sender);
                 }
                 return true;
-            }
-            case "j" -> {
-                if (sender instanceof Player) {
-                    jump((Player) sender);
-                }
             }
             case "mod" -> {
                 if (!sender.hasPermission("xdbl.mod")) {
@@ -126,7 +121,8 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "day" -> {
-                if (!sender.hasPermission("xdbl.time")) {
+                if (!sender.hasPermission("xdbl.time.day") ||
+                        !sender.hasPermission("xdbl.time.*")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -136,7 +132,8 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "night" -> {
-                if (!sender.hasPermission("xdbl.time")) {
+                if (!sender.hasPermission("xdbl.time.night") ||
+                        !sender.hasPermission("xdbl.time.*")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -146,6 +143,10 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "discord" -> {
+                if (!sender.hasPermission("xdbl.discord")) {
+                    this.plugin.noPermission((Player) sender);
+                    return true;
+                }
                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Click <white><click:copy_to_clipboard:"+ plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE") +"><hover:show_text:"+plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE")+">this</click></white> to copy the Discord link, or click here: <white>"+ plugin.getConfig().getString("DISCORD_INVITE", "EXAMPLE_INVITE")));
                 return true;
             }

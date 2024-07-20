@@ -66,7 +66,6 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         switch (cmd.getName()) {
             case "arena" -> {
-
                 if (!sender.hasPermission("xdbl.arena")) {
                     this.plugin.noPermission((Player) sender);
                     return true;

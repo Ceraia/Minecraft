@@ -91,6 +91,10 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
+        if (!sender.hasPermission("xdbl.sit")) {
+            this.plugin.noPermission((Player) sender);
+            return true;
+        }
 
         sit(player, player.getLocation().add(0, -0.3, 0), false);
         return true;
