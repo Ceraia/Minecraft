@@ -9,88 +9,56 @@ commands:
   arena:
     description: Arena command
     usage: /arena <list|delete|public> [name]
-    permission: double.arena
-    permission-message: "You do not have permission to use this command"
   pvp:
     description: PVP command
     usage: /pvp <player|accept>
-    permission: double.pvp
-    permission-message: "You do not have permission to use this command"
   gvg:
     description: GVG command
     usage: /gvg <player|accept|invite>
-    permission: double.gvg
-    permission-message: "You do not have permission to use this command"
   mod:
     description: Moderation commands
     usage: /mod <ban> <arena|pvp> <player>
-    permission: double.mod
-    permission-message: "You do not have permission to use this command"
   leaderboard:
     description: Show the top fighters in the server
     usage: /leaderboard
-    permission: double.pvp
     aliases: [ top ]
-    permission-message: "You do not have permission to use this command"
   profile:
     description: Show your profile
     usage: /profile
-    permission: double.pvp
-    permission-message: "You do not have permission to use this command"
   stats:
     description: Show your profile
     usage: /profile
-    permission: double.pvp
-    permission-message: "You do not have permission to use this command"
   version:
     description: Show the plugin version
     usage: /version
   sit:
     description: Sit command
     usage: /sit
-    permission: double.sit
-    permission-message: "You do not have permission to use this command"
   marry:
     description: Marry command
     usage: /marry <player>
-    permission: double.marry
-    permission-message: "You do not have permission to use this command"
   divorce:
     description: Divorce command
     usage: /divorce
-    permission: double.marry
-    permission-message: "You do not have permission to use this command"
   accept:
     description: Accept command
     usage: /accept
-    permission: double.marry
-    permission-message: "You do not have permission to use this command"
   jump:
     description: Jump command
     usage: /jump
-    permission: double.jump
     aliases: [ j ]
-    permission-message: "You do not have permission to use this command"
   day:
     description: Day command
     usage: /day
-    permission: double.time.day
-    permission-message: "You do not have permission to use this command"
   night:
     description: Night command
     usage: /night
-    permission: double.time.night
-    permission-message: "You do not have permission to use this command"
   discord:
     description: Discord command
     usage: /discord
-    permission: double.discord
-    permission-message: "You do not have permission to use this command"
   race:
     description: A command to change your race
     usage: /race
-    permission: double.races
-    permission-message: "You do not have permission to use this command"
 permissions :
   double.discord:
     description: "Access to the /discord command that is set in the config.yml"

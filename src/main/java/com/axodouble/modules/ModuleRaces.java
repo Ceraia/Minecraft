@@ -78,7 +78,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 if (selectedRace == null)
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Race not found!"));
                 else {
-                    if (!sender.hasPermission("double.races.become." + args[1]) ||
+                    if (!sender.hasPermission("double.races.become." + args[1]) &&
                             !sender.hasPermission("double.races.become.*")) {
                         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You do not have permission to become this race"));
                         return true;
@@ -146,6 +146,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 0.9,
                 2.7,
+                4,
                 new ItemStack(ItemStack.of(Material.POTATO)),
                 new File(f, "Halfling.yml")
         ).saveFile());
@@ -157,6 +158,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 0.95,
                 3.15,
+                4,
                 new ItemStack(ItemStack.of(Material.RED_MUSHROOM)),
                 new File(f, "Gnome.yml")
         ).saveFile());
@@ -168,6 +170,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 1,
                 4.5,
+                4.2,
                 new ItemStack(ItemStack.of(Material.IRON_PICKAXE)),
                 new File(f, "Dwarven.yml")
         ).saveFile());
@@ -179,6 +182,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 1,
                 5,
+                4,
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Short-Human.yml")
         ).saveFile());
@@ -190,6 +194,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 1,
                 5,
+                4,
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Human.yml")
         ).saveFile());
@@ -201,6 +206,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.42,
                 1,
                 5,
+                4,
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Tall-Human.yml")
         ).saveFile());
@@ -212,17 +218,19 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.504,
                 1.05,
                 5.55,
+                4.5,
                 new ItemStack(ItemStack.of(Material.BOW)),
                 new File(f, "Elven.yml")
         ).saveFile());
         races.add(new Race(
                 "Bugbear",
                 1.33,
-                0.09,
+                0.08,
                 30,
                 0.64,
                 1.1,
                 6.65,
+                3.2,
                 new ItemStack(ItemStack.of(Material.BEEF)),
                 new File(f, "Bugbear.yml")
         ).saveFile());
@@ -251,6 +259,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     config.getDouble("jumpheight", 0.42),
                     config.getDouble("damage", 1),
                     config.getDouble("reach", 5),
+                    config.getDouble("attackspeed", 4),
                     config.getItemStack("item", new ItemStack(ItemStack.of(Material.BREAD))),
                     file
             );
@@ -265,7 +274,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
-    public class Race {
+    public static class Race {
         private final String name;
         private final double scale;
         private final double speed;
@@ -273,6 +282,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         private final double jumpHeight;
         private final double damage;
         private final double reach;
+        private final double attackSpeed;
         private final ItemStack item;
         private final File configFile;
 
@@ -283,6 +293,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     double jumpHeight,
                     double damage,
                     double reach,
+                    double attackSpeed,
                     ItemStack item,
                     File configFile
         ) {
@@ -293,6 +304,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             this.jumpHeight = jumpHeight;
             this.damage = damage;
             this.reach = reach;
+            this.attackSpeed = attackSpeed;
             this.item = item;
             this.configFile = configFile;
         }
@@ -325,6 +337,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             return reach;
         }
 
+        public double getAttackSpeed() {
+            return attackSpeed;
+        }
+
         public ItemStack getItem() {
             return item;
         }
@@ -352,12 +368,13 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
 
         public void apply(Player player) {
-            player.getAttribute(Attribute.GENERIC_SCALE).setBaseValue(scale);
-            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(speed);
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
-            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
-            player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE).setBaseValue(reach);
-            player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE).setBaseValue(reach);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).setBaseValue(scale);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(speed);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(health);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(damage);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(reach);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(reach);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(attackSpeed);
         }
     }
 }
