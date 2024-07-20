@@ -132,6 +132,17 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 new File(f, "Halfling.yml")
         ).saveFile());
         races.add(new Race(
+                "Gnome",
+                0.6,
+                0.12,
+                16,
+                0.42,
+                0.95,
+                3.15,
+                new ItemStack(ItemStack.of(Material.RED_MUSHROOM)),
+                new File(f, "Gnome.yml")
+        ).saveFile());
+        races.add(new Race(
                 "Dwarven",
                 0.9,
                 0.09,
