@@ -52,22 +52,8 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
         }
 
         switch (cmd.getName()) {
-            case "divorce" -> {
-
-                if (args.length == 0) {
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/divorce <player>"));
-                    return true;
-                }
-
-                Player target = plugin.getServer().getPlayer(args[0]);
-                if (target == null) {
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"));
-                    return true;
-                }
-
+            case "divorce" ->
                 plugin.getMarriageModule().divorce(player);
-
-            }
             case "marry" -> {
                 if (args.length == 0) {
                     player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/marry <player>"));
@@ -119,25 +105,68 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
 
     public void invite(Player sender, Player target) {
         if (this.plugin.getPlayerManager().getDoublePlayer(sender.getUniqueId()).isMarried()) {
+            sender.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>You are already married!"
+                    )
+            );
             return;
         }
         if (this.plugin.getPlayerManager().getDoublePlayer(target.getUniqueId()).isMarried()) {
+            sender.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>" + target.getName() + " is already married!"
+                    )
+            );
             return;
+        }
+
+        if(this.invites.containsKey(sender)) {
+            // Get the key and check if the value is the same as the target
+            if (this.invites.get(sender).equals(target)) {
+                accept(sender, target);
+                return;
+            }
         }
 
         this.invites.put(target, sender);
         this.plugin.getServer().sendMessage(
                 MiniMessage.miniMessage().deserialize(
-                        "<green>" + sender.getName() + " has invited " + target.getName() + " to marry them!"
+                        "<green>"+sender.getName()+"<gray> has invited <green>" + target.getName() + "<gray> to marry them!"
+                )
+        );
+        target.sendMessage(
+                MiniMessage.miniMessage().deserialize(
+                        "<green>" + sender.getName() + "<gray> has invited you to marry them! Click <hover:show_text:'Click to accept the marriage proposal.'><click:run_command:/marry "+sender.getName()+">[<green>here<gray>]</click><gray> to accept."
                 )
         );
     }
 
     public void accept(Player target, Player sender) {
         if (this.plugin.getPlayerManager().getDoublePlayer(sender.getUniqueId()).isMarried()) {
+            sender.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>You are already married!"
+                    )
+            );
+            target.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>" + sender.getName() + " is already married!"
+                    )
+            );
             return;
         }
         if (this.plugin.getPlayerManager().getDoublePlayer(target.getUniqueId()).isMarried()) {
+            sender.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>" + target.getName() + " is already married!"
+                    )
+            );
+            target.sendMessage(
+                    MiniMessage.miniMessage().deserialize(
+                            "<red>You are already married!"
+                    )
+            );
             return;
         }
         if (!this.invites.containsKey(target) || !this.invites.get(target).equals(sender)) {
@@ -146,7 +175,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
 
         this.plugin.getServer().sendMessage(
                 MiniMessage.miniMessage().deserialize(
-                        "<green>" + target.getName() + " has accepted " + sender.getName() + "'s marriage proposal!"
+                        "<green>" + target.getName() + "<gray> has accepted <green>" + sender.getName() + "<gray>'s marriage proposal!"
                 )
         );
         DoublePlayer doubleTarget = this.plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
@@ -169,7 +198,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
 
         this.plugin.getServer().sendMessage(
                 MiniMessage.miniMessage().deserialize(
-                        "<green>" + target.getName() + " has declined " + sender.getName() + "'s marriage proposal!"
+                        "<green>" + target.getName() + "<gray> has declined <green>" + sender.getName() + "<gray>'s marriage proposal!"
                 )
         );
         this.invites.remove(target);

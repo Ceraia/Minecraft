@@ -92,7 +92,7 @@ permissions :
     description: "Access to the /sit command and to sit on blocks"
     default: true
   double.marry:
-    description: "Access to the /marry, /accept and /divorce commands"
+    description: "Access to the /marry command"
     default: true
   double.jump:
     description: "Access to the /jump command"
