@@ -1,7 +1,7 @@
-package dev.xdbl.managers;
+package com.axodouble.managers;
 
-import dev.xdbl.Double;
-import dev.xdbl.types.DoublePlayer;
+import com.axodouble.Double;
+import com.axodouble.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

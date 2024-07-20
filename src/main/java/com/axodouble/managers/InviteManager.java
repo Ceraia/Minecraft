@@ -1,6 +1,6 @@
-package dev.xdbl.managers;
+package com.axodouble.managers;
 
-import dev.xdbl.types.Arena;
+import com.axodouble.types.Arena;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;

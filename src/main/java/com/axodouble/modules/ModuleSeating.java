@@ -1,7 +1,6 @@
-package dev.xdbl.modules;
+package com.axodouble.modules;
 
-import dev.xdbl.Double;
-import net.kyori.adventure.text.minimessage.MiniMessage;
+import com.axodouble.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -91,7 +90,7 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
-        if (!sender.hasPermission("xdbl.sit")) {
+        if (!sender.hasPermission("double.sit")) {
             this.plugin.noPermission((Player) sender);
             return true;
         }

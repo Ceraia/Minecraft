@@ -1,6 +1,6 @@
-package dev.xdbl.types;
+package com.axodouble.types;
 
-import dev.xdbl.Double;
+import com.axodouble.Double;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

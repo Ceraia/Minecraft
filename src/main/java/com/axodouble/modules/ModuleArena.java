@@ -1,9 +1,9 @@
-package dev.xdbl.modules;
+package com.axodouble.modules;
 
-import dev.xdbl.Double;
-import dev.xdbl.managers.InviteManager;
-import dev.xdbl.types.Arena;
-import dev.xdbl.types.DoublePlayer;
+import com.axodouble.Double;
+import com.axodouble.managers.InviteManager;
+import com.axodouble.types.Arena;
+import com.axodouble.types.DoublePlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -66,7 +66,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         switch (cmd.getName()) {
             case "arena" -> {
-                if (!sender.hasPermission("xdbl.arena")) {
+                if (!sender.hasPermission("double.arena")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -144,7 +144,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 }
             }
             case "pvp" -> {
-                if (!sender.hasPermission("xdbl.pvp")) {
+                if (!sender.hasPermission("double.pvp")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -314,7 +314,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "gvg" -> {
-                if (!sender.hasPermission("xdbl.gvg")) {
+                if (!sender.hasPermission("double.gvg")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -492,7 +492,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
             }
             case "top", "leaderboard" -> leaderboard(sender);
             case "profile" -> {
-                if (!sender.hasPermission("xdbl.pvp")) {
+                if (!sender.hasPermission("double.pvp")) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
                     return true;
                 }

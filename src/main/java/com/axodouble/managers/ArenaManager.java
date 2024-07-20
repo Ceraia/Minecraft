@@ -1,7 +1,7 @@
-package dev.xdbl.managers;
+package com.axodouble.managers;
 
-import dev.xdbl.Double;
-import dev.xdbl.types.Arena;
+import com.axodouble.Double;
+import com.axodouble.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

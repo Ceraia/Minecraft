@@ -1,8 +1,8 @@
-package dev.xdbl.types;
+package com.axodouble.types;
 
-import dev.xdbl.Double;
-import dev.xdbl.Utils;
-import dev.xdbl.managers.InviteManager;
+import com.axodouble.Double;
+import com.axodouble.Utils;
+import com.axodouble.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.title.Title;

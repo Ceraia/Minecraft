@@ -1,7 +1,7 @@
-package dev.xdbl.modules;
+package com.axodouble.modules;
 
-import dev.xdbl.Double;
-import dev.xdbl.types.DoublePlayer;
+import com.axodouble.Double;
+import com.axodouble.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -45,7 +45,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "mod" -> {
-                if (!sender.hasPermission("xdbl.mod")) {
+                if (!sender.hasPermission("double.mod")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -121,8 +121,8 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "day" -> {
-                if (!sender.hasPermission("xdbl.time.day") ||
-                        !sender.hasPermission("xdbl.time.*")) {
+                if (!sender.hasPermission("double.time.day") ||
+                        !sender.hasPermission("double.time.*")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -132,8 +132,8 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "night" -> {
-                if (!sender.hasPermission("xdbl.time.night") ||
-                        !sender.hasPermission("xdbl.time.*")) {
+                if (!sender.hasPermission("double.time.night") ||
+                        !sender.hasPermission("double.time.*")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -143,7 +143,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "discord" -> {
-                if (!sender.hasPermission("xdbl.discord")) {
+                if (!sender.hasPermission("double.discord")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -197,7 +197,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void jump(Player player) {
-        if (!player.hasPermission("xdbl.jump")) {
+        if (!player.hasPermission("double.jump")) {
             this.plugin.noPermission(player);
         }
         // Get the block the player is looking at even if it is out of reach

@@ -1,12 +1,12 @@
-package dev.xdbl;
+package com.axodouble;
 
-import dev.xdbl.listeners.PlayerInventoryListener;
-import dev.xdbl.listeners.SpellsListener;
-import dev.xdbl.managers.ArenaManager;
-import dev.xdbl.managers.InviteManager;
-import dev.xdbl.managers.PlayerManager;
-import dev.xdbl.modules.*;
-import dev.xdbl.types.ArenaSelectGUI;
+import com.axodouble.listeners.PlayerInventoryListener;
+import com.axodouble.listeners.SpellsListener;
+import com.axodouble.managers.ArenaManager;
+import com.axodouble.managers.InviteManager;
+import com.axodouble.managers.PlayerManager;
+import com.axodouble.modules.*;
+import com.axodouble.types.ArenaSelectGUI;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;

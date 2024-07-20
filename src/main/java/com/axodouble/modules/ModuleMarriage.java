@@ -1,7 +1,7 @@
-package dev.xdbl.modules;
+package com.axodouble.modules;
 
-import dev.xdbl.Double;
-import dev.xdbl.types.DoublePlayer;
+import com.axodouble.Double;
+import com.axodouble.types.DoublePlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -45,7 +45,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
-        if (!sender.hasPermission("xdbl.marry")) {
+        if (!sender.hasPermission("double.marry")) {
             this.plugin.noPermission((Player) sender);
             return true;
         }

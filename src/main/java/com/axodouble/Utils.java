@@ -1,6 +1,6 @@
-package dev.xdbl;
+package com.axodouble;
 
-import dev.xdbl.types.Arena;
+import com.axodouble.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;

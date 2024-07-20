@@ -1,6 +1,6 @@
-package dev.xdbl.modules;
+package com.axodouble.modules;
 
-import dev.xdbl.Double;
+import com.axodouble.Double;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -47,7 +47,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
         switch (args[0]) {
             case "reload" -> {
-                if (!sender.hasPermission("xdbl.races.reload")) {
+                if (!sender.hasPermission("double.races.reload")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -56,7 +56,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
             case "become" -> {
-                if (!sender.hasPermission("xdbl.races.become")) {
+                if (!sender.hasPermission("double.races.become")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
@@ -78,8 +78,8 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 if (selectedRace == null)
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Race not found!"));
                 else {
-                    if (!sender.hasPermission("xdbl.races.become." + args[1]) ||
-                            !sender.hasPermission("xdbl.races.become.*")) {
+                    if (!sender.hasPermission("double.races.become." + args[1]) ||
+                            !sender.hasPermission("double.races.become.*")) {
                         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You do not have permission to become this race"));
                         return true;
                     }
@@ -92,7 +92,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 }
             }
             case "restore" -> {
-                if (!sender.hasPermission("xdbl.races.restore")) {
+                if (!sender.hasPermission("double.races.restore")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
