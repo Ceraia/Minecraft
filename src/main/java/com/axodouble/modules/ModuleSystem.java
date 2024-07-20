@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -157,44 +158,36 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        switch (command.getName().toLowerCase()) {
-            case "mod" -> {
-                if (args.length == 1) {
-                    List<String> tabOptions = new ArrayList<>();
-                    tabOptions.add("ban");
-                    tabOptions.add("remove");
-                    return tabOptions;
-                }
-                if (args.length == 2) {
-                    List<String> tabOptions = new ArrayList<>();
-                    if (args[1].equalsIgnoreCase("ban")) {
-                        tabOptions.add("pvp");
-                    }
-                    tabOptions.add("arena");
-                    return tabOptions;
-                }
-                if (args.length == 3) {
-                    if (args[2].equalsIgnoreCase("pvp")) {
-                        List<String> tabOptions = new ArrayList<>();
-                        // If there is an argument, suggest online player names
-                        for (Player player : Bukkit.getOnlinePlayers()) {
-                            tabOptions.add(player.getName());
-                        }
-                        return tabOptions;
-                    }
-                    if (args[2].equalsIgnoreCase("arena")) {
-                        List<String> tabOptions = new ArrayList<>();
-                        // If there is an argument, suggest all arena names
-                        plugin.getArenaManager().getArenas().forEach(arena -> tabOptions.add(arena.getName()));
-                        return tabOptions;
-                    }
-                }
-                // If there is more than one argument, return an empty list
-                return new ArrayList<>();
+        List<String> tabOptions = new ArrayList<>();
+        if (command.getName().toLowerCase().equals("mod")) {
+            if (args.length == 1) {
+                tabOptions.add("ban");
+                tabOptions.add("remove");
             }
-
+            if (args.length == 2) {
+                if (args[1].equalsIgnoreCase("ban")) {
+                    tabOptions.add("pvp");
+                }
+                tabOptions.add("arena");
+            }
+            if (args.length == 3) {
+                if (args[2].equalsIgnoreCase("pvp")) {
+                    // If there is an argument, suggest online player names
+                    for (Player player : Bukkit.getOnlinePlayers()) {
+                        tabOptions.add(player.getName());
+                    }
+                }
+                if (args[2].equalsIgnoreCase("arena")) {
+                    // If there is an argument, suggest all arena names
+                    plugin.getArenaManager().getArenas().forEach(arena -> tabOptions.add(arena.getName()));
+                }
+            }
         }
-        return null;
+
+        List<String> returnedOptions = new ArrayList<>();
+        StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
+
+        return returnedOptions;
     }
 
     public void jump(Player player) {

@@ -14,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -115,19 +116,26 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         // Return a string list of all races
-        List<String> options = new ArrayList<>();
+        List<String> tabOptions = new ArrayList<>();
         if (args.length == 1) {
-            options.add("reload");
-            options.add("become");
+            tabOptions.add("reload");
+            tabOptions.add("become");
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("become")) {
                 for (Race race : races) {
-                    options.add(race.getName());
+                    tabOptions.add(race.getName());
                 }
             }
+        } else if (args.length == 3) {
+            if (args[0].equalsIgnoreCase("become")) {
+                tabOptions.add("reload");
+                tabOptions.add("become");
+            }
         }
+        List<String> returnedOptions = new ArrayList<>();
+        StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
 
-        return options;
+        return returnedOptions;
     }
 
     public void reloadRaces() {

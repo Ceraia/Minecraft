@@ -16,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -103,14 +104,17 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         // Return all online players except the sender
-        List<String> players = new ArrayList<>();
+        List<String> tabOptions = new ArrayList<>();
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             if (!player.getName().equals(sender.getName())) {
-                players.add(player.getName());
+                tabOptions.add(player.getName());
             }
         }
 
-        return players;
+        List<String> returnedOptions = new ArrayList<>();
+        StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
+
+        return returnedOptions;
     }
 
     public void invite(Player sender, Player target) {

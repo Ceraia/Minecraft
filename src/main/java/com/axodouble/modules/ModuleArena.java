@@ -32,6 +32,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -530,7 +531,6 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         switch (cmd.getName()) {
             case "arena" -> {
-                List<String> arenas = new ArrayList<>();
                 if (args.length == 1) {
                     return Arrays.asList("list", "delete", "public", "create", "sp1", "sp2", "top", "scoreboard");
                 } else if (args.length == 2 && (
@@ -538,12 +538,16 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                                 args[0].equalsIgnoreCase("public") ||
                                 args[0].equalsIgnoreCase("sp1") ||
                                 args[0].equalsIgnoreCase("sp2"))) {
+                    List<String> tabOptions = new ArrayList<>();
                     plugin.getArenaManager().getArenas().forEach(a -> {
                         if (a.getOwner().equals(sender.getName())) {
-                            arenas.add(a.getName());
+                            tabOptions.add(a.getName());
                         }
                     });
-                    return arenas;
+                    List<String> returnedOptions = new ArrayList<>();
+                    StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
+
+                    return returnedOptions;
                 } else if (args.length == 2 && args[0].equalsIgnoreCase("create")) {
                     return List.of("<name>");
                 } else if ((args.length == 3 && args[0].equalsIgnoreCase("public"))) {
@@ -561,8 +565,10 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                             tabOptions.add(player.getName());
                         }
                     }
+                    List<String> returnedOptions = new ArrayList<>();
+                    StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
 
-                    return tabOptions;
+                    return returnedOptions;
                 }
                 // If there is more than one argument, return an empty list
                 return new ArrayList<>();
@@ -571,13 +577,18 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 if (args.length == 1) {
                     return Arrays.asList("invite", "accept", "leave", "kick", "fight");
                 } else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
-                    ArrayList<String> players = new ArrayList<>();
+                    ArrayList<String> tabOptions = new ArrayList<>();
                     if (groups.containsKey((Player) sender)) {
-                        groups.get((Player) sender).forEach(p -> players.add(p.getName()));
+                        groups.get((Player) sender).forEach(p -> tabOptions.add(p.getName()));
                     }
-                    return players;
+                    List<String> returnedOptions = new ArrayList<>();
+                    StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
+                    return returnedOptions;
                 } else if (args.length == 2 && (args[0].equalsIgnoreCase("invite") || args[0].equalsIgnoreCase("fight"))) {
-                    return Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList());
+                    List<String> returnedOptions = new ArrayList<>();
+                    StringUtil.copyPartialMatches(args[args.length - 1], Bukkit.getOnlinePlayers().stream().map(Player::getName).collect(Collectors.toList()), returnedOptions);
+
+                    return returnedOptions;
                 }
 
                 return new ArrayList<>();
@@ -588,9 +599,11 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
             case "profile" -> {
                 if (args.length == 1) {
                     // Return a list of all players
-                    List<String> players = new ArrayList<>();
-                    Bukkit.getOnlinePlayers().forEach(p -> players.add(p.getName()));
-                    return players;
+                    List<String> tabOptions = new ArrayList<>();
+                    Bukkit.getOnlinePlayers().forEach(p -> tabOptions.add(p.getName()));
+                    List<String> returnedOptions = new ArrayList<>();
+                    StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);
+                    return returnedOptions;
                 }
             }
         }
