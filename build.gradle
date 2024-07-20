@@ -6,9 +6,10 @@ plugins {
 // Get the day and the month
 def date = new Date()
 
-def major = "0"
+def major = "1"
+def minor = "0"
 
-version = major + "." + date.format('YY') + '.' + date.format('M') + date.format('dd') + "-build-" + date.format('H') + date.format('mm')
+version = major + "." + minor + '.' +date.format('YY') + date.format('M') + date.format('dd') + "-build-" + date.format('H') + date.format('mm')
 
 tasks {
     runServer {
