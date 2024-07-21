@@ -3,6 +3,9 @@ package com.axodouble.modules;
 import com.axodouble.Double;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.type.Slab;
+import org.bukkit.block.data.type.Stairs;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -155,9 +158,20 @@ public class ModuleSeating implements CommandExecutor, TabCompleter, Listener {
 
         Player player = e.getPlayer();
 
-        if (e.getClickedBlock().getType().toString().contains("STAIRS") || (e.getClickedBlock().getType().toString().contains("SLAB"))) {
-            e.setCancelled(true);
-            sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5), true);
+        if(e.getClickedBlock().getType().toString().contains("SLAB")) {
+            Slab slab = (Slab) e.getClickedBlock().getBlockData();
+            if(slab.getType().equals(Slab.Type.BOTTOM)) {
+                e.setCancelled(true);
+                sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5), true);
+            }
+        }
+
+        if (e.getClickedBlock().getType().toString().contains("STAIRS") ) {
+            Stairs stairs = (Stairs) e.getClickedBlock().getBlockData();
+            if(stairs.getHalf().equals(Stairs.Half.BOTTOM)) {
+                e.setCancelled(true);
+                sit(player, e.getClickedBlock().getLocation().add(0.5, 0.1, 0.5), true);
+            }
         }
     }
 
