@@ -133,6 +133,8 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
                     List<Component> lore = new ArrayList<>();
 
+                    Arrays.stream(race.getLore().split("<newline>")).toList().forEach(s -> lore.add(MiniMessage.miniMessage().deserialize(s)));
+                    //lore.add(MiniMessage.miniMessage().deserialize(race.getLore()));
                     lore.add(MiniMessage.miniMessage().deserialize("<gray>Scale : <green>" + race.getScale()));
                     lore.add(MiniMessage.miniMessage().deserialize("<gray>Speed : <green>" + race.getSpeed()));
                     lore.add(MiniMessage.miniMessage().deserialize("<gray>Health : <green>" + race.getHealth()));
@@ -144,6 +146,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     meta.lore(lore);
 
                     itemStack.setItemMeta(meta);
+                    itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
 
                     inv.setItem(i.get(), itemStack);
                     raceSelectSlots.put(itemStack, race);
@@ -227,6 +230,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void addDefaultRaces() {
+        races.clear();
         File f = new File(plugin.getDataFolder(), "races");
         if (!f.exists())
             f.mkdirs();
@@ -240,7 +244,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.9,
                 2.7,
                 4,
-                "",
+                "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.",
                 new ItemStack(ItemStack.of(Material.POTATO)),
                 new File(f, "Halfling.yml")
         ).saveFile());
@@ -253,7 +257,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 0.95,
                 3.15,
                 4,
-                "",
+                "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.",
                 new ItemStack(ItemStack.of(Material.RED_MUSHROOM)),
                 new File(f, "Gnome.yml")
         ).saveFile());
@@ -266,7 +270,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1,
                 4.5,
                 4.2,
-                "",
+                "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.",
                 new ItemStack(ItemStack.of(Material.IRON_PICKAXE)),
                 new File(f, "Dwarven.yml")
         ).saveFile());
@@ -279,7 +283,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1,
                 5,
                 4,
-                "",
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Short-Human.yml")
         ).saveFile());
@@ -292,7 +296,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1,
                 5,
                 4,
-                "",
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Human.yml")
         ).saveFile());
@@ -305,7 +309,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1,
                 5,
                 4,
-                "",
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
                 new ItemStack(ItemStack.of(Material.BREAD)),
                 new File(f, "Tall-Human.yml")
         ).saveFile());
@@ -318,7 +322,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1.05,
                 5.55,
                 4.5,
-                "",
+                "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.",
                 new ItemStack(ItemStack.of(Material.BOW)),
                 new File(f, "Elven.yml")
         ).saveFile());
@@ -331,11 +335,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 1.1,
                 6.65,
                 3.2,
-                "",
+                "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.",
                 new ItemStack(ItemStack.of(Material.BEEF)),
                 new File(f, "Bugbear.yml")
         ).saveFile());
-
     }
 
     public void loadRaces() {
@@ -459,6 +462,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
         public Race saveFile() {
             FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+            config.set("lore", lore);
             config.set("scale", scale);
             config.set("speed", speed);
             config.set("health", health);
