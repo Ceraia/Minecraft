@@ -31,11 +31,9 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
         this.plugin = plugin;
 
         Objects.requireNonNull(plugin.getCommand("marry")).setExecutor(this);
-        Objects.requireNonNull(plugin.getCommand("accept")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("divorce")).setExecutor(this);
 
         Objects.requireNonNull(plugin.getCommand("marry")).setTabCompleter(this);
-        Objects.requireNonNull(plugin.getCommand("accept")).setTabCompleter(this);
         Objects.requireNonNull(plugin.getCommand("divorce")).setTabCompleter(this);
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -67,20 +65,6 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
                 }
 
                 plugin.getMarriageModule().invite(player, target);
-            }
-            case "accept" -> {
-                if (args.length == 0) {
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/accept <player>"));
-                    return true;
-                }
-
-                Player target = plugin.getServer().getPlayer(args[0]);
-                if (target == null) {
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"));
-                    return true;
-                }
-
-                plugin.getMarriageModule().accept(target, player);
             }
         }
 

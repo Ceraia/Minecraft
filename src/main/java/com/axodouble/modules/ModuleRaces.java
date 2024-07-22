@@ -271,7 +271,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 4.5,
                 4.2,
                 "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.",
-                new ItemStack(ItemStack.of(Material.IRON_PICKAXE)),
+                new ItemStack(ItemStack.of(Material.IRON_ORE)),
                 new File(f, "Dwarven.yml")
         ).saveFile());
         races.add(new Race(
@@ -314,12 +314,25 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 new File(f, "Tall-Human.yml")
         ).saveFile());
         races.add(new Race(
+                "Half-Elf",
+                1.11,
+                0.0975,
+                23,
+                0.64,
+                0.94,
+                5.27,
+                4.25,
+                "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.",
+                new ItemStack(ItemStack.of(Material.APPLE)),
+                new File(f, "Half-Elf.yml")
+        ).saveFile());
+        races.add(new Race(
                 "Elven",
                 1.11,
                 0.095,
                 26,
-                0.504,
-                1.05,
+                0.64,
+                0.88,
                 5.55,
                 4.5,
                 "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.",
@@ -327,11 +340,24 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 new File(f, "Elven.yml")
         ).saveFile());
         races.add(new Race(
+                "Half-Orc",
+                1.15,
+                0.09,
+                28,
+                0.7,
+                1.05,
+                5.55,
+                3.5,
+                "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.",
+                new ItemStack(ItemStack.of(Material.PORKCHOP)),
+                new File(f, "Half-Orc.yml")
+        ).saveFile());
+        races.add(new Race(
                 "Bugbear",
                 1.33,
                 0.08,
                 30,
-                0.64,
+                0.79,
                 1.1,
                 6.65,
                 3.2,

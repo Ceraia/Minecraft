@@ -121,16 +121,20 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                 );
                 return true;
             }
-            case "day" -> {
+            case "day", "noon" -> {
                 if (!sender.hasPermission("double.time.day") ||
                         !sender.hasPermission("double.time.*")) {
                     this.plugin.noPermission((Player) sender);
                     return true;
                 }
                 if (sender instanceof Player) {
-                    ((Player) sender).getWorld().setTime(0);
+                    if(args[0].equalsIgnoreCase("noon")) {
+                        ((Player) sender).getWorld().setTime(6000);
+                    } else {
+                        ((Player) sender).getWorld().setTime(0);
+                    }
                     ((Player) sender).getWorld().setWeatherDuration(1);
-                    ((Player) sender).getWorld().setClearWeatherDuration(5*60*20);
+                    ((Player) sender).getWorld().setClearWeatherDuration(15*60*20);
                 }
                 return true;
             }

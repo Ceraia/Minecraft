@@ -25,36 +25,34 @@ commands:
   profile:
     description: Show your profile
     usage: /profile
-  stats:
-    description: Show your profile
-    usage: /profile
+    aliases: [ stats ]
   version:
-    description: Show the plugin version
+    description: Show the version of the plugin.
     usage: /version
   sit:
-    description: Sit command
+    description: Sit where ever you want.
     usage: /sit
   marry:
-    description: Marry command
+    description: Marry someone you love.
     usage: /marry <player>
   divorce:
-    description: Divorce command
+    description: Divorce who you're married to.
     usage: /divorce
-  accept:
-    description: Accept command
-    usage: /accept
   jump:
-    description: Jump command
+    description: Teleport to the destination you are looking at.
     usage: /jump
     aliases: [ j ]
   day:
-    description: Day command
+    description: Turn the world to day.
     usage: /day
   night:
-    description: Night command
+    description: Turn the world to night.
     usage: /night
+  noon:
+    description: Turn the world to noon.
+    usage: /noon
   discord:
-    description: Discord command
+    description: Get a link to the discord server
     usage: /discord
   race:
     description: A command to change your race
