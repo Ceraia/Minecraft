@@ -128,7 +128,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
                 if (sender instanceof Player) {
-                    if(args[0].equalsIgnoreCase("noon")) {
+                    if(command.getName().equalsIgnoreCase("noon")) {
                         ((Player) sender).getWorld().setTime(6000);
                     } else {
                         ((Player) sender).getWorld().setTime(0);
