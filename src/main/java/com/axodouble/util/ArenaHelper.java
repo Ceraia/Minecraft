@@ -1,5 +1,6 @@
-package com.axodouble;
+package com.axodouble.util;
 
+import com.axodouble.Double;
 import com.axodouble.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,8 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.Objects;
 
-public class Utils {
-
+public class ArenaHelper {
     public static void revertInventory(Double plugin, Player pl, Arena arena) {
         try {
             File file = new File(plugin.getDataFolder(), "data/pinventory_" + arena.getName() + "_" + pl.getName() + ".yml");
@@ -40,5 +40,9 @@ public class Utils {
     public static void teleportPlayerToSpawn(Double plugin, Player player, Arena arena) {
         Location l = arena.getPlayerPriorLocation(player);
         player.teleport(l);
+    }
+
+    public static boolean defaultRaces(Double plugin) {
+        return true;
     }
 }

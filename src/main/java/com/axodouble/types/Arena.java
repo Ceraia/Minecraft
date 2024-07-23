@@ -1,7 +1,7 @@
 package com.axodouble.types;
 
 import com.axodouble.Double;
-import com.axodouble.Utils;
+import com.axodouble.util.ArenaHelper;
 import com.axodouble.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -56,7 +56,7 @@ public class Arena {
         this.configFile = configFile;
     }
 
-    public boolean saveArena() {
+    public void saveArena() {
         try {
             configFile = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
 
@@ -78,9 +78,7 @@ public class Arena {
             config.save(configFile);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
         }
-        return true;
     }
 
     public boolean totems() {
@@ -106,8 +104,8 @@ public class Arena {
         this.state = state;
     }
 
-    public boolean delete() {
-        return configFile.delete();
+    public void delete() {
+        configFile.delete();
     }
 
     public String getName() {
@@ -215,11 +213,11 @@ public class Arena {
         }
 
         if (!end || quit) {
-            Utils.teleportPlayerToSpawn(plugin, player, this);
+            ArenaHelper.teleportPlayerToSpawn(plugin, player, this);
             plugin.getArenaManager().removePlayerFromArena(player);
 
             player.getInventory().clear();
-            Utils.revertInventory(plugin, player, this);
+            ArenaHelper.revertInventory(plugin, player, this);
             if (!end) {
                 return;
             }
@@ -237,7 +235,7 @@ public class Arena {
                                     + " in the "
                                     + this.getName()
                                     + " arena with a win chance of "
-                                    + plugin.getPlayerManager().CalculateWinChance(winners.get(0).getUniqueId(), losers.get(0).getUniqueId()) + "%!"
+                                    + plugin.getPlayerManager().CalculateWinChance(winners.getFirst().getUniqueId(), losers.getFirst().getUniqueId()) + "%!"
                     )
             );
 
@@ -263,11 +261,11 @@ public class Arena {
                     if (pl == player && quit) {
                         continue;
                     }
-                    Utils.teleportPlayerToSpawn(plugin, pl, thisArena);
+                    ArenaHelper.teleportPlayerToSpawn(plugin, pl, thisArena);
 
                     plugin.getArenaManager().removePlayerFromArena(pl);
 
-                    Utils.revertInventory(plugin, pl, thisArena);
+                    ArenaHelper.revertInventory(plugin, pl, thisArena);
                 }
 
                 // Reward

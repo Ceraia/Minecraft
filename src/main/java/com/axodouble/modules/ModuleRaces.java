@@ -38,7 +38,6 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         this.plugin = plugin;
         this.races = new ArrayList<>();
 
-
         Objects.requireNonNull(plugin.getCommand("race")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("race")).setTabCompleter(this);
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -106,56 +105,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
             }
-            case "gui" -> {
-                if (!sender.hasPermission("double.races.become")) {
-                    this.plugin.noPermission((Player) sender);
-                    return true;
-                }
-                List<Race> selectable = new ArrayList<>();
-                for (Race race : races) {
-                    if(sender.hasPermission("double.races.become." + race.getName()) ||
-                            sender.hasPermission("double.races.become.*")) selectable.add(race);
-                }
-
-                // Open a GUI with all selectable races
-                int size = Math.max(9, (selectable.size() + 8) / 9 * 9);
-                Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a race to become"));
-
-                Map<ItemStack, Race> raceSelectSlots = new HashMap<>();
-
-                AtomicInteger i = new AtomicInteger(); // Slot
-                selectable.forEach(race -> {
-                    ItemStack itemStack = race.getItem(); // Create the itemstack
-                    ItemMeta meta = itemStack.getItemMeta();
-                    meta.displayName(
-                            MiniMessage.miniMessage().deserialize("<green>" +race.getName() + "</green>")
-                    );
-
-                    List<Component> lore = new ArrayList<>();
-
-                    Arrays.stream(race.getLore().split("<newline>")).toList().forEach(s -> lore.add(MiniMessage.miniMessage().deserialize(s)));
-                    //lore.add(MiniMessage.miniMessage().deserialize(race.getLore()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Scale : <green>" + race.getScale()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Speed : <green>" + race.getSpeed()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Health : <green>" + race.getHealth()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Jump Height : <green>" + race.getJumpHeight()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage : <green>"+race.getDamage()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Reach : <green>"+race.getReach()));
-                    lore.add(MiniMessage.miniMessage().deserialize("<gray>Attack Speed : <green>"+race.getAttackSpeed()));
-
-                    meta.lore(lore);
-
-                    itemStack.setItemMeta(meta);
-                    itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
-
-                    inv.setItem(i.get(), itemStack);
-                    raceSelectSlots.put(itemStack, race);
-                    i.getAndIncrement();
-                });
-                playerOpenGuis.put(player, raceSelectSlots);
-                player.openInventory(inv);
-                return true;
-            }
+            case "gui" -> openRaceGUI(player);
             case "restore" -> {
                 if (!sender.hasPermission("double.races.restore")) {
                     this.plugin.noPermission((Player) sender);
@@ -170,8 +120,8 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
         }
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid arguments!"));
 
+        openRaceGUI(player);
         return true;
     }
 
@@ -405,6 +355,58 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    private void openRaceGUI(Player player) {
+        {
+            if (!player.hasPermission("double.races.become")) {
+                this.plugin.noPermission((Player) player);
+                return;
+            }
+            List<Race> selectable = new ArrayList<>();
+            for (Race race : races) {
+                if(player.hasPermission("double.races.become." + race.getName()) ||
+                        player.hasPermission("double.races.become.*")) selectable.add(race);
+            }
+
+            // Open a GUI with all selectable races
+            int size = Math.max(9, (selectable.size() + 8) / 9 * 9);
+            Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a race to become"));
+
+            Map<ItemStack, Race> raceSelectSlots = new HashMap<>();
+
+            AtomicInteger i = new AtomicInteger(); // Slot
+            selectable.forEach(race -> {
+                ItemStack itemStack = race.getItem(); // Create the itemstack
+                ItemMeta meta = itemStack.getItemMeta();
+                meta.displayName(
+                        MiniMessage.miniMessage().deserialize("<green>" +race.getName() + "</green>")
+                );
+
+                List<Component> lore = new ArrayList<>();
+
+                Arrays.stream(race.getLore().split("<newline>")).toList().forEach(s -> lore.add(MiniMessage.miniMessage().deserialize(s)));
+                //lore.add(MiniMessage.miniMessage().deserialize(race.getLore()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Scale : <green>" + race.getScale()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Speed : <green>" + race.getSpeed()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Health : <green>" + race.getHealth()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Jump Height : <green>" + race.getJumpHeight()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage : <green>"+race.getDamage()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Reach : <green>"+race.getReach()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Attack Speed : <green>"+race.getAttackSpeed()));
+
+                meta.lore(lore);
+
+                itemStack.setItemMeta(meta);
+                itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+
+                inv.setItem(i.get(), itemStack);
+                raceSelectSlots.put(itemStack, race);
+                i.getAndIncrement();
+            });
+            playerOpenGuis.put(player, raceSelectSlots);
+            player.openInventory(inv);
+        }
+    }
+
     public static class Race {
         private final String name;
         private final double scale;
@@ -509,6 +511,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).setBaseValue(scale);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(speed);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(health);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)).setBaseValue(jumpHeight);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(damage);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(reach);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(reach);
