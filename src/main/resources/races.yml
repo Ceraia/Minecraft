@@ -10,4 +10,28 @@ races:
     falldamagemultiplier: 1.0
     miningefficiency: 0.0
     armor: 0.0
-
+    item: BREAD
+  - name: Tall Human
+    scale: 1.05
+    speed: 0.1
+    health: 20
+    jumpheight: 0.42
+    damage: 1
+    reach: 5.0
+    attackspeed: 4.0
+    falldamagemultiplier: 1.0
+    miningefficiency: 0.0
+    armor: 0.0
+    item: BREAD
+  - name: Short Human
+    scale: 0.95
+    speed: 0.1
+    health: 20
+    jumpheight: 0.42
+    damage: 1
+    reach: 5.0
+    attackspeed: 4.0
+    falldamagemultiplier: 1.0
+    miningefficiency: 0.0
+    armor: 0.0
+    item: BREAD

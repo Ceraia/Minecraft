@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 public class Double extends JavaPlugin {
-
+    private final Double plugin = this;
     private ArenaManager arenaManager;
     private InviteManager inviteManager;
     private ArenaSelectGUI arenaSelectGUI;
@@ -31,26 +31,28 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
 
+        plugin.saveResource("races.yml", false);
+
         /*---------------------------------*/
         /*       Registering Managers      */
         /*---------------------------------*/
-        this.arenaManager = new ArenaManager(this);
-        this.playerManager = new PlayerManager(this);
-        this.inviteManager = new InviteManager();
+        plugin.arenaManager = new ArenaManager(this);
+        plugin.playerManager = new PlayerManager(this);
+        plugin.inviteManager = new InviteManager();
 
         /*---------------------------------*/
         /*             Modules             */
         /*---------------------------------*/
-        this.moduleSeating = new ModuleSeating(this);
-        this.moduleMarriage = new ModuleMarriage(this);
-        this.moduleArena = new ModuleArena(this);
-        this.moduleSystem = new ModuleSystem(this);
-        this.moduleRaces = new ModuleRaces(this);
+        plugin.moduleSeating = new ModuleSeating(this);
+        plugin.moduleMarriage = new ModuleMarriage(this);
+        plugin.moduleArena = new ModuleArena(this);
+        plugin.moduleSystem = new ModuleSystem(this);
+        plugin.moduleRaces = new ModuleRaces(this);
 
         /*---------------------------------*/
         /*               GUIs              */
         /*---------------------------------*/
-        this.arenaSelectGUI = new ArenaSelectGUI(this);
+        plugin.arenaSelectGUI = new ArenaSelectGUI(this);
 
         /*---------------------------------*/
         /*            Listeners            */
