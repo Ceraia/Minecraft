@@ -182,169 +182,169 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
     public void addDefaultRaces() {
         races.clear();
+        {
+            races.add(new Race(
+                    "Halfling", // Name
+                    0.54, // Scale
+                    0.12, // Speed
+                    14, // Health
+                    0.42, // Jumpheight
+                    0.9, // Damage
+                    2.5, // Reach
+                    5, // Attack Speed
+                    "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.", // Lore
+                    1, // Fall Damage Multiplier
+                    5.2, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.POTATO) // Item
+            ));
 
-        races.add(new Race(
-                "Halfling", // Name
-                0.54, // Scale
-                0.12, // Speed
-                14, // Health
-                0.42, // Jumpheight
-                0.9, // Damage
-                2.5, // Reach
-                5, // Attack Speed
-                "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.", // Lore
-                1, // Fall Damage Multiplier
-                5.2, // Mining Efficiency
-                0, // Armor
-                new ItemStack(Material.POTATO) // Item
-        ));
+            races.add(new Race(
+                    "Gnome", // Name
+                    0.6, // Scale
+                    0.11, // Speed
+                    16, // Health
+                    0.42, // Jumpheight
+                    0.95, // Damage
+                    3, // Reach
+                    4.5, // Attack Speed
+                    "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.", // Lore
+                    1, // Fall Damage Multiplier
+                    6.65, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.RED_MUSHROOM) // Item
+            ));
 
-        races.add(new Race(
-                "Gnome", // Name
-                0.6, // Scale
-                0.11, // Speed
-                16, // Health
-                0.42, // Jumpheight
-                0.95, // Damage
-                3, // Reach
-                4.5, // Attack Speed
-                "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.", // Lore
-                1, // Fall Damage Multiplier
-                6.65, // Mining Efficiency
-                0, // Armor
-                new ItemStack(Material.RED_MUSHROOM) // Item
-        ));
+            races.add(new Race(
+                    "Dwarven", // Name
+                    0.9, // Scale
+                    0.1, // Speed
+                    24, // Health
+                    0.42, // Jumpheight
+                    1, // Damage
+                    4.5, // Reach
+                    4, // Attack Speed
+                    "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.", // Lore
+                    1, // Fall Damage Multiplier
+                    9.95, // Mining Efficiency
+                    2, // Armor
+                    new ItemStack(Material.IRON_ORE) // Item
+            ));
 
-        races.add(new Race(
-                "Dwarven", // Name
-                0.9, // Scale
-                0.1, // Speed
-                24, // Health
-                0.42, // Jumpheight
-                1, // Damage
-                4.5, // Reach
-                4, // Attack Speed
-                "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.", // Lore
-                1, // Fall Damage Multiplier
-                9.95, // Mining Efficiency
-                2, // Armor
-                new ItemStack(Material.IRON_ORE) // Item
-        ));
+            races.add(new Race(
+                    "Short Human", // Name
+                    0.95, // Scale
+                    0.1, // Speed
+                    20, // Health
+                    0.42, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    4, // Attack Speed
+                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                    1, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.BREAD) // Item
+            ));
 
-        races.add(new Race(
-                "Short Human", // Name
-                0.95, // Scale
-                0.1, // Speed
-                20, // Health
-                0.42, // Jumpheight
-                1, // Damage
-                5, // Reach
-                4, // Attack Speed
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
-                1, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                0, // Armor
-                new ItemStack(Material.BREAD) // Item
-        ));
+            races.add(new Race(
+                    "Human", // Name
+                    1, // Scale
+                    0.1, // Speed
+                    20, // Health
+                    0.42, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    4, // Attack Speed
+                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                    1, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.BREAD) // Item
+            ));
 
-        races.add(new Race(
-                "Human", // Name
-                1, // Scale
-                0.1, // Speed
-                20, // Health
-                0.42, // Jumpheight
-                1, // Damage
-                5, // Reach
-                4, // Attack Speed
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
-                1, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                0, // Armor
-                new ItemStack(Material.BREAD) // Item
-        ));
+            races.add(new Race(
+                    "Tall Human", // Name
+                    1.05, // Scale
+                    0.1, // Speed
+                    20, // Health
+                    0.42, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    4, // Attack Speed
+                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                    1, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.BREAD) // Item
+            ));
 
-        races.add(new Race(
-                "Tall Human", // Name
-                1.05, // Scale
-                0.1, // Speed
-                20, // Health
-                0.42, // Jumpheight
-                1, // Damage
-                5, // Reach
-                4, // Attack Speed
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
-                1, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                0, // Armor
-                new ItemStack(Material.BREAD) // Item
-        ));
+            races.add(new Race(
+                    "Half-Elf", // Name
+                    1.11, // Scale
+                    0.0975, // Speed
+                    24, // Health
+                    0.52, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    3.95, // Attack Speed
+                    "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.", // Lore
+                    0.925, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    1, // Armor
+                    new ItemStack(Material.APPLE) // Item
+            ));
 
-        races.add(new Race(
-                "Half-Elf", // Name
-                1.11, // Scale
-                0.975, // Speed
-                24, // Health
-                0.52, // Jumpheight
-                1, // Damage
-                5, // Reach
-                3.95, // Attack Speed
-                "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.", // Lore
-                0.925, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                1, // Armor
-                new ItemStack(Material.APPLE) // Item
-        ));
+            races.add(new Race(
+                    "Elven", // Name
+                    1.11, // Scale
+                    0.095, // Speed
+                    26, // Health
+                    0.63, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    3.9, // Attack Speed
+                    "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.", // Lore
+                    0.75, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    2, // Armor
+                    new ItemStack(Material.BOW) // Item
+            ));
 
-        races.add(new Race(
-                "Elven", // Name
-                1.11, // Scale
-                0.95, // Speed
-                26, // Health
-                0.63, // Jumpheight
-                1, // Damage
-                5, // Reach
-                3.9, // Attack Speed
-                "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.", // Lore
-                0.75, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                2, // Armor
-                new ItemStack(Material.BOW) // Item
-        ));
+            races.add(new Race(
+                    "Half-Orc", // Name
+                    1.15, // Scale
+                    0.0925, // Speed
+                    26, // Health
+                    0.63, // Jumpheight
+                    1, // Damage
+                    5.5, // Reach
+                    3.8, // Attack Speed
+                    "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.", // Lore
+                    0.75, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    3, // Armor
+                    new ItemStack(Material.PORKCHOP) // Item
+            ));
 
-        races.add(new Race(
-                "Half-Orc", // Name
-                1.15, // Scale
-                0.925, // Speed
-                26, // Health
-                0.63, // Jumpheight
-                1, // Damage
-                5.5, // Reach
-                3.8, // Attack Speed
-                "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.", // Lore
-                0.75, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                3, // Armor
-                new ItemStack(Material.PORKCHOP) // Item
-        ));
+            races.add(new Race(
+                    "Bugbear", // Name
+                    1.33, // Scale
+                    0.09, // Speed
+                    28, // Health
+                    0.63, // Jumpheight
+                    1.25, // Damage
+                    6.1, // Reach
+                    3, // Attack Speed
+                    "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.", // Lore
+                    0.75, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    4, // Armor
+                    new ItemStack(Material.BEEF) // Item
+            ));
+            saveAllRaces();
+        }
 
-        races.add(new Race(
-                "Bugbear", // Name
-                1.33, // Scale
-                0.9, // Speed
-                28, // Health
-                0.63, // Jumpheight
-                1.25, // Damage
-                6.1, // Reach
-                3, // Attack Speed
-                "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.", // Lore
-                0.75, // Fall Damage Multiplier
-                0, // Mining Efficiency
-                4, // Armor
-                new ItemStack(Material.BEEF) // Item
-        ));
-
-
-        loadRaces();
     }
 
     public void loadRaces(boolean reload) {
@@ -357,22 +357,8 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         ConfigurationSection racesSection = config.getConfigurationSection("races");
         if (racesSection == null) {
             plugin.getLogger().warning("No races found in races.yml! Adding default races.");
-            races.add(new Race(
-                    "Human",
-                    1,
-                    0.1,
-                    20,
-                    0.42,
-                    1,
-                    5,
-                    4,
-                    "<gray>No known lore...",
-                    1,
-                    0,
-                    0,
-                    new ItemStack(Material.BREAD)
-            ));
-            saveAllRaces();
+            addDefaultRaces();
+
             return;
         }
 
@@ -584,6 +570,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(speed);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(health);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)).setBaseValue(jumpHeight);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE)).setBaseValue(jumpHeight * 7.145);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(damage);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(reach);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(reach);
@@ -591,6 +578,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)).setBaseValue(fallDamageMultiplier);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)).setBaseValue(miningEfficiency);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(armor);
+
         }
     }
 }
