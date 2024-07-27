@@ -1,37 +1,171 @@
 races:
-  - name: Human
-    scale: 1.0
-    speed: 0.1
-    health: 20
+  Halfling:
+    lore: <gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading
+      danger.
+    scale: 0.54
+    speed: 0.12
+    health: 14
     jumpheight: 0.42
-    damage: 1
-    reach: 5.0
-    attackspeed: 4.0
+    damage: 0.9
+    reach: 2.5
+    attackspeed: 5.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: POTATO
     falldamagemultiplier: 1.0
-    miningefficiency: 0.0
+    miningefficiency: 5.2
     armor: 0.0
-    item: BREAD
-  - name: Tall Human
-    scale: 1.05
-    speed: 0.1
-    health: 20
+  Gnome:
+    lore: <gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack
+      to outwit foes.
+    scale: 0.6
+    speed: 0.11
+    health: 16
     jumpheight: 0.42
-    damage: 1
-    reach: 5.0
-    attackspeed: 4.0
+    damage: 0.95
+    reach: 3.0
+    attackspeed: 4.5
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: RED_MUSHROOM
     falldamagemultiplier: 1.0
-    miningefficiency: 0.0
+    miningefficiency: 6.65
     armor: 0.0
-    item: BREAD
-  - name: Short Human
+  Dwarven:
+    lore: <gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners
+      and warriors.
+    scale: 0.9
+    speed: 0.1
+    health: 24
+    jumpheight: 0.42
+    damage: 1.0
+    reach: 4.5
+    attackspeed: 4.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: IRON_ORE
+    falldamagemultiplier: 1.0
+    miningefficiency: 9.95
+    armor: 2.0
+  Short Human:
+    lore: <gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any
+      environment.
     scale: 0.95
     speed: 0.1
     health: 20
     jumpheight: 0.42
-    damage: 1
+    damage: 1.0
     reach: 5.0
     attackspeed: 4.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: BREAD
     falldamagemultiplier: 1.0
     miningefficiency: 0.0
     armor: 0.0
-    item: BREAD
+  Human:
+    lore: <gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any
+      environment.
+    scale: 1.0
+    speed: 0.1
+    health: 20
+    jumpheight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackspeed: 4.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: BREAD
+    falldamagemultiplier: 1.0
+    miningefficiency: 0.0
+    armor: 0.0
+  Tall Human:
+    lore: <gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any
+      environment.
+    scale: 1.05
+    speed: 0.1
+    health: 20
+    jumpheight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackspeed: 4.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: BREAD
+    falldamagemultiplier: 1.0
+    miningefficiency: 0.0
+    armor: 0.0
+  Half-Elf:
+    lore: <gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result
+      of a Elven - Human relationship.
+    scale: 1.11
+    speed: 0.0975
+    health: 24
+    jumpheight: 0.52
+    damage: 1.0
+    reach: 5.0
+    attackspeed: 3.95
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: APPLE
+    falldamagemultiplier: 0.925
+    miningefficiency: 0.0
+    armor: 1.0
+  Elven:
+    lore: <gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and
+      excel in archery.
+    scale: 1.11
+    speed: 0.095
+    health: 26
+    jumpheight: 0.63
+    damage: 1.0
+    reach: 5.0
+    attackspeed: 3.9
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: BOW
+    falldamagemultiplier: 0.75
+    miningefficiency: 0.0
+    armor: 2.0
+  Half-Orc:
+    lore: <gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of
+      a Orc - Human relationship.
+    scale: 1.15
+    speed: 0.0925
+    health: 26
+    jumpheight: 0.63
+    damage: 1.0
+    reach: 5.5
+    attackspeed: 3.8
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: PORKCHOP
+    falldamagemultiplier: 0.75
+    miningefficiency: 0.0
+    armor: 3.0
+  Bugbear:
+    lore: <gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute
+      strength.
+    scale: 1.33
+    speed: 0.09
+    health: 28
+    jumpheight: 0.63
+    damage: 1.25
+    reach: 6.1
+    attackspeed: 3.0
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 3953
+      type: BEEF
+    falldamagemultiplier: 0.75
+    miningefficiency: 0.0
+    armor: 4.0
