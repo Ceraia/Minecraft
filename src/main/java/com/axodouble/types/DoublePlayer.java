@@ -10,11 +10,9 @@ import java.util.List;
 import java.util.UUID;
 
 public class DoublePlayer {
-
     private final Double plugin;
     private final UUID uuid;
     private final String name;
-    private String kingdom;
     private final int draws;
     private boolean pvpbanned;
     private int wins;
@@ -23,8 +21,6 @@ public class DoublePlayer {
     private final File configFile;
     private final List<String> logs;
     private int elo;
-    private long lastFought;
-    private int rank;
     private String marriedname;
 
 
@@ -40,7 +36,6 @@ public class DoublePlayer {
             int losses,
             int draws,
             List<String> logs,
-            long lastFought,
             File configFile
 
     ) {
@@ -56,9 +51,6 @@ public class DoublePlayer {
         this.losses = losses;
         this.draws = draws;
         this.logs = logs;
-        this.lastFought = lastFought;
-        this.kingdom = kingdom;
-        this.rank = rank;
         this.configFile = configFile;
     }
 
@@ -144,10 +136,6 @@ public class DoublePlayer {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setLastFought(long lastFought) {
-        this.lastFought = lastFought;
     }
 
     public void divorce() {

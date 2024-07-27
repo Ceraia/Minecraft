@@ -37,12 +37,8 @@ public class ArenaHelper {
         }
     }
 
-    public static void teleportPlayerToSpawn(Double plugin, Player player, Arena arena) {
+    public static void teleportPlayerToSpawn( Player player, Arena arena) {
         Location l = arena.getPlayerPriorLocation(player);
         player.teleport(l);
-    }
-
-    public static boolean defaultRaces(Double plugin) {
-        return true;
     }
 }

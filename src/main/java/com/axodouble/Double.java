@@ -1,7 +1,7 @@
 package com.axodouble;
 
 import com.axodouble.listeners.PlayerInventoryListener;
-import com.axodouble.listeners.SpellsListener;
+import com.axodouble.listeners.OLDSpellsListener;
 import com.axodouble.managers.ArenaManager;
 import com.axodouble.managers.InviteManager;
 import com.axodouble.managers.PlayerManager;
@@ -29,6 +29,7 @@ public class Double extends JavaPlugin {
 
     public void onEnable() {
         saveDefaultConfig();
+        new File(getDataFolder(), "data").mkdirs();
         new File(getDataFolder(), "data/arenas").mkdirs();
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
@@ -58,7 +59,7 @@ public class Double extends JavaPlugin {
         /*            Listeners            */
         /*---------------------------------*/
         new PlayerInventoryListener(plugin);
-        new SpellsListener(plugin);
+        new OLDSpellsListener(plugin);
 
         /*---------------------------------*/
         /*             Helpers             */

@@ -13,11 +13,11 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
-public class SpellsListener implements Listener {
+public class OLDSpellsListener implements Listener {
 
     private final Double plugin;
 
-    public SpellsListener(Double plugin) {
+    public OLDSpellsListener(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }

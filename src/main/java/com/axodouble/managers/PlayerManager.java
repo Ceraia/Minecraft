@@ -50,7 +50,6 @@ public class PlayerManager {
                     config.getInt("losses", 0),
                     config.getInt("draws", 0),
                     config.getStringList("logs"),
-                    config.getInt("lastSeen", (int) (System.currentTimeMillis() / 1000L)),
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -183,7 +182,6 @@ public class PlayerManager {
                     0,
                     0,
                     new ArrayList<String>(),
-                    (int) (System.currentTimeMillis() / 1000L),
                     configFile
             );
         } catch (IOException e) {

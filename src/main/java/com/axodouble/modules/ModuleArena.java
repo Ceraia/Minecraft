@@ -46,7 +46,6 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
     private final Map<Player, Player> playersByGroup = new HashMap<>();
 
     private final Map<Player, Player> invites = new HashMap<>();
-
     public ModuleArena(Double plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -367,7 +366,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                         return true;
                     }
 
-                    if (notOnline.size() > 0) {
+                    if (!notOnline.isEmpty()) {
                         System.out.println(notOnline);
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player(s) " + String.join(", ", notOnline) + " are not online"));
                         return true;
@@ -861,9 +860,9 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
         // Check in which team the player is
         if (arena.getTeam1().contains(e.getPlayer())) {
-            calculateElo(e.getPlayer(), arena.getTeam2().get(0));
+            calculateElo(e.getPlayer(), arena.getTeam2().getFirst());
         } else {
-            calculateElo(e.getPlayer(), arena.getTeam1().get(0));
+            calculateElo(e.getPlayer(), arena.getTeam1().getFirst());
         }
         updateScoreboard();
     }
@@ -971,7 +970,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
         File file = new File(plugin.getDataFolder(), "data/arenas/" + name + ".yml");
 
-        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, false, file);
+        Arena arena = new Arena(plugin, name, sender.getName(), ((Player) sender).getLocation(), ((Player) sender).getLocation(), false, file);
 
         arena.setSpawnPoint1(((Player) sender).getLocation());
         arena.setSpawnPoint2(((Player) sender).getLocation());

@@ -22,10 +22,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Arena {
-
     private final Double plugin;
 
-    // before ready
     private final String name;
     private final String owner;
     private final List<Player> startPlayers = new ArrayList<>();
@@ -33,17 +31,13 @@ public class Arena {
     private final Map<Player, Location> priorLocations = new HashMap<>();
     private boolean isPublic;
     private File configFile;
-    // after ready
     private Location spawnPoint1, spawnPoint2;
-    // after start
     private List<Player> team1 = new ArrayList<>();
     private List<Player> team2 = new ArrayList<>();
     private ArenaState state = ArenaState.WAITING;
-    private int timer;
     public boolean totems = false;
-    private boolean isFFA = false;
 
-    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean isFFA, File configFile) {
+    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -51,7 +45,6 @@ public class Arena {
         this.spawnPoint1 = spawnPoint1;
         this.spawnPoint2 = spawnPoint2;
         this.isPublic = isPublic;
-        this.isFFA = isFFA;
 
         this.configFile = configFile;
     }
@@ -213,7 +206,7 @@ public class Arena {
         }
 
         if (!end || quit) {
-            ArenaHelper.teleportPlayerToSpawn(plugin, player, this);
+            ArenaHelper.teleportPlayerToSpawn(player, this);
             plugin.getArenaManager().removePlayerFromArena(player);
 
             player.getInventory().clear();
@@ -261,7 +254,7 @@ public class Arena {
                     if (pl == player && quit) {
                         continue;
                     }
-                    ArenaHelper.teleportPlayerToSpawn(plugin, pl, thisArena);
+                    ArenaHelper.teleportPlayerToSpawn(pl, thisArena);
 
                     plugin.getArenaManager().removePlayerFromArena(pl);
 
@@ -271,13 +264,11 @@ public class Arena {
                 // Reward
                 for (Player pl : winners) {
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addWin();
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
                 }
 
                 // Reward losers
                 for (Player pl : losers) {
                     plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addLoss();
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
                 }
 
                 thisArena.setState(ArenaState.WAITING);
