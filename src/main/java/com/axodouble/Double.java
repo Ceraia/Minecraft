@@ -7,6 +7,7 @@ import com.axodouble.managers.InviteManager;
 import com.axodouble.managers.PlayerManager;
 import com.axodouble.modules.*;
 import com.axodouble.types.ArenaSelectGUI;
+import com.axodouble.util.ConfigHelper;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,6 +25,7 @@ public class Double extends JavaPlugin {
     private ModuleArena moduleArena;
     private ModuleSystem moduleSystem;
     private ModuleRaces moduleRaces;
+    public ConfigHelper config;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -31,34 +33,37 @@ public class Double extends JavaPlugin {
         new File(getDataFolder(), "data/items").mkdirs();
         new File(getDataFolder(), "data/users").mkdirs();
 
-        plugin.saveResource("races.yml", false);
-
         /*---------------------------------*/
         /*       Registering Managers      */
         /*---------------------------------*/
-        plugin.arenaManager = new ArenaManager(this);
-        plugin.playerManager = new PlayerManager(this);
+        plugin.arenaManager = new ArenaManager(plugin);
+        plugin.playerManager = new PlayerManager(plugin);
         plugin.inviteManager = new InviteManager();
 
         /*---------------------------------*/
         /*             Modules             */
         /*---------------------------------*/
-        plugin.moduleSeating = new ModuleSeating(this);
-        plugin.moduleMarriage = new ModuleMarriage(this);
-        plugin.moduleArena = new ModuleArena(this);
-        plugin.moduleSystem = new ModuleSystem(this);
-        plugin.moduleRaces = new ModuleRaces(this);
+        plugin.moduleSeating = new ModuleSeating(plugin);
+        plugin.moduleMarriage = new ModuleMarriage(plugin);
+        plugin.moduleArena = new ModuleArena(plugin);
+        plugin.moduleSystem = new ModuleSystem(plugin);
+        plugin.moduleRaces = new ModuleRaces(plugin);
 
         /*---------------------------------*/
         /*               GUIs              */
         /*---------------------------------*/
-        plugin.arenaSelectGUI = new ArenaSelectGUI(this);
+        plugin.arenaSelectGUI = new ArenaSelectGUI(plugin);
 
         /*---------------------------------*/
         /*            Listeners            */
         /*---------------------------------*/
-        new PlayerInventoryListener(this);
-        new SpellsListener(this);
+        new PlayerInventoryListener(plugin);
+        new SpellsListener(plugin);
+
+        /*---------------------------------*/
+        /*             Helpers             */
+        /*---------------------------------*/
+        plugin.config = new ConfigHelper(plugin);
     }
 
     public void onDisable() {

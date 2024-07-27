@@ -1,28 +1,29 @@
 package com.axodouble.util;
 
 import com.axodouble.Double;
+import com.axodouble.modules.ModuleRaces;
+import org.bukkit.Material;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.io.InputStream;
 
-public abstract class ConfigHelper {
-    private Double plugin;
-
+public class ConfigHelper {
+    private final Double plugin;
     public ConfigHelper(Double plugin) {
         this.plugin = plugin;
     }
 
-    public void saveDefaultConfigs(){
-        plugin.getResource("config.yml");
-        plugin.getResource("races.yml");
-
-        // Check if any of the files exist
-        if (!plugin.getDataFolder().exists()) {
-            plugin.getDataFolder().mkdir();
-        }
-
-        plugin.saveResource("config.yml", false);
-
-        plugin.saveResource("races.yml", false);
+    // Get the FileConfiguration from a file
+    public FileConfiguration get(File file) {
+        return YamlConfiguration.loadConfiguration(file);
+    }
+    // Get the FileConfiguration from a file path
+    public FileConfiguration get(String path) {
+        return get(new File(plugin.getDataFolder(), path));
     }
 
 }

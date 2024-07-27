@@ -10,6 +10,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -42,7 +43,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         Objects.requireNonNull(plugin.getCommand("race")).setTabCompleter(this);
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
-        reloadRaces();
+        loadRaces();
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             return true;
         }
         if(args.length == 0) {
-            player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid arguments!"));
+            openRaceGUI(player);
             return true;
         }
 
@@ -176,189 +177,233 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
     public void reloadRaces() {
         races.clear();
-        loadRaces();
+        loadRaces(true);
     }
 
     public void addDefaultRaces() {
         races.clear();
-        File f = new File(plugin.getDataFolder(), "races");
-        if (!f.exists())
-            f.mkdirs();
 
         races.add(new Race(
-                "Halfling",
-                0.54,
-                0.13,
-                14,
-                0.42,
-                0.9,
-                2.7,
-                4,
-                "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.",
-                new ItemStack(ItemStack.of(Material.POTATO)),
-                new File(f, "Halfling.yml")
-        ).saveFile());
+                "Halfling", // Name
+                0.54, // Scale
+                0.12, // Speed
+                14, // Health
+                0.42, // Jumpheight
+                0.9, // Damage
+                2.5, // Reach
+                5, // Attack Speed
+                "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.", // Lore
+                1, // Fall Damage Multiplier
+                5.2, // Mining Efficiency
+                0, // Armor
+                new ItemStack(Material.POTATO) // Item
+        ));
+
         races.add(new Race(
-                "Gnome",
-                0.6,
-                0.12,
-                16,
-                0.42,
-                0.95,
-                3.15,
-                4,
-                "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.",
-                new ItemStack(ItemStack.of(Material.RED_MUSHROOM)),
-                new File(f, "Gnome.yml")
-        ).saveFile());
+                "Gnome", // Name
+                0.6, // Scale
+                0.11, // Speed
+                16, // Health
+                0.42, // Jumpheight
+                0.95, // Damage
+                3, // Reach
+                4.5, // Attack Speed
+                "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.", // Lore
+                1, // Fall Damage Multiplier
+                6.65, // Mining Efficiency
+                0, // Armor
+                new ItemStack(Material.RED_MUSHROOM) // Item
+        ));
+
         races.add(new Race(
-                "Dwarven",
-                0.9,
-                0.09,
-                24,
-                0.42,
-                1,
-                4.5,
-                4.2,
-                "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.",
-                new ItemStack(ItemStack.of(Material.IRON_ORE)),
-                new File(f, "Dwarven.yml")
-        ).saveFile());
+                "Dwarven", // Name
+                0.9, // Scale
+                0.1, // Speed
+                24, // Health
+                0.42, // Jumpheight
+                1, // Damage
+                4.5, // Reach
+                4, // Attack Speed
+                "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.", // Lore
+                1, // Fall Damage Multiplier
+                9.95, // Mining Efficiency
+                2, // Armor
+                new ItemStack(Material.IRON_ORE) // Item
+        ));
+
         races.add(new Race(
-                "Short-Human",
-                0.95,
-                0.1,
-                20,
-                0.42,
-                1,
-                5,
-                4,
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
-                new ItemStack(ItemStack.of(Material.BREAD)),
-                new File(f, "Short-Human.yml")
-        ).saveFile());
+                "Short Human", // Name
+                0.95, // Scale
+                0.1, // Speed
+                20, // Health
+                0.42, // Jumpheight
+                1, // Damage
+                5, // Reach
+                4, // Attack Speed
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                1, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                0, // Armor
+                new ItemStack(Material.BREAD) // Item
+        ));
+
         races.add(new Race(
-                "Human",
-                1,
-                0.1,
-                20,
-                0.42,
-                1,
-                5,
-                4,
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
-                new ItemStack(ItemStack.of(Material.BREAD)),
-                new File(f, "Human.yml")
-        ).saveFile());
+                "Human", // Name
+                1, // Scale
+                0.1, // Speed
+                20, // Health
+                0.42, // Jumpheight
+                1, // Damage
+                5, // Reach
+                4, // Attack Speed
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                1, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                0, // Armor
+                new ItemStack(Material.BREAD) // Item
+        ));
+
         races.add(new Race(
-                "Tall-Human",
-                1.05,
-                0.1,
-                20,
-                0.42,
-                1,
-                5,
-                4,
-                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",
-                new ItemStack(ItemStack.of(Material.BREAD)),
-                new File(f, "Tall-Human.yml")
-        ).saveFile());
+                "Tall Human", // Name
+                1.05, // Scale
+                0.1, // Speed
+                20, // Health
+                0.42, // Jumpheight
+                1, // Damage
+                5, // Reach
+                4, // Attack Speed
+                "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.", // Lore
+                1, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                0, // Armor
+                new ItemStack(Material.BREAD) // Item
+        ));
+
         races.add(new Race(
-                "Half-Elf",
-                1.11,
-                0.0975,
-                23,
-                0.64,
-                0.94,
-                5.27,
-                4.25,
-                "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.",
-                new ItemStack(ItemStack.of(Material.APPLE)),
-                new File(f, "Half-Elf.yml")
-        ).saveFile());
+                "Half-Elf", // Name
+                1.11, // Scale
+                0.975, // Speed
+                24, // Health
+                0.52, // Jumpheight
+                1, // Damage
+                5, // Reach
+                3.95, // Attack Speed
+                "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.", // Lore
+                0.925, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                1, // Armor
+                new ItemStack(Material.APPLE) // Item
+        ));
+
         races.add(new Race(
-                "Elven",
-                1.11,
-                0.095,
-                26,
-                0.64,
-                0.88,
-                5.55,
-                4.5,
-                "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.",
-                new ItemStack(ItemStack.of(Material.BOW)),
-                new File(f, "Elven.yml")
-        ).saveFile());
+                "Elven", // Name
+                1.11, // Scale
+                0.95, // Speed
+                26, // Health
+                0.63, // Jumpheight
+                1, // Damage
+                5, // Reach
+                3.9, // Attack Speed
+                "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.", // Lore
+                0.75, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                2, // Armor
+                new ItemStack(Material.BOW) // Item
+        ));
+
         races.add(new Race(
-                "Half-Orc",
-                1.15,
-                0.09,
-                28,
-                0.7,
-                1.05,
-                5.55,
-                3.5,
-                "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.",
-                new ItemStack(ItemStack.of(Material.PORKCHOP)),
-                new File(f, "Half-Orc.yml")
-        ).saveFile());
+                "Half-Orc", // Name
+                1.15, // Scale
+                0.925, // Speed
+                26, // Health
+                0.63, // Jumpheight
+                1, // Damage
+                5.5, // Reach
+                3.8, // Attack Speed
+                "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.", // Lore
+                0.75, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                3, // Armor
+                new ItemStack(Material.PORKCHOP) // Item
+        ));
+
         races.add(new Race(
-                "Bugbear",
-                1.33,
-                0.08,
-                30,
-                0.79,
-                1.1,
-                6.65,
-                3.2,
-                "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.",
-                new ItemStack(ItemStack.of(Material.BEEF)),
-                new File(f, "Bugbear.yml")
-        ).saveFile());
+                "Bugbear", // Name
+                1.33, // Scale
+                0.9, // Speed
+                28, // Health
+                0.63, // Jumpheight
+                1.25, // Damage
+                6.1, // Reach
+                3, // Attack Speed
+                "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.", // Lore
+                0.75, // Fall Damage Multiplier
+                0, // Mining Efficiency
+                4, // Armor
+                new ItemStack(Material.BEEF) // Item
+        ));
+
+
+        loadRaces();
     }
 
-    public void loadRaces() {
-        plugin.getLogger().info("(Re)Loading races...");
-        // Load all races
-        File f = new File(plugin.getDataFolder(), "races");
-        if (!f.exists()) {
-            f.mkdirs();
-            // Add the default races
-            addDefaultRaces();
+    public void loadRaces(boolean reload) {
+        if(reload) plugin.getLogger().info("Reloading races...");
+        else plugin.getLogger().info("Loading races...");
+
+        // Load all races from the races.yml file
+        File file = new File(plugin.getDataFolder(), "races.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection racesSection = config.getConfigurationSection("races");
+        if (racesSection == null) {
+            plugin.getLogger().warning("No races found in races.yml! Adding default races.");
+            races.add(new Race(
+                    "Human",
+                    1,
+                    0.1,
+                    20,
+                    0.42,
+                    1,
+                    5,
+                    4,
+                    "<gray>No known lore...",
+                    1,
+                    0,
+                    0,
+                    new ItemStack(Material.BREAD)
+            ));
+            saveAllRaces();
+            return;
         }
 
-        File[] files = f.listFiles();
-        for (File file : files) {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-
+        for (String raceName : racesSection.getKeys(false)) {
+            String path = "races." + raceName;
             Race race = new Race(
-                    file.getName().split("\\.")[0],
-                    config.getDouble("scale", 1),
-                    config.getDouble("speed", 0.1),
-                    config.getInt("health", 20),
-                    config.getDouble("jumpheight", 0.42),
-                    config.getDouble("damage", 1),
-                    config.getDouble("reach", 5),
-                    config.getDouble("attackspeed", 4),
-                    config.getString("lore", "<gray>No known lore..."),
-                    config.getItemStack("item", new ItemStack(ItemStack.of(Material.BREAD))),
-                    file
+                    raceName,
+                    config.getDouble(path + ".scale", 1),
+                    config.getDouble(path + ".speed", 0.1),
+                    config.getInt(path + ".health", 20),
+                    config.getDouble(path + ".jumpheight", 0.42),
+                    config.getDouble(path + ".damage", 1),
+                    config.getDouble(path + ".reach", 5),
+                    config.getDouble(path + ".attackspeed", 4),
+                    config.getString(path + ".lore", "<gray>No known lore..."),
+                    config.getDouble(path + ".falldamagemultiplier", 1),
+                    config.getDouble(path + ".miningefficiency", 0),
+                    config.getDouble(path + ".armor", 0),
+                    config.getItemStack(path + ".item", new ItemStack(Material.BREAD))
             );
             races.add(race);
         }
     }
-
-    public void saveRaces() {
-        // Save all races
-        for (Race race : races) {
-            race.saveFile();
-        }
+    public void loadRaces(){
+        loadRaces(false);
     }
 
     private void openRaceGUI(Player player) {
         {
             if (!player.hasPermission("double.races.become")) {
-                this.plugin.noPermission((Player) player);
+                this.plugin.noPermission(player);
                 return;
             }
             List<Race> selectable = new ArrayList<>();
@@ -392,6 +437,9 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage : <green>"+race.getDamage()));
                 lore.add(MiniMessage.miniMessage().deserialize("<gray>Reach : <green>"+race.getReach()));
                 lore.add(MiniMessage.miniMessage().deserialize("<gray>Attack Speed : <green>"+race.getAttackSpeed()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Fall Damage Multiplier : <green>"+race.getFallDamageMultiplier()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Mining Efficiency : <green>"+race.getMiningEfficiency()));
+                lore.add(MiniMessage.miniMessage().deserialize("<gray>Armor : <green>"+race.getArmor()));
 
                 meta.lore(lore);
 
@@ -407,6 +455,34 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    public void saveAllRaces() {
+        // Save the races to the races.yml file
+        File file = new File(plugin.getDataFolder(), "races.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        for (Race race : races) {
+            String path = "races." + race.getName();
+            config.set(path + ".lore", race.getLore());
+            config.set(path + ".scale", race.getScale());
+            config.set(path + ".speed", race.getSpeed());
+            config.set(path + ".health", race.getHealth());
+            config.set(path + ".jumpheight", race.getJumpHeight());
+            config.set(path + ".damage", race.getDamage());
+            config.set(path + ".reach", race.getReach());
+            config.set(path + ".attackspeed", race.getAttackSpeed());
+            config.set(path + ".item", race.getItem());
+            config.set(path + ".falldamagemultiplier", race.getFallDamageMultiplier());
+            config.set(path + ".miningefficiency", race.getMiningEfficiency());
+            config.set(path + ".armor", race.getArmor());
+        }
+
+        try {
+            config.save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static class Race {
         private final String name;
         private final double scale;
@@ -417,8 +493,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         private final double reach;
         private final double attackSpeed;
         private final String lore;
+        private final double fallDamageMultiplier ;
+        private final double miningEfficiency ;
+        private final double armor ;
         private final ItemStack item;
-        private final File configFile;
 
         public Race(String name,
                     double scale,
@@ -429,8 +507,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     double reach,
                     double attackSpeed,
                     String lore,
-                    ItemStack item,
-                    File configFile
+                    double fallDamageMultiplier,
+                    double miningEfficiency,
+                    double armor,
+                    ItemStack item
         ) {
             this.name = name;
             this.scale = scale;
@@ -441,8 +521,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             this.reach = reach;
             this.attackSpeed = attackSpeed;
             this.lore = lore;
+            this.fallDamageMultiplier = fallDamageMultiplier;
+            this.miningEfficiency = miningEfficiency;
+            this.armor = armor;
             this.item = item;
-            this.configFile = configFile;
         }
 
         public String getName() {
@@ -480,31 +562,21 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         public ItemStack getItem() {
             return item;
         }
+
+        public double getFallDamageMultiplier() {
+            return fallDamageMultiplier;
+        }
+
+        public double getMiningEfficiency() {
+            return miningEfficiency;
+        }
+
+        public double getArmor() {
+            return armor;
+        }
+
         public String getLore() {
             return lore;
-        }
-
-        public File getConfigFile() {
-            return configFile;
-        }
-
-        public Race saveFile() {
-            FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-            config.set("lore", lore);
-            config.set("scale", scale);
-            config.set("speed", speed);
-            config.set("health", health);
-            config.set("jumpheight", jumpHeight);
-            config.set("damage", damage);
-            config.set("reach", reach);
-            config.set("item", item);
-            try {
-                config.save(configFile);
-                return this;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return this;
-            }
         }
 
         public void apply(Player player) {
@@ -516,6 +588,9 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(reach);
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(reach);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(attackSpeed);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)).setBaseValue(fallDamageMultiplier);
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)).setBaseValue(miningEfficiency);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(armor);
         }
     }
 }
