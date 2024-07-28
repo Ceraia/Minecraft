@@ -33,17 +33,20 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
     private final Double plugin;
     public List<Race> races;
+    public List<RaceFaction> raceFactions;
     public Map<Player, Map<ItemStack, Race>> playerOpenGuis = new HashMap<>();
 
     public ModuleRaces(Double plugin) {
         this.plugin = plugin;
         this.races = new ArrayList<>();
+        this.raceFactions = new ArrayList<>();
 
         Objects.requireNonNull(plugin.getCommand("race")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("race")).setTabCompleter(this);
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
         loadRaces();
+        loadRaceFactions();
     }
 
     @Override
@@ -51,6 +54,12 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         if (!(sender instanceof Player player)) {
             return true;
         }
+
+        if(!racesEnabled()){
+            player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Races are not enabled in the config!"));
+            return true;
+        }
+
         if(args.length == 0) {
             openRaceGUI(player);
             return true;
@@ -175,6 +184,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    public boolean racesEnabled() {
+        return plugin.getConfig().getBoolean("races-enabled", true);
+    }
+
     public void reloadRaces() {
         races.clear();
         loadRaces(true);
@@ -189,9 +202,9 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     0.12, // Speed
                     14, // Health
                     0.42, // Jumpheight
-                    0.9, // Damage
+                    0.95, // Damage
                     2.5, // Reach
-                    5, // Attack Speed
+                    4.5, // Attack Speed
                     "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.", // Lore
                     1, // Fall Damage Multiplier
                     5.2, // Mining Efficiency
@@ -201,13 +214,13 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
             races.add(new Race(
                     "Gnome", // Name
-                    0.6, // Scale
+                    0.7, // Scale
                     0.11, // Speed
                     16, // Health
                     0.42, // Jumpheight
-                    0.95, // Damage
+                    0.9, // Damage
                     3, // Reach
-                    4.5, // Attack Speed
+                    5, // Attack Speed
                     "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.", // Lore
                     1, // Fall Damage Multiplier
                     6.65, // Mining Efficiency
@@ -216,7 +229,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             ));
 
             races.add(new Race(
-                    "Dwarven", // Name
+                    "Dwarf", // Name
                     0.9, // Scale
                     0.1, // Speed
                     24, // Health
@@ -280,6 +293,38 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             ));
 
             races.add(new Race(
+                    "Satyr", // Name
+                    1.05, // Scale
+                    0.13, // Speed
+                    18, // Health
+                    0.52, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    3.9, // Attack Speed
+                    "<gray>Fast and intelligent<newline><green>Satyrs<gray> are expert explorers and have seen far across the world.", // Lore
+                    1, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.RABBIT_FOOT) // Item
+            ));
+
+            races.add(new Race(
+                    "Githyanki", // Name
+                    1.07, // Scale
+                    0.975, // Speed
+                    22, // Health
+                    0.42, // Jumpheight
+                    1, // Damage
+                    5, // Reach
+                    4.2, // Attack Speed
+                    "<gray>Fierce and fast,<newline><green>Githyanki<gray> are veteran warriors.", // Lore
+                    1, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    0, // Armor
+                    new ItemStack(Material.NETHER_STAR) // Item
+            ));
+
+            races.add(new Race(
                     "Half-Elf", // Name
                     1.11, // Scale
                     0.0975, // Speed
@@ -290,13 +335,13 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     3.95, // Attack Speed
                     "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.", // Lore
                     0.925, // Fall Damage Multiplier
-                    0, // Mining Efficiency
+                    1, // Mining Efficiency
                     1, // Armor
                     new ItemStack(Material.APPLE) // Item
             ));
 
             races.add(new Race(
-                    "Elven", // Name
+                    "Elf", // Name
                     1.11, // Scale
                     0.095, // Speed
                     26, // Health
@@ -306,7 +351,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     3.9, // Attack Speed
                     "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.", // Lore
                     0.75, // Fall Damage Multiplier
-                    0, // Mining Efficiency
+                    1, // Mining Efficiency
                     2, // Armor
                     new ItemStack(Material.BOW) // Item
             ));
@@ -322,29 +367,112 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     3.8, // Attack Speed
                     "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.", // Lore
                     0.75, // Fall Damage Multiplier
-                    0, // Mining Efficiency
+                    2, // Mining Efficiency
                     3, // Armor
                     new ItemStack(Material.PORKCHOP) // Item
             ));
 
             races.add(new Race(
                     "Bugbear", // Name
-                    1.33, // Scale
+                    1.22, // Scale
                     0.09, // Speed
                     28, // Health
                     0.63, // Jumpheight
                     1.25, // Damage
-                    6.1, // Reach
+                    5.8, // Reach
                     3, // Attack Speed
                     "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.", // Lore
                     0.75, // Fall Damage Multiplier
-                    0, // Mining Efficiency
+                    2, // Mining Efficiency
                     4, // Armor
                     new ItemStack(Material.BEEF) // Item
             ));
-            saveAllRaces();
+
+            races.add(new Race(
+                    "Goliath", // Name
+                    1.33, // Scale
+                    0.08, // Speed
+                    30, // Health
+                    0.63, // Jumpheight
+                    1.25, // Damage
+                    6.1, // Reach
+                    3, // Attack Speed
+                    "<gray>Large and strong,<newline><green>Goliaths<gray> are often used in heavy labour.", // Lore
+                    0.75, // Fall Damage Multiplier
+                    0, // Mining Efficiency
+                    5, // Armor
+                    new ItemStack(Material.OAK_SAPLING) // Item
+            ));
         }
 
+        saveAllRaces();
+    }
+
+    public void addDefaultFactions(){
+        raceFactions.clear();
+        {
+            raceFactions.add(new RaceFaction(
+                    "<red>Gnomish Dynasty",
+                    "<red>The Gnomish Dynasty<gray>, formed by the Gnomish, a monarchy.",
+                    new ItemStack(Material.RED_MUSHROOM),
+                    0,
+                    0,
+                    0,
+                    0,
+                    Arrays.asList("Gnome", "Satyr", "Githyanki", "Bugbear")
+                    )
+            );
+            raceFactions.add(new RaceFaction(
+                    "<blue>Republic of Man",
+                    "<blue>The Republic of Man<gray>, formed by the Humans, a democratic republic.",
+                    new ItemStack(Material.BREAD),
+                    0,
+                    0,
+                    0,
+                    0,
+                    Arrays.asList("Dwarf", "Short Human", "Human", "Tall Human", "Half-Elf", "Half-Orc")
+                    )
+            );
+            raceFactions.add(new RaceFaction(
+                    "<green>Elven Demagogue",
+                    "<green>The Elven Demagogue<gray>, formed by the Elves, a theocracy.",
+                    new ItemStack(Material.PORKCHOP),
+                    0,
+                    0,
+                    0,
+                    0,
+                    Arrays.asList("Halfling", "Half-Elf", "Elf", "Goliath")
+                    )
+            );
+            raceFactions.add(new RaceFaction(
+                    "<yellow>Unaligned",
+                    "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance.",
+                    new ItemStack(Material.IRON_ORE),
+                    0,
+                    0,
+                    0,
+                    0,
+                    Arrays.asList(
+                            "Halfling",
+                            "Gnome",
+                            "Dwarf",
+                            "Short Human",
+                            "Human",
+                            "Tall Human",
+                            "Satyr",
+                            "Githyanki",
+                            "Half-Elf",
+                            "Elf",
+                            "Half-Orc",
+                            "Bugbear",
+                            "Goliath"
+                    )
+                    )
+            );
+
+            saveAllFactions();
+
+        }
     }
 
     public void loadRaces(boolean reload) {
@@ -382,6 +510,47 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             races.add(race);
         }
     }
+
+    public void loadRaceFactions(boolean reload) {
+        if (reload) plugin.getLogger().info("Reloading race factions...");
+        else plugin.getLogger().info("Loading race factions...");
+
+        // Load all factions from the races.yml file
+        File file = new File(plugin.getDataFolder(), "races.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        ConfigurationSection racesSection = config.getConfigurationSection("factions");
+        if (racesSection == null) {
+            plugin.getLogger().warning("No factions found in races.yml! Adding default factions.");
+            addDefaultFactions();
+
+            return;
+        }
+
+        for (String raceName : racesSection.getKeys(false)) {
+            String path = "races." + raceName;
+            Race race = new Race(
+                    raceName,
+                    config.getDouble(path + ".scale", 1),
+                    config.getDouble(path + ".speed", 0.1),
+                    config.getInt(path + ".health", 20),
+                    config.getDouble(path + ".jumpheight", 0.42),
+                    config.getDouble(path + ".damage", 1),
+                    config.getDouble(path + ".reach", 5),
+                    config.getDouble(path + ".attackspeed", 4),
+                    config.getString(path + ".lore", "<gray>No known lore..."),
+                    config.getDouble(path + ".falldamagemultiplier", 1),
+                    config.getDouble(path + ".miningefficiency", 0),
+                    config.getDouble(path + ".armor", 0),
+                    config.getItemStack(path + ".item", new ItemStack(Material.BREAD))
+            );
+            races.add(race);
+        }
+    }
+
+    public void loadRaceFactions(){
+        loadRaceFactions(false);
+    }
+
     public void loadRaces(){
         loadRaces(false);
     }
@@ -469,6 +638,29 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
     }
 
+    public void saveAllFactions() {
+        // Save the factions to the races.yml file
+        File file = new File(plugin.getDataFolder(), "races.yml");
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+
+        for (RaceFaction faction : raceFactions) {
+            String path = "factions." + faction.getName();
+            config.set(path + ".lore", faction.getLore());
+            config.set(path + ".item", faction.getItem());
+            config.set(path + ".health", faction.getHealth());
+            config.set(path + ".damage", faction.getDamage());
+            config.set(path + ".miningefficiency", faction.getMiningEfficiency());
+            config.set(path + ".armor", faction.getArmor());
+            config.set(path + ".raceInhabitants", faction.getRaceInhabitants());
+        }
+
+        try {
+            config.save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static class Race {
         private final String name;
         private final double scale;
@@ -511,6 +703,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             this.miningEfficiency = miningEfficiency;
             this.armor = armor;
             this.item = item;
+
         }
 
         public String getName() {
@@ -579,6 +772,60 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)).setBaseValue(miningEfficiency);
             Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(armor);
 
+        }
+    }
+
+    public static class RaceFaction {
+        private final String name;
+        private final String lore;
+        private final ItemStack item;
+        private final int health;
+        private final double damage;
+        private final double miningEfficiency ;
+        private final double armor ;
+        private final List<String> raceInhabitants = new ArrayList<>();
+
+        public RaceFaction(String name, String lore, ItemStack item, int health, double damage, double miningEfficiency, double armor, List<String> raceInhabitants) {
+            this.name = name;
+            this.lore = lore;
+            this.item = item;
+            this.health = health;
+            this.damage = damage;
+            this.miningEfficiency = miningEfficiency;
+            this.armor = armor;
+            this.raceInhabitants.addAll(raceInhabitants);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getLore() {
+            return lore;
+        }
+
+        public ItemStack getItem() {
+            return item;
+        }
+
+        public int getHealth() {
+            return health;
+        }
+
+        public double getDamage() {
+            return damage;
+        }
+
+        public double getMiningEfficiency() {
+            return miningEfficiency;
+        }
+
+        public double getArmor() {
+            return armor;
+        }
+
+        public List<String> getRaceInhabitants() {
+            return raceInhabitants;
         }
     }
 }
