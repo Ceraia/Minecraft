@@ -22,11 +22,15 @@ public class DoublePlayer {
     private final List<String> logs;
     private int elo;
     private String marriedname;
+    private String race;
+    private String faction;
 
 
     public DoublePlayer(
             Double plugin,
             String name,
+            String race,
+            String faction,
             String marriedname,
             UUID uuid,
             int elo,
@@ -42,6 +46,8 @@ public class DoublePlayer {
         this.plugin = plugin;
 
         this.name = name;
+        this.race = race;
+        this.faction = faction;
         this.marriedname = marriedname;
         this.uuid = uuid;
         this.elo = elo;
@@ -100,10 +106,6 @@ public class DoublePlayer {
         return losses;
     }
 
-    public int draws() {
-        return draws;
-    }
-
     public void addWin() {
         wins++;
         this.savePlayer();
@@ -122,6 +124,8 @@ public class DoublePlayer {
     public void savePlayer() {
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
         config.set("name", name);
+        config.set("race", race);
+        config.set("faction", faction);
         config.set("married", marriedname);
         config.set("uuid", uuid.toString());
         config.set("elo", elo);
@@ -158,5 +162,13 @@ public class DoublePlayer {
 
     public String getPartner() {
         return marriedname;
+    }
+
+    public String getRace() {
+        return race;
+    }
+
+    public String getFaction() {
+        return faction;
     }
 }

@@ -41,6 +41,8 @@ public class PlayerManager {
             DoublePlayer doublePlayer = new DoublePlayer(
                     plugin,
                     config.getString("name"),
+                    config.getString("race", "human"),
+                    config.getString("faction", null),
                     config.getString("married", null),
                     UUID.fromString(Objects.requireNonNull(config.getString("uuid"))),//UUID.fromString(file.getName().split("\\.")[0]),
                     config.getInt("elo", 1500),
@@ -159,6 +161,8 @@ public class PlayerManager {
             int defaultElo = 1500;
 
             config.set("name", playerName);
+            config.set("race", "human");
+            config.set("faction", null);
             config.set("married", null);
             config.set("uuid", playerUUID.toString());
             config.set("elo", defaultElo);
@@ -173,6 +177,8 @@ public class PlayerManager {
             return new DoublePlayer(
                     plugin,
                     Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName(),
+                    "human",
+                    null,
                     null,
                     playerUUID,
                     defaultElo,

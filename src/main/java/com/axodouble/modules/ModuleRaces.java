@@ -32,14 +32,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
     private final Double plugin;
-    public List<Race> races;
-    public List<RaceFaction> raceFactions;
-    public Map<Player, Map<ItemStack, Race>> playerOpenGuis = new HashMap<>();
+    public List<Race> races = new ArrayList<>();
+    public List<RaceFaction> raceFactions = new ArrayList<>();
+    public Map<Player, Map<ItemStack, Race>> playerRaceSelection = new HashMap<>();
+    public Map<Player, Map<ItemStack, RaceFaction>> playerRaceFactionSelection = new HashMap<>();
+
 
     public ModuleRaces(Double plugin) {
         this.plugin = plugin;
-        this.races = new ArrayList<>();
-        this.raceFactions = new ArrayList<>();
+
 
         Objects.requireNonNull(plugin.getCommand("race")).setExecutor(this);
         Objects.requireNonNull(plugin.getCommand("race")).setTabCompleter(this);
@@ -124,9 +125,14 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 // Restore all races
                 player.sendMessage(
                         MiniMessage.miniMessage().deserialize(
-                                "<green>Restoring all default races..."
+                                "<green>Restoring all default races & factions..."
                         ));
                 addDefaultRaces();
+                addDefaultFactions();
+                return true;
+            }
+            case "faction" -> {
+                openFactionGUI(player);
                 return true;
             }
         }
@@ -174,11 +180,11 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         Player player = (Player) e.getWhoClicked(); // Get the player who clicked
 
         if (Objects.equals(e.getView().title().toString(), MiniMessage.miniMessage().deserialize("<green>Select a race to become").toString())) {
-            if (playerOpenGuis.containsKey(player)) {
+            if (playerRaceSelection.containsKey(player)) {
                 // Get the relevant slot and race that the player clicked on
-                if(playerOpenGuis.get(player).containsKey(e.getCurrentItem())){
+                if(playerRaceSelection.get(player).containsKey(e.getCurrentItem())){
                     e.setCancelled(true);
-                    playerOpenGuis.get(player).get(e.getCurrentItem()).apply(player);
+                    playerRaceSelection.get(player).get(e.getCurrentItem()).apply(player);
                 }
             }
         }
@@ -522,28 +528,21 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         if (racesSection == null) {
             plugin.getLogger().warning("No factions found in races.yml! Adding default factions.");
             addDefaultFactions();
-
-            return;
         }
 
-        for (String raceName : racesSection.getKeys(false)) {
-            String path = "races." + raceName;
-            Race race = new Race(
-                    raceName,
-                    config.getDouble(path + ".scale", 1),
-                    config.getDouble(path + ".speed", 0.1),
-                    config.getInt(path + ".health", 20),
-                    config.getDouble(path + ".jumpheight", 0.42),
-                    config.getDouble(path + ".damage", 1),
-                    config.getDouble(path + ".reach", 5),
-                    config.getDouble(path + ".attackspeed", 4),
+        for (String factionName : racesSection.getKeys(false)) {
+            String path = "factions." + factionName;
+            RaceFaction faction = new RaceFaction(
+                    factionName,
                     config.getString(path + ".lore", "<gray>No known lore..."),
-                    config.getDouble(path + ".falldamagemultiplier", 1),
+                    config.getItemStack(path + ".item", new ItemStack(Material.BREAD)),
+                    config.getInt(path + ".health", 0),
+                    config.getDouble(path + ".damage", 0),
                     config.getDouble(path + ".miningefficiency", 0),
                     config.getDouble(path + ".armor", 0),
-                    config.getItemStack(path + ".item", new ItemStack(Material.BREAD))
+                    config.getStringList(path + ".raceInhabitants")
             );
-            races.add(race);
+            raceFactions.add(faction);
         }
     }
 
@@ -556,25 +555,20 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     }
 
     private void openRaceGUI(Player player) {
-        {
-            if (!player.hasPermission("double.races.become")) {
-                this.plugin.noPermission(player);
-                return;
-            }
-            List<Race> selectable = new ArrayList<>();
-            for (Race race : races) {
-                if(player.hasPermission("double.races.become." + race.getName()) ||
-                        player.hasPermission("double.races.become.*")) selectable.add(race);
-            }
+        List<Race> selectable = new ArrayList<>();
+        for (Race race : races) {
+            if(player.hasPermission("double.races.become." + race.getName()) ||
+                    player.hasPermission("double.races.become.*")) selectable.add(race);
+        }
 
-            // Open a GUI with all selectable races
-            int size = Math.max(9, (selectable.size() + 8) / 9 * 9);
-            Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a race to become"));
+        // Open a GUI with all selectable races
+        int size = Math.max(9, (selectable.size() + 8) / 9 * 9);
+        Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a race to become"));
 
-            Map<ItemStack, Race> raceSelectSlots = new HashMap<>();
+        Map<ItemStack, Race> raceSelectSlots = new HashMap<>();
 
-            AtomicInteger i = new AtomicInteger(); // Slot
-            selectable.forEach(race -> {
+        AtomicInteger i = new AtomicInteger(); // Slot
+        selectable.forEach(race -> {
                 ItemStack itemStack = race.getItem(); // Create the itemstack
                 ItemMeta meta = itemStack.getItemMeta();
                 meta.displayName(
@@ -605,9 +599,45 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 raceSelectSlots.put(itemStack, race);
                 i.getAndIncrement();
             });
-            playerOpenGuis.put(player, raceSelectSlots);
-            player.openInventory(inv);
-        }
+        playerRaceSelection.put(player, raceSelectSlots);
+        player.openInventory(inv);
+
+    }
+
+    private void openFactionGUI(Player player) {
+        List<RaceFaction> selectable = new ArrayList<>(raceFactions);
+        // Open a GUI with all selectable factions
+        int size = Math.max(9, (selectable.size() + 8) / 9 * 9);
+        Inventory inv = Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a faction to join"));
+
+        Map<ItemStack, RaceFaction> factionSelectSlots = new HashMap<>();
+
+        AtomicInteger i = new AtomicInteger(); // Slot
+        selectable.forEach(faction -> {
+            ItemStack itemStack = faction.getItem(); // Create the itemstack
+            ItemMeta meta = itemStack.getItemMeta();
+            meta.displayName(
+                    MiniMessage.miniMessage().deserialize(faction.getName())
+            );
+
+            List<Component> lore = new ArrayList<>();
+            lore.add(MiniMessage.miniMessage().deserialize(faction.getLore()));
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Health Bonus : <green>" + faction.getHealth()));
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage Bonus : <green>" + faction.getDamage()));
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Mining Efficiency Bonus : <green>" + faction.getMiningEfficiency()));
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Armor Bonus : <green>" + faction.getArmor()));
+
+            meta.lore(lore);
+
+            itemStack.setItemMeta(meta);
+            itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
+
+            inv.setItem(i.get(), itemStack);
+            factionSelectSlots.put(itemStack, faction);
+            i.getAndIncrement();
+        });
+        playerRaceFactionSelection.put(player, factionSelectSlots);
+        player.openInventory(inv);
     }
 
     public void saveAllRaces() {
