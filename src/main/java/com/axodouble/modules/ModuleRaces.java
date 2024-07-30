@@ -36,6 +36,8 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     public List<RaceFaction> raceFactions = new ArrayList<>();
     public Map<Player, Map<ItemStack, Race>> playerRaceSelection = new HashMap<>();
     public Map<Player, Map<ItemStack, RaceFaction>> playerRaceFactionSelection = new HashMap<>();
+    public Map<Player, RaceFaction> playerRaceFactionSelected = new HashMap<>();
+    public Map<Player, Race> playerRaceSelected = new HashMap<>();
 
 
     public ModuleRaces(Double plugin) {
@@ -184,7 +186,15 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 // Get the relevant slot and race that the player clicked on
                 if(playerRaceSelection.get(player).containsKey(e.getCurrentItem())){
                     e.setCancelled(true);
-                    playerRaceSelection.get(player).get(e.getCurrentItem()).apply(player);
+                    playerRaceFactionSelected.get(player).apply(player, playerRaceSelection.get(player).get(e.getCurrentItem()));
+                }
+            }
+        } else if (Objects.equals(e.getView().title().toString(), MiniMessage.miniMessage().deserialize("<green>Select a faction to join").toString())) {
+            if (playerRaceFactionSelection.containsKey(player)) {
+                // Get the relevant slot and faction that the player clicked on
+                if (playerRaceFactionSelection.get(player).containsKey(e.getCurrentItem())) {
+                    e.setCancelled(true);
+                    playerRaceFactionSelected.put(player, playerRaceFactionSelection.get(player).get(e.getCurrentItem()));
                 }
             }
         }
@@ -856,6 +866,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
         public List<String> getRaceInhabitants() {
             return raceInhabitants;
+        }
+
+        public void apply (Player player, Race race){
+
         }
     }
 }
