@@ -171,4 +171,14 @@ public class DoublePlayer {
     public String getFaction() {
         return faction;
     }
+
+    public void setFaction(String faction) {
+        this.faction = faction;
+        this.savePlayer();
+    }
+
+    public void setRace(String race){
+        this.race = race;
+        this.savePlayer();
+    }
 }

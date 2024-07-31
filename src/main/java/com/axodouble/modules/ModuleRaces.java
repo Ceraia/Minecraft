@@ -64,7 +64,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
 
         if(args.length == 0) {
-            openRaceGUI(player);
+            openFactionGUI(player);
             return true;
         }
 
@@ -118,7 +118,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
             }
-            case "gui" -> openRaceGUI(player);
+            case "gui" -> openFactionGUI(player);
             case "restore" -> {
                 if (!sender.hasPermission("double.races.restore")) {
                     this.plugin.noPermission((Player) sender);
@@ -139,7 +139,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             }
         }
 
-        openRaceGUI(player);
+        openFactionGUI(player);
         return true;
     }
 
@@ -187,6 +187,15 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 if(playerRaceSelection.get(player).containsKey(e.getCurrentItem())){
                     e.setCancelled(true);
                     playerRaceFactionSelected.get(player).apply(player, playerRaceSelection.get(player).get(e.getCurrentItem()));
+                    e.getClickedInventory().close();
+                    player.sendMessage(MiniMessage.miniMessage().deserialize("" +
+                            "<green>Succesfully changed your faction to <white>" +
+                            playerRaceFactionSelected.get(player).getName()+
+                            "<green>, and your race to " +
+                            playerRaceSelection.get(player).get(e.getCurrentItem()).getName()+"<green>!"));
+
+                    plugin.getPlayerManager().getDoublePlayer(player).setRace(playerRaceSelection.get(player).get(e.getCurrentItem()).getName());
+                    plugin.getPlayerManager().getDoublePlayer(player).setFaction(playerRaceFactionSelected.get(player).getName());
                 }
             }
         } else if (Objects.equals(e.getView().title().toString(), MiniMessage.miniMessage().deserialize("<green>Select a faction to join").toString())) {
@@ -195,6 +204,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                 if (playerRaceFactionSelection.get(player).containsKey(e.getCurrentItem())) {
                     e.setCancelled(true);
                     playerRaceFactionSelected.put(player, playerRaceFactionSelection.get(player).get(e.getCurrentItem()));
+                    openRaceGUI(player);
                 }
             }
         }
@@ -420,8 +430,9 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     new ItemStack(Material.OAK_SAPLING) // Item
             ));
         }
-
         saveAllRaces();
+        races.clear();
+        loadRaces();
     }
 
     public void addDefaultFactions(){
@@ -469,26 +480,15 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     0,
                     0,
                     Arrays.asList(
-                            "Halfling",
-                            "Gnome",
-                            "Dwarf",
-                            "Short Human",
-                            "Human",
-                            "Tall Human",
-                            "Satyr",
-                            "Githyanki",
-                            "Half-Elf",
-                            "Elf",
-                            "Half-Orc",
-                            "Bugbear",
-                            "Goliath"
+                            "*"
                     )
                     )
             );
 
-            saveAllFactions();
-
         }
+        saveAllFactions();
+        raceFactions.clear();
+        loadRaceFactions();
     }
 
     public void loadRaces(boolean reload) {
@@ -502,7 +502,6 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         if (racesSection == null) {
             plugin.getLogger().warning("No races found in races.yml! Adding default races.");
             addDefaultRaces();
-
             return;
         }
 
@@ -534,13 +533,14 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         // Load all factions from the races.yml file
         File file = new File(plugin.getDataFolder(), "races.yml");
         FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        ConfigurationSection racesSection = config.getConfigurationSection("factions");
-        if (racesSection == null) {
+        ConfigurationSection factionsSection = config.getConfigurationSection("factions");
+        if (factionsSection == null) {
             plugin.getLogger().warning("No factions found in races.yml! Adding default factions.");
             addDefaultFactions();
+            return;
         }
 
-        for (String factionName : racesSection.getKeys(false)) {
+        for (String factionName : factionsSection.getKeys(false)) {
             String path = "factions." + factionName;
             RaceFaction faction = new RaceFaction(
                     factionName,
@@ -567,8 +567,12 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     private void openRaceGUI(Player player) {
         List<Race> selectable = new ArrayList<>();
         for (Race race : races) {
-            if(player.hasPermission("double.races.become." + race.getName()) ||
-                    player.hasPermission("double.races.become.*")) selectable.add(race);
+            if(
+                    (player.hasPermission("double.races.become." + race.getName()) ||
+                    player.hasPermission("double.races.become.*")) &&
+                            (playerRaceFactionSelected.get(player).getRaceInhabitants().contains(race.getName())
+                            || playerRaceFactionSelected.get(player).getRaceInhabitants().contains("*"))
+            ) selectable.add(race);
         }
 
         // Open a GUI with all selectable races
@@ -869,6 +873,18 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
         }
 
         public void apply (Player player, Race race){
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).setBaseValue(race.getScale());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)).setBaseValue(race.getSpeed());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(health + race.getHealth());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)).setBaseValue(race.getJumpHeight());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE)).setBaseValue(race.getJumpHeight() * 7.145);
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)).setBaseValue(damage+ race.getDamage());
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)).setBaseValue(race.getReach());
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)).setBaseValue(race.getReach());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)).setBaseValue(race.getAttackSpeed());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)).setBaseValue(race.getFallDamageMultiplier());
+            Objects.requireNonNull(player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)).setBaseValue(miningEfficiency+race.getMiningEfficiency());
+            Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_ARMOR)).setBaseValue(armor+race.getArmor());
 
         }
     }

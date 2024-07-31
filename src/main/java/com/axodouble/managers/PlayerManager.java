@@ -89,6 +89,19 @@ public class PlayerManager {
         return newPlayer;
     }
 
+    public DoublePlayer getDoublePlayer(Player player) {
+        // Check if the player is already in the list
+        for (DoublePlayer doublePlayer : doublePlayers) {
+            if (doublePlayer.getUUID().equals(player.getUniqueId())) {
+                return doublePlayer;
+            }
+        }
+
+        DoublePlayer newPlayer = createNewDoublePlayer(player.getUniqueId());
+        doublePlayers.add(newPlayer);
+        return newPlayer;
+    }
+
 
     public void PlayerKill(UUID playerKiller, UUID playerVictim) {
         DoublePlayer killer = getDoublePlayer(playerKiller);
