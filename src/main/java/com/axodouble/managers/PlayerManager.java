@@ -50,7 +50,6 @@ public class PlayerManager {
                     config.getBoolean("pvpbanned", false),
                     config.getInt("wins", 0),
                     config.getInt("losses", 0),
-                    config.getInt("draws", 0),
                     config.getStringList("logs"),
                     file
             );
@@ -197,7 +196,6 @@ public class PlayerManager {
                     defaultElo,
                     false,
                     false,
-                    0,
                     0,
                     0,
                     new ArrayList<String>(),

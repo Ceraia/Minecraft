@@ -86,7 +86,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                                 return true;
                             }
                             DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
-                            boolean arenabanned = doublePlayer.arenaBan();
+                            boolean arenabanned = doublePlayer.toggleArenaBan();
                             if (arenabanned) {
                                 doublePlayer.addLog("Banned from creation of arenas by " + sender.getName());
                                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Banned from creation of arenas by " + sender.getName()));
@@ -101,7 +101,7 @@ public class ModuleSystem implements CommandExecutor, TabCompleter, Listener {
                                 return true;
                             }
                             DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
-                            boolean pvpbanned = doublePlayer.pvpBan();
+                            boolean pvpbanned = doublePlayer.togglePvpBan();
                             if (pvpbanned) {
                                 doublePlayer.addLog("Banned from PVPing by " + sender.getName());
                                 sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Banned from PVPing by " + sender.getName()));

@@ -108,7 +108,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                             medal = "<white>"; // Default medal color for players outside the top 3
                         }
 
-                        top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+                        top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.getWins()+ ap.getLosses()) + " games)"));
                         i.getAndIncrement();
                     });
 
@@ -156,7 +156,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
                 // Check if the sender is pvpbanned
                 DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId());
-                if (doublePlayer.pvpBanned()) {
+                if (doublePlayer.isPvpBanned()) {
                     sender.sendMessage(
                             MiniMessage.miniMessage().deserialize("<red>You are banned from PvP!")
                     );
@@ -167,7 +167,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                     Player p = (Player) sender;
 
                     // Check if the player is banned
-                    if (plugin.getPlayerManager().getDoublePlayer(p.getUniqueId()).pvpBanned()) {
+                    if (plugin.getPlayerManager().getDoublePlayer(p.getUniqueId()).isPvpBanned()) {
                         sender.sendMessage(
                                 MiniMessage.miniMessage().deserialize("<red>This player is banned from PvP!")
                         );
@@ -513,11 +513,11 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 sender.sendMessage(MiniMessage.miniMessage().deserialize(
                         "<yellow><bold>Profile of " + player.getName() +
                                 "\n<yellow><bold>ELO: <green>" + doublePlayer.getElo() +
-                                "\n<yellow><bold>Games: <green>" + (doublePlayer.wins() + doublePlayer.losses()) +
-                                "\n<yellow><bold>Wins: <green>" + doublePlayer.wins() +
-                                "\n<yellow><bold>Losses: <green>" + doublePlayer.losses() +
-                                "\n<yellow><bold>PVP-Banned: <green>" + doublePlayer.pvpBanned() +
-                                "\n<yellow><bold>Arena-Banned: <green>" + doublePlayer.arenaBanned()
+                                "\n<yellow><bold>Games: <green>" + (doublePlayer.getWins() + doublePlayer.getLosses()) +
+                                "\n<yellow><bold>Wins: <green>" + doublePlayer.getWins() +
+                                "\n<yellow><bold>Losses: <green>" + doublePlayer.getLosses() +
+                                "\n<yellow><bold>PVP-Banned: <green>" + doublePlayer.isPvpBanned() +
+                                "\n<yellow><bold>Arena-Banned: <green>" + doublePlayer.isArenaBanned()
                 ));
 
                 return true;
@@ -938,7 +938,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
         String name = args[1];
 
         // Check if the user is banned from creating arenas
-        if (plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId()).arenaBanned()) {
+        if (plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId()).isArenaBanned()) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize("<red>You are banned from creating arenas")
             );
@@ -1162,7 +1162,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 medal = "<white>"; // Default medal color for players outside the top 3
             }
 
-            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.getWins() + ap.getLosses()) + " games)"));
             i.getAndIncrement();
         });
 
