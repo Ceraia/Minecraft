@@ -215,12 +215,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void reloadRaces() {
-        races.clear();
         loadRaces(true);
     }
 
     public void addDefaultRaces() {
-        races.clear();
         {
             races.add(new Race(
                     "Halfling", // Name
@@ -431,12 +429,10 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
             ));
         }
         saveAllRaces();
-        races.clear();
         loadRaces();
     }
 
     public void addDefaultFactions(){
-        raceFactions.clear();
         {
             raceFactions.add(new RaceFaction(
                     "<red>Gnomish Dynasty",
@@ -487,11 +483,11 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
 
         }
         saveAllFactions();
-        raceFactions.clear();
         loadRaceFactions();
     }
 
     public void loadRaces(boolean reload) {
+        races.clear();
         if(reload) plugin.getLogger().info("Reloading races...");
         else plugin.getLogger().info("Loading races...");
 
@@ -527,6 +523,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
     }
 
     public void loadRaceFactions(boolean reload) {
+        raceFactions.clear();
         if (reload) plugin.getLogger().info("Reloading race factions...");
         else plugin.getLogger().info("Loading race factions...");
 
