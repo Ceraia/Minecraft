@@ -15,7 +15,7 @@ object ArenaHelper {
     @JvmStatic
     fun revertInventory( plugin: Double, player: Player,  arena: Arena) {
         try {
-            val file = File(plugin.getDataFolder(), "data/pinventory_" + arena.getName() + "_" + player.getName() + ".yml")
+            val file = File(plugin.getDataFolder(), "data/pinventory_" + arena.name + "_" + player.getName() + ".yml")
 
             val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
 
@@ -41,7 +41,7 @@ object ArenaHelper {
 
     @JvmStatic
     fun teleportPlayerToSpawn(  player: Player,  arena: Arena) {
-        val l: Location = arena.getPlayerPriorLocation(player)
+        val l: Location? = arena.getPlayerPriorLocation(player)
         l?.let { player.teleport(it) }
     }
 }

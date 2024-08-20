@@ -136,12 +136,11 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
                 }
                 if (args[0].equalsIgnoreCase("public")) {
                     arenaPublic(sender, args);
-                    return true;
                 } else {
                     plugin.badUsage((Player) sender);
                     arenaHelp(sender);
-                    return true;
                 }
+                return true;
             }
             case "pvp" -> {
                 if (!sender.hasPermission("double.pvp")) {
@@ -786,7 +785,7 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
         double healthAfter = victim.getHealth() - e.getFinalDamage();
         if (healthAfter <= 0) {
             // Check if during the fight totems are allowed
-            if (arena.totems) {
+            if (arena.getTotems()) {
                 if (
                         (victim.getInventory().getItemInMainHand().getType() == Material.TOTEM_OF_UNDYING) ||
                                 (victim.getInventory().getItemInOffHand().getType() == Material.TOTEM_OF_UNDYING)
@@ -860,9 +859,9 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
 
         // Check in which team the player is
         if (arena.getTeam1().contains(e.getPlayer())) {
-            calculateElo(e.getPlayer(), arena.getTeam2().getFirst());
+            calculateElo(e.getPlayer(), arena.getTeam2().get(0));
         } else {
-            calculateElo(e.getPlayer(), arena.getTeam1().getFirst());
+            calculateElo(e.getPlayer(), arena.getTeam1().get(0));
         }
         updateScoreboard();
     }

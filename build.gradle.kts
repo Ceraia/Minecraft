@@ -2,10 +2,12 @@ import java.text.SimpleDateFormat
 import java.util.Date
 
 plugins {
-    id("java")
+    kotlin("jvm") version "2.0.20-RC2"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("xyz.jpenilla.run-paper") version "2.3.1"
-    kotlin("jvm")
 }
+
+group = "com.axodouble"
 
 // Get the current date
 val date = Date()
@@ -16,6 +18,7 @@ val minor = "5"
 // Format the version string
 version = "${major}.${minor}.${SimpleDateFormat("yyMMdd").format(date)}-build-${SimpleDateFormat("HHmm").format(date)}"
 
+
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/") {
@@ -24,29 +27,32 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
-    maven("https://jitpack.io/") {
-        name = "jitpack"
-    }
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
-    implementation(kotlin("stdlib-jdk8"))
+    compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 }
 
 val targetJavaVersion = 21
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
-    }
+kotlin {
+    jvmToolchain(targetJavaVersion)
 }
 
 tasks.withType<JavaCompile> {
     options.release.set(targetJavaVersion)
+    tasks.build {
+        dependsOn("shadowJar")
+    }
+}
+
+
+tasks.build {
+    dependsOn("shadowJar")
 }
 
 tasks.processResources {
-    val props = mapOf("version" to project.version)
+    val props = mapOf("version" to version)
     inputs.properties(props)
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
@@ -56,9 +62,6 @@ tasks.processResources {
 
 tasks {
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("1.21.1")
     }
 }

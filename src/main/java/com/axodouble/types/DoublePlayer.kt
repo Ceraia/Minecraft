@@ -11,7 +11,7 @@ class DoublePlayer(
     private val plugin: Double,
     private val name: String,
     private var race: String,
-    private var faction: String,
+    private var faction: String?,
     private var marriedName: String?,
     private val uuid: UUID,
     private var elo: Int,
@@ -19,7 +19,6 @@ class DoublePlayer(
     private var pvpBanned: Boolean,
     private var wins: Int,
     private var losses: Int,
-    private val logs: MutableList<String>,
     private val configFile: File
 ) {
 
@@ -64,16 +63,10 @@ class DoublePlayer(
         savePlayer()
     }
 
-    fun addLog(log: String) {
-        logs.add(log)
-        savePlayer()
-    }
-
     fun savePlayer() {
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(configFile)
         config.set("name", name)
         config.set("race", race)
-        config.set("faction", faction)
         config.set("married", marriedName)
         config.set("uuid", uuid.toString())
         config.set("elo", elo)
@@ -81,7 +74,6 @@ class DoublePlayer(
         config.set("pvpbanned", pvpBanned)
         config.set("wins", wins)
         config.set("losses", losses)
-        config.set("logs", logs)
 
         try {
             config.save(configFile)

@@ -50,7 +50,6 @@ public class PlayerManager {
                     config.getBoolean("pvpbanned", false),
                     config.getInt("wins", 0),
                     config.getInt("losses", 0),
-                    config.getStringList("logs"),
                     file
             );
             doublePlayers.add(doublePlayer);
@@ -188,7 +187,7 @@ public class PlayerManager {
 
             return new DoublePlayer(
                     plugin,
-                    Objects.requireNonNull(Bukkit.getPlayer(playerUUID)).getName(),
+                    Bukkit.getPlayer(playerUUID).getName(),
                     "human",
                     null,
                     null,
@@ -198,7 +197,6 @@ public class PlayerManager {
                     false,
                     0,
                     0,
-                    new ArrayList<String>(),
                     configFile
             );
         } catch (IOException e) {

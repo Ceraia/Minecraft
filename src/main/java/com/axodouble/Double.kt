@@ -46,8 +46,8 @@ class Double : JavaPlugin() {
         /*---------------------------------*/
         /*       Registering Managers      */
         /*---------------------------------*/
-        arenaManager = ArenaManager(plugin)
         playerManager = PlayerManager(plugin)
+        arenaManager = ArenaManager(plugin)
         inviteManager = InviteManager()
 
         /*---------------------------------*/

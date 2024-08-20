@@ -42,7 +42,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         val arenasSelectSlots = mutableMapOf<Int, Arena>()
         var i = 0
 
-        for (arena in arenas.filter { it.state == Arena.ArenaState.WAITING }) {
+        for (arena in arenas.filter { it.getState() == Arena.ArenaState.WAITING }) {
             val itemStack = ItemStack(Material.ENDER_EYE)
             itemStack.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
             itemStack.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
@@ -117,7 +117,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         if (event.inventory.type == InventoryType.PLAYER) return
 
                 val inviter = event.whoClicked as Player
-        when (event.view.title) {
+        when (event.view.title().toString()) {
             INVENTORY_NAME_ARENAS.toString() -> {
                 event.isCancelled = true
                 val slot = event.slot
@@ -125,7 +125,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 val invite = plugin.inviteManager.selectingInvites[inviter]
                 invite?.arena = arena
 
-                if (arena == null || arena.state != Arena.ArenaState.WAITING) {
+                if (arena == null || arena.getState() != Arena.ArenaState.WAITING) {
                     inviter.sendMessage(
                             MiniMessage.miniMessage().deserialize("<red>That arena is not available at the moment. Please try again later.")
                     )
