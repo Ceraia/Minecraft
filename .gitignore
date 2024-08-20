@@ -20,5 +20,11 @@ gradle-app.setting
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+# Kotlin
+.kotlin
+
+# Idea
+.idea
+
 # Dev environment
 run/*
