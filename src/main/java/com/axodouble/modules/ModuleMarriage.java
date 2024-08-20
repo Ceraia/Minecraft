@@ -51,7 +51,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
 
         switch (cmd.getName()) {
             case "divorce" ->
-                plugin.getMarriageModule().divorce(player);
+                plugin.getModuleMarriage().divorce(player);
             case "marry" -> {
                 if (args.length == 0) {
                     player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/marry <player>"));
@@ -64,7 +64,7 @@ public class ModuleMarriage implements CommandExecutor, TabCompleter, Listener {
                     return true;
                 }
 
-                plugin.getMarriageModule().invite(player, target);
+                plugin.getModuleMarriage().invite(player, target);
             }
         }
 

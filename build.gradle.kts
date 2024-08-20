@@ -4,6 +4,7 @@ import java.util.Date
 plugins {
     id("java")
     id("xyz.jpenilla.run-paper") version "2.3.1"
+    kotlin("jvm")
 }
 
 // Get the current date
@@ -30,6 +31,7 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 val targetJavaVersion = 21
