@@ -1,4 +1,7 @@
 # Double, a utility and pvp plugin built for the Ceraia discord server.
+![GitHub branch check runs](https://img.shields.io/github/check-runs/Axodouble/Double/master?style=for-the-badge)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/Axodouble/Double?style=for-the-badge)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Axodouble/Double?style=for-the-badge)
 
 ## Features
 The plugin has a few simple features that are added to make the server more fun and engaging.
