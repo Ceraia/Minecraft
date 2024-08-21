@@ -1,8 +1,6 @@
-package com.axodouble.types
+package com.axodouble.modules.arena
 
 import com.axodouble.Double
-import com.axodouble.util.ArenaHelper
-import com.axodouble.managers.InviteManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
@@ -98,7 +96,7 @@ class Arena(
     }
 
     fun addPlayer(player: Player, team: Int) {
-        plugin.arenaManager.addPlayerToArena(player, this)
+        plugin.arenaModule.arenaManager.addPlayerToArena(player, this)
         if (team == 1) {
             team1.add(player)
         } else {
@@ -146,7 +144,7 @@ class Arena(
 
         if (!end || quit) {
             ArenaHelper.teleportPlayerToSpawn(player, this)
-            plugin.arenaManager.removePlayerFromArena(player)
+            plugin.arenaModule.arenaManager.removePlayerFromArena(player)
             player.inventory.clear()
             ArenaHelper.revertInventory(plugin, player, this)
             if (!end) return
@@ -180,7 +178,7 @@ class Arena(
                 for (pl in getOnlinePlayers()) {
                     if (pl == player && quit) continue
                     ArenaHelper.teleportPlayerToSpawn(pl, thisArena)
-                    plugin.arenaManager.removePlayerFromArena(pl)
+                    plugin.arenaModule.arenaManager.removePlayerFromArena(pl)
                     ArenaHelper.revertInventory(plugin, pl, thisArena)
                 }
 
@@ -200,7 +198,7 @@ class Arena(
         }.runTaskLater(plugin, 5 * 20L)
     }
 
-    fun start(invite: InviteManager.Invite, players: List<Player>) {
+    fun start(invite: ArenaInviteManager.Invite, players: List<Player>) {
         setState(ArenaState.STARTING)
 
         try {
@@ -257,7 +255,7 @@ class Arena(
                         pl.showTitle(Title.title(
                                 MiniMessage.miniMessage().deserialize("<green>${count - 1}"),
                                 MiniMessage.miniMessage().deserialize(
-                        if (plugin.arenaManager.getArena(pl)?.totems == true)
+                        if (plugin.arenaModule.arenaManager.getArena(pl)?.totems == true)
                         "<red>Totems have been enabled for the fight."
                                 else
                         "<green>Totems have been disabled for the fight."

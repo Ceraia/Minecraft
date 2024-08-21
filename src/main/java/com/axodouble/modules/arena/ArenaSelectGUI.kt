@@ -1,7 +1,6 @@
-package com.axodouble.types
+package com.axodouble.modules.arena
 
 import com.axodouble.Double
-import com.axodouble.managers.InviteManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -11,9 +10,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
-import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import org.bukkit.inventory.meta.ItemMeta
 
 class ArenaSelectGUI(private val plugin: Double) : Listener {
 
@@ -30,10 +27,10 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
     }
 
     fun openArenaList(inviter: Player, invited: Player) {
-        val invite = InviteManager.Invite(inviter, invited)
-        plugin.inviteManager.selectingInvites[inviter] = invite
+        val invite = ArenaInviteManager.Invite(inviter, invited)
+        plugin.arenaInviteManager.selectingInvites[inviter] = invite
 
-        val arenas = plugin.arenaManager.arenas
+        val arenas = plugin.arenaModule.arenaManager.arenas
                 .filter { it.isPublic || it.owner == inviter.name }
 
         val size = Math.max(9, (arenas.size + 8) / 9 * 9)
@@ -122,7 +119,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 event.isCancelled = true
                 val slot = event.slot
                 val arena = selectingArenaCache[inviter]?.get(slot)
-                val invite = plugin.inviteManager.selectingInvites[inviter]
+                val invite = plugin.arenaInviteManager.selectingInvites[inviter]
                 invite?.arena = arena
 
                 if (arena == null || arena.getState() != Arena.ArenaState.WAITING) {
@@ -137,7 +134,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
             INVENTORY_NAME_TOTEMS.toString() -> {
                 event.isCancelled = true
                 val slot = event.slot
-                val invite = plugin.inviteManager.selectingInvites[inviter]
+                val invite = plugin.arenaInviteManager.selectingInvites[inviter]
                 val arena = invite?.arena
                 arena?.totems = slot == 1
 
@@ -158,16 +155,16 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 if (invite != null) {
                     invite.arena = arena
                 }
-                plugin.inviteManager.selectingInvites.remove(inviter)
+                plugin.arenaInviteManager.selectingInvites.remove(inviter)
                 if (invite != null) {
-                    plugin.inviteManager.invites[invite.invited] = invite
+                    plugin.arenaInviteManager.invites[invite.invited] = invite
                 }
                 inviter.closeInventory()
             }
             INVENTORY_NAME_RANKED.toString() -> {
                 event.isCancelled = true
                 val slot = event.slot
-                val invite = plugin.inviteManager.selectingInvites[inviter]
+                val invite = plugin.arenaInviteManager.selectingInvites[inviter]
                 val arena = invite?.arena
                 arena?.totems = slot == 1
 

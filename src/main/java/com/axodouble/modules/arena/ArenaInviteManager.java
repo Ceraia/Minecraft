@@ -1,12 +1,11 @@
-package com.axodouble.managers;
+package com.axodouble.modules.arena;
 
-import com.axodouble.types.Arena;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class InviteManager {
+public class ArenaInviteManager {
 
     public Map<Player, Invite> invites = new HashMap<>();
     public Map<Player, Invite> selectingInvites = new HashMap<>();
