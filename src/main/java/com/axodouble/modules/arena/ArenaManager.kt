@@ -1,8 +1,6 @@
-package com.axodouble.managers
+package com.axodouble.modules.arena
 
 import com.axodouble.Double
-import com.axodouble.types.Arena
-import org.bukkit.Location
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player

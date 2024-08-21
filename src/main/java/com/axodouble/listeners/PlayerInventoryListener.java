@@ -19,7 +19,7 @@ public class PlayerInventoryListener implements Listener {
     }
 
     private boolean isInArena(Player player) {
-        return plugin.getArenaManager().getArena(player) != null;
+        return plugin.getArenaModule().arenaManager.getArena(player) != null;
     }
 
     @EventHandler

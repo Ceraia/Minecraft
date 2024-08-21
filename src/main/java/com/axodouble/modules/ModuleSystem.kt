@@ -180,7 +180,7 @@ class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, 
                             Bukkit.getOnlinePlayers().mapTo(tabOptions) { it.name }
                         }
                         "arena" -> {
-                            plugin.arenaManager.arenas.mapTo(tabOptions) { it.name }
+                            plugin.arenaModule.arenaManager.arenas.mapTo(tabOptions) { it.name }
                         }
                     }
                 }

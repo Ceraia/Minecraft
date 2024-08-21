@@ -2,11 +2,11 @@ package com.axodouble
 
 import com.axodouble.listeners.PlayerInventoryListener
 import com.axodouble.listeners.OLDSpellsListener
-import com.axodouble.managers.ArenaManager
-import com.axodouble.managers.InviteManager
+import com.axodouble.modules.arena.ArenaInviteManager
 import com.axodouble.managers.PlayerManager
 import com.axodouble.modules.*
-import com.axodouble.types.ArenaSelectGUI
+import com.axodouble.modules.arena.ArenaModule
+import com.axodouble.modules.arena.ArenaSelectGUI
 import com.axodouble.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
@@ -15,9 +15,7 @@ import java.io.File
 
 class Double : JavaPlugin() {
     private val plugin: Double = this
-    lateinit var arenaManager: ArenaManager
-        private set
-    lateinit var inviteManager: InviteManager
+    lateinit var arenaInviteManager: ArenaInviteManager
         private set
     lateinit var arenaSelectGUI: ArenaSelectGUI
         private set
@@ -27,7 +25,7 @@ class Double : JavaPlugin() {
         private set
     lateinit var moduleMarriage: ModuleMarriage
         private set
-    lateinit var moduleArena: ModuleArena
+    lateinit var arenaModule: ArenaModule
         private set
     lateinit var moduleSystem: ModuleSystem
         private set
@@ -47,15 +45,14 @@ class Double : JavaPlugin() {
         /*       Registering Managers      */
         /*---------------------------------*/
         playerManager = PlayerManager(plugin)
-        arenaManager = ArenaManager(plugin)
-        inviteManager = InviteManager()
+        arenaInviteManager = ArenaInviteManager()
 
         /*---------------------------------*/
         /*             Modules             */
         /*---------------------------------*/
         moduleSeating = ModuleSeating(plugin)
         moduleMarriage = ModuleMarriage(plugin)
-        moduleArena = ModuleArena(plugin)
+        arenaModule = ArenaModule(plugin)
         moduleSystem = ModuleSystem(plugin)
         moduleRaces = ModuleRaces(plugin)
 

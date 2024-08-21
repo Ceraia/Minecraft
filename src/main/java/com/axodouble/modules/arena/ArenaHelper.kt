@@ -1,7 +1,6 @@
-package com.axodouble.util;
+package com.axodouble.modules.arena;
 
 import com.axodouble.Double;
-import com.axodouble.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
