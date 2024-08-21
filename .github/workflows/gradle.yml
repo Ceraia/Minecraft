@@ -27,7 +27,7 @@ jobs:
       - name: Get JAR filename
         id: get_jar_filename
         run: |
-          jar_file=$(find build/libs -name '*.jar' -print -quit)
+          jar_file=$(find build/libs -name '*-all.jar' -print -quit)
           if [ -z "$jar_file" ]; then
             echo "No JAR file found in build/libs directory"
             exit 1
