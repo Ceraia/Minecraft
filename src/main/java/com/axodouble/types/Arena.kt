@@ -231,7 +231,7 @@ class Arena(
 
         players.forEach {
             it.apply {
-                health = 20.0
+                health = it.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
                 foodLevel = 20
                 saturation = 20.0F
                 gameMode = GameMode.SURVIVAL
