@@ -9,12 +9,12 @@ import java.util.UUID
 
 class DoublePlayer(
     private val plugin: Double,
-    private val name: String,
+    val name: String,
     private var race: String,
     private var faction: String?,
     private var marriedName: String?,
-    private val uuid: UUID,
-    private var elo: Int,
+    val uuid: UUID,
+    var elo: Int,
     private var arenaBanned: Boolean,
     private var pvpBanned: Boolean,
     private var wins: Int,
@@ -23,15 +23,6 @@ class DoublePlayer(
 ) {
 
     fun getUUID(): UUID = uuid
-
-    fun getName(): String = name
-
-    fun getElo(): Int = elo
-
-    fun setElo(elo: Int) {
-        this.elo = elo
-        savePlayer()
-    }
 
     fun togglePvpBan(): Boolean {
         pvpBanned = !pvpBanned

@@ -871,12 +871,12 @@ public class ModuleArena implements CommandExecutor, TabCompleter, Listener {
         UUID loserUUID = loser.getUniqueId();
 
         // Get the win chance
-        int winChance = plugin.getPlayerManager().CalculateWinChance(winnerUUID, loserUUID);
+        int winChance = plugin.getPlayerManager().calculateWinChance(winnerUUID, loserUUID);
 
         Bukkit.broadcast(MiniMessage.miniMessage().deserialize("<green>" + winner.getName() + " just killed " + loser.getName() + " in the " + plugin.getArenaManager().getArena(loser).getName() + " arena with a win chance of " + winChance + "%!"));
 
         // Handle ELO calculations
-        plugin.getPlayerManager().PlayerKill(winnerUUID, loserUUID);
+        plugin.getPlayerManager().playerKill(winnerUUID, loserUUID);
 
         updateScoreboard();
     }

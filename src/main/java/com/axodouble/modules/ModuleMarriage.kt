@@ -152,13 +152,13 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
 
     fun divorce(player: Player) {
         val doublePlayer = plugin.playerManager.getDoublePlayer(player.uniqueId)
-        val doublePartner = plugin.playerManager.getDoublePlayer(doublePlayer.getPartner())
+        val doublePartner = plugin.playerManager.getDoublePlayer(doublePlayer.getPartner() ?: return)
 
         doublePlayer.divorce()
         doublePartner.divorce()
 
         plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
-                "<green>${player.name} has divorced ${doublePartner.getName()}."
+                "<green>${player.name} has divorced ${doublePartner.name}."
         ))
     }
 

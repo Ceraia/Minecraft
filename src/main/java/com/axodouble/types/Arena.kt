@@ -157,7 +157,7 @@ class Arena(
 
             pl.sendMessage(
                     MiniMessage.miniMessage().deserialize(
-                            "<green>${winners.joinToString(", ") { it.name }} just killed ${losers.joinToString(", ") { it.name }} in the ${name} arena with a win chance of ${plugin.playerManager.CalculateWinChance(winners.first().uniqueId, losers.first().uniqueId)}%!"
+                            "<green>${winners.joinToString(", ") { it.name }} just killed ${losers.joinToString(", ") { it.name }} in the ${name} arena with a win chance of ${plugin.playerManager.calculateWinChance(winners.first().uniqueId, losers.first().uniqueId)}%!"
                     )
             )
 

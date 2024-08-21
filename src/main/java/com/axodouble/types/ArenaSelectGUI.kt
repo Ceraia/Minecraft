@@ -33,7 +33,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         val invite = InviteManager.Invite(inviter, invited)
         plugin.inviteManager.selectingInvites[inviter] = invite
 
-        val arenas = plugin.arenaManager.getArenas()
+        val arenas = plugin.arenaManager.arenas
                 .filter { it.isPublic || it.owner == inviter.name }
 
         val size = Math.max(9, (arenas.size + 8) / 9 * 9)
@@ -151,7 +151,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 val invitedPlayer = invite?.invited?.let { plugin.server.getPlayer(it.uniqueId) }
                 invitedPlayer?.sendMessage(
                         MiniMessage.miniMessage().deserialize(
-                                "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.CalculateWinChance(inviter.uniqueId, invite.invited.uniqueId)}% chance of winning!</green>"
+                                "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.calculateWinChance(inviter.uniqueId, invite.invited.uniqueId)}% chance of winning!</green>"
                         )
                 )
 
