@@ -1,4 +1,4 @@
-package com.axodouble.modules;
+package com.axodouble.modules.races;
 
 import com.axodouble.Double;
 import net.kyori.adventure.text.Component;

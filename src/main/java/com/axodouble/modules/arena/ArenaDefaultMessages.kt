@@ -1,11 +1,13 @@
-package com.axodouble.modules.arena;
+package com.axodouble.modules.arena
 
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.command.CommandSender;
+import net.kyori.adventure.text.minimessage.MiniMessage
+import org.bukkit.command.CommandSender
 
-public class ArenaDefaultMessages {
-    public static void arenaHelp(CommandSender sender) {
-        sender.sendMessage(MiniMessage.miniMessage().deserialize(
+object ArenaDefaultMessages {
+    @JvmStatic
+    fun arenaHelp(sender: CommandSender) {
+        sender.sendMessage(
+            MiniMessage.miniMessage().deserialize(
                 """
                                 < yellow ><bold > Arena Help
                                 <green>/arena list -Show your arenas
@@ -15,27 +17,37 @@ public class ArenaDefaultMessages {
                                 <gold > 1. < green >/arena create <name > -Create a new arena
                                 <gold> 2. < green >/arena sp1 <name > -Set spawn point for the first player
                                 <gold> 3. < green >/arena sp2 <name > -Set spawn point for the second player
-                        """
-        ));
+                        
+                        """.trimIndent()
+            )
+        )
     }
 
-    public  static void notYours(CommandSender sender) {
+    @JvmStatic
+    fun notYours(sender: CommandSender) {
         sender.sendMessage(
-                MiniMessage.miniMessage().deserialize("<red>Arena is not yours.")
-        );
+            MiniMessage.miniMessage().deserialize("<red>Arena is not yours.")
+        )
     }
 
-    public static void notFound(CommandSender sender) {
+    @JvmStatic
+    fun notFound(sender: CommandSender) {
         sender.sendMessage(
-                MiniMessage.miniMessage().deserialize("<red>Arena not found.")
-        );
+            MiniMessage.miniMessage().deserialize("<red>Arena not found.")
+        )
     }
 
-    public static  void pvpHelp(CommandSender sender) {
-        sender.sendMessage(MiniMessage.miniMessage().deserialize("""
+    @JvmStatic
+    fun pvpHelp(sender: CommandSender) {
+        sender.sendMessage(
+            MiniMessage.miniMessage().deserialize(
+                """
                 <gray> Usage: /pvp<player>
                 <gray> Usage: /pvp accept
                 <gray> Usage: /pvp reload
-                """));
+                
+                """.trimIndent()
+            )
+        )
     }
 }

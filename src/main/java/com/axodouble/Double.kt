@@ -1,12 +1,13 @@
 package com.axodouble
 
-import com.axodouble.listeners.PlayerInventoryListener
 import com.axodouble.listeners.OLDSpellsListener
 import com.axodouble.modules.arena.ArenaInviteManager
 import com.axodouble.managers.PlayerManager
 import com.axodouble.modules.*
 import com.axodouble.modules.arena.ArenaModule
 import com.axodouble.modules.arena.ArenaSelectGUI
+import com.axodouble.modules.races.ModuleRaces
+import com.axodouble.modules.system.ModuleSystem
 import com.axodouble.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
@@ -64,7 +65,6 @@ class Double : JavaPlugin() {
         /*---------------------------------*/
         /*            Listeners            */
         /*---------------------------------*/
-        PlayerInventoryListener(plugin)
         OLDSpellsListener(plugin)
 
         /*---------------------------------*/

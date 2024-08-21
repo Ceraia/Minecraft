@@ -28,10 +28,10 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
 
     fun openArenaList(inviter: Player, invited: Player) {
         val invite = ArenaInviteManager.Invite(inviter, invited)
-        plugin.arenaInviteManager.selectingInvites[inviter] = invite
+        plugin.arenaInviteManager.selectingInvites.put(inviter, invite)
 
         val arenas = plugin.arenaModule.arenaManager.arenas
-                .filter { it.isPublic || it.owner == inviter.name }
+            .filter { it.isPublic || it.owner == inviter.name }
 
         val size = Math.max(9, (arenas.size + 8) / 9 * 9)
         val inv = Bukkit.createInventory(null, size, INVENTORY_NAME_ARENAS)
@@ -113,7 +113,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         if (currentItem.type == Material.AIR) return
         if (event.inventory.type == InventoryType.PLAYER) return
 
-                val inviter = event.whoClicked as Player
+        val inviter = event.whoClicked as Player
         when (event.view.title().toString()) {
             INVENTORY_NAME_ARENAS.toString() -> {
                 event.isCancelled = true
@@ -124,7 +124,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
 
                 if (arena == null || arena.getState() != Arena.ArenaState.WAITING) {
                     inviter.sendMessage(
-                            MiniMessage.miniMessage().deserialize("<red>That arena is not available at the moment. Please try again later.")
+                        MiniMessage.miniMessage().deserialize("<red>That arena is not available at the moment. Please try again later.")
                     )
                     return
                 }
@@ -139,17 +139,17 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 arena?.totems = slot == 1
 
                 inviter.sendMessage(
-                        MiniMessage.miniMessage().deserialize(
-                                "<green>Totems have been ${if (slot == 1) "enabled" else "disabled"} for the fight."
-                        )
+                    MiniMessage.miniMessage().deserialize(
+                        "<green>Totems have been ${if (slot == 1) "enabled" else "disabled"} for the fight."
+                    )
                 )
 
                 val totemsEnabled = if (arena?.totems == true) "<green>enabled</green>" else "<red>disabled</red>"
                 val invitedPlayer = invite?.invited?.let { plugin.server.getPlayer(it.uniqueId) }
                 invitedPlayer?.sendMessage(
-                        MiniMessage.miniMessage().deserialize(
-                                "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.calculateWinChance(inviter.uniqueId, invite.invited.uniqueId)}% chance of winning!</green>"
-                        )
+                    MiniMessage.miniMessage().deserialize(
+                        "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.calculateWinChance(inviter.uniqueId, invite.invited.uniqueId)}% chance of winning!</green>"
+                    )
                 )
 
                 if (invite != null) {
@@ -157,7 +157,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 }
                 plugin.arenaInviteManager.selectingInvites.remove(inviter)
                 if (invite != null) {
-                    plugin.arenaInviteManager.invites[invite.invited] = invite
+                    plugin.arenaInviteManager.invites.put(invite.invited, invite)
                 }
                 inviter.closeInventory()
             }
@@ -169,9 +169,9 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 arena?.totems = slot == 1
 
                 inviter.sendMessage(
-                        MiniMessage.miniMessage().deserialize(
-                                "<green>Totems have been ${if (slot == 1) "enabled" else "disabled"} for the fight."
-                        )
+                    MiniMessage.miniMessage().deserialize(
+                        "<green>Totems have been ${if (slot == 1) "enabled" else "disabled"} for the fight."
+                    )
                 )
             }
         }

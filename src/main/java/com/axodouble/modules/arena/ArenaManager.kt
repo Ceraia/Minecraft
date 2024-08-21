@@ -39,6 +39,10 @@ class ArenaManager(private val plugin: Double) {
 
     fun getArena(player: Player): Arena? = playersInArena[player]
 
+    fun isInArena(player: Player): Boolean {
+        return plugin.arenaModule.arenaManager.getArena(player) != null
+    }
+
     fun getArena(name: String): Arena? {
         return arenas.find { it.name.equals(name, ignoreCase = true) }
     }
