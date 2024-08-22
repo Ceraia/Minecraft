@@ -49,7 +49,8 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                 }
 
                 if (args[0].equalsIgnoreCase("list")) {
-                    ArenaActions.arenaList(sender);
+                    plugin.getArenaModule().getArenaActions().arenaList(sender);
+                    plugin.getArenaModule().getArenaActions().arenaList(sender);
                     return true;
                 }
 
@@ -91,23 +92,23 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                 }
 
                 if (args[0].equalsIgnoreCase("delete")) {
-                    ArenaActions.arenaDelete(sender, args);
+                    plugin.getArenaModule().getArenaActions().arenaDelete(sender, args);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("create")) {
-                    ArenaActions.arenaCreate(sender, args);
+                    plugin.getArenaModule().getArenaActions().arenaCreate(sender, args);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("sp1")) {
-                    ArenaActions.arenaSP1(sender, args);
+                    plugin.getArenaModule().getArenaActions().arenaSP1(sender, args);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("sp2")) {
-                    ArenaActions.arenaSP2(sender, args);
+                    plugin.getArenaModule().getArenaActions().arenaSP2(sender, args);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("public")) {
-                    ArenaActions.arenaPublic(sender, args);
+                    plugin.getArenaModule().getArenaActions().arenaPublic(sender, args);
                 } else {
                     plugin.badUsage((Player) sender);
                     ArenaDefaultMessages.arenaHelp(sender);
@@ -184,8 +185,8 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                     List<Player> playersToFight = new ArrayList<>();
 
                     if (invite.group) {
-                        List<Player> group1 = ArenaActions.getPlayersByGroup(invite.inviter);
-                        List<Player> group2 = ArenaActions.getPlayersByGroup(invite.invited);
+                        List<Player> group1 = plugin.getArenaModule().getArenaActions().getPlayersByGroup(invite.inviter);
+                        List<Player> group2 = plugin.getArenaModule().getArenaActions().getPlayersByGroup(invite.invited);
 
                         if (group1 == null || group2 == null) {
                             for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
@@ -304,7 +305,8 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                 Player player = (Player) sender;
 
                 if (args[0].equalsIgnoreCase("invite")) {
-                    if (ArenaActions.playersByGroup.containsKey(player) && !ArenaActions.groups.containsKey(player)) {
+
+                    if (plugin.getArenaModule().getArenaActions().getPlayersByGroup().containsKey(player) && !plugin.getArenaModule().getArenaActions().getGroups().containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already in a group"));
                         return true;
                     }
@@ -325,7 +327,7 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                             targets.add(target);
                         }
 
-                        if (ArenaActions.playersByGroup.containsKey(target)) {
+                        if (plugin.getArenaModule().getArenaActions().getPlayersByGroup().containsKey(target)) {
                             assert target != null;
                             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " is already in a group"));
                             return true;
@@ -349,48 +351,48 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                                         "<green>/gvg accept</green> to accept the invite"
                         ));
 
-                        ArenaActions.invites.put(target, player);
+                        plugin.getArenaModule().getArenaActions().getInvites().put(target, player);
                     }
 
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Invites sent to " + targets.stream().map(Player::getName).collect(Collectors.joining(", "))));
                     return true;
                 } else if (args[0].equalsIgnoreCase("accept")) {
-                    Player inviter = ArenaActions.invites.get(player);
+                    Player inviter = plugin.getArenaModule().getArenaActions().getInvites().get(player);
 
                     if (inviter == null || !inviter.isOnline()) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>No invites found"));
                         return true;
                     }
 
-                    if (ArenaActions.playersByGroup.containsKey(inviter) && !ArenaActions.groups.containsKey(inviter)) {
+                    if (plugin.getArenaModule().getArenaActions().getPlayersByGroup().containsKey(inviter) && !plugin.getArenaModule().getArenaActions().getGroups().containsKey(inviter)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + inviter.getName() + " is already in a group"));
                         return true;
                     }
 
-                    if (ArenaActions.playersByGroup.containsKey(player)) {
+                    if (plugin.getArenaModule().getArenaActions().getPlayersByGroup().containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already in a group"));
                         return true;
                     }
 
-                    List<Player> group = ArenaActions.groups.get(inviter);
+                    List<Player> group = plugin.getArenaModule().getArenaActions().getGroups().get(inviter);
                     if (group == null) {
                         group = new ArrayList<>();
                         group.add(inviter);
-                        ArenaActions.playersByGroup.put(inviter, inviter);
+                        plugin.getArenaModule().getArenaActions().getPlayersByGroup().put(inviter, inviter);
                     }
                     group.add(player);
-                    ArenaActions.groups.put(inviter, group);
+                    plugin.getArenaModule().getArenaActions().getGroups().put(inviter, group);
 
-                    ArenaActions.playersByGroup.put(player, inviter);
+                    plugin.getArenaModule().getArenaActions().getPlayersByGroup().put(player, inviter);
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Invite accepted"));
                     for (Player pl : group) {
                         pl.sendMessage(MiniMessage.miniMessage().deserialize("<green>Player " + player.getName() + " has joined the group"));
                     }
                     return true;
                 } else if (args[0].equalsIgnoreCase("leave")) {
-                    ArenaActions.leaveGang(player);
+                    plugin.getArenaModule().getArenaActions().leaveGang(player);
                 } else if (args[0].equalsIgnoreCase("kick")) {
-                    if (!ArenaActions.groups.containsKey(player)) {
+                    if (!plugin.getArenaModule().getArenaActions().getGroups().containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"));
                         return true;
                     }
@@ -406,7 +408,7 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
-                    List<Player> group = ArenaActions.groups.get(player);
+                    List<Player> group = plugin.getArenaModule().getArenaActions().getGroups().get(player);
 
                     if (!group.contains(target)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " is not in your group"));
@@ -414,19 +416,19 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                     }
 
                     group.remove(target);
-                    ArenaActions.playersByGroup.remove(target);
+                    plugin.getArenaModule().getArenaActions().getPlayersByGroup().remove(target);
 
                     target.sendMessage(MiniMessage.miniMessage().deserialize("<red>You have been kicked from the group by " + player.getName()));
 
                     if (group.size() <= 1) {
 
-                        ArenaActions.groups.get(player).forEach(p -> {
+                        plugin.getArenaModule().getArenaActions().getGroups().get(player).forEach(p -> {
                             player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Group has been disbanded"));
-                            ArenaActions.playersByGroup.remove(p);
-                            ArenaActions.groups.remove(player);
+                            plugin.getArenaModule().getArenaActions().getPlayersByGroup().remove(p);
+                            plugin.getArenaModule().getArenaActions().getGroups().remove(player);
                         });
 
-                        ArenaActions.groups.remove(player);
+                        plugin.getArenaModule().getArenaActions().getGroups().remove(player);
                     } else {
                         group.forEach(p -> p.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + target.getName() + " has been kicked from the group by " + player.getName())));
                     }
@@ -446,12 +448,12 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                         return true;
                     }
 
-                    if (!ArenaActions.groups.containsKey(player)) {
+                    if (!plugin.getArenaModule().getArenaActions().getGroups().containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"));
                         return true;
                     }
 
-                    if (!ArenaActions.groups.containsKey(invited) || (ArenaActions.groups.get(player).contains(invited) || ArenaActions.groups.get(invited).contains(player))) {
+                    if (!plugin.getArenaModule().getArenaActions().getGroups().containsKey(invited) || (plugin.getArenaModule().getArenaActions().getGroups().get(player).contains(invited) || plugin.getArenaModule().getArenaActions().getGroups().get(invited).contains(player))) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player " + playerName + " is not in a group"));
                         return true;
                     }
@@ -461,7 +463,7 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
 
                 return true;
             }
-            case "top", "leaderboard" -> ArenaActions.leaderboard(sender);
+            case "top", "leaderboard" -> plugin.getArenaModule().getArenaActions().leaderboard(sender);
             case "profile" -> {
                 if (!sender.hasPermission("double.pvp")) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"));
@@ -548,8 +550,8 @@ public class ArenaCommandHandler implements CommandExecutor, TabCompleter {
                     return Arrays.asList("invite", "accept", "leave", "kick", "fight");
                 } else if (args.length == 2 && args[0].equalsIgnoreCase("kick")) {
                     ArrayList<String> tabOptions = new ArrayList<>();
-                    if (ArenaActions.groups.containsKey((Player) sender)) {
-                        ArenaActions.groups.get((Player) sender).forEach(p -> tabOptions.add(p.getName()));
+                    if (plugin.getArenaModule().getArenaActions().getGroups().containsKey((Player) sender)) {
+                        plugin.getArenaModule().getArenaActions().getGroups().get((Player) sender).forEach(p -> tabOptions.add(p.getName()));
                     }
                     List<String> returnedOptions = new ArrayList<>();
                     StringUtil.copyPartialMatches(args[args.length - 1], tabOptions, returnedOptions);

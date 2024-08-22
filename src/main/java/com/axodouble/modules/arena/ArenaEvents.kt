@@ -217,7 +217,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             if (e is EntityDamageByEntityEvent) {
                 if ((e.damager is Player)) {
                     // Do ELO calculations
-                    ArenaActions.calculateElo(victim, killer)
+                    plugin.arenaModule.arenaActions.calculateElo(victim, e.damager as Player)
                 }
             }
 
@@ -245,7 +245,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             )
         }
         if (killer != null) {
-            ArenaActions.calculateElo(e.entity, killer)
+            plugin.arenaModule.arenaActions.calculateElo(e.entity, killer)
         }
 
 
@@ -256,19 +256,19 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
                 arena!!.end(e.entity, false)
             }
         }.runTaskLater(plugin, 5L)
-        ArenaActions.updateScoreboard()
+        plugin.arenaModule.arenaActions.updateScoreboard()
     }
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent?) {
-        ArenaActions.updateScoreboard()
+        plugin.arenaModule.arenaActions.updateScoreboard()
     }
 
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {
         val player = e.player
-        if (ArenaActions.playersByGroup.containsKey(player)) {
-            ArenaActions.leaveGang(player)
+        if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(player)) {
+            plugin.arenaModule.arenaActions.leaveGang(player)
         }
 
         if (!isInArena(e.player)) {
@@ -280,13 +280,13 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
 
         // Check in which team the player is
         if (arena!!.getTeam1().contains(e.player)) {
-            ArenaActions.calculateElo(e.player, arena.getTeam2()[0])
+            plugin.arenaModule.arenaActions.calculateElo(e.player, arena.getTeam2()[0])
         } else {
-            ArenaActions.calculateElo(e.player, arena.getTeam1()[0])
+            plugin.arenaModule.arenaActions.calculateElo(e.player, arena.getTeam1()[0])
         }
 
         arena.end(e.player, true)
-        ArenaActions.updateScoreboard()
+        plugin.arenaModule.arenaActions.updateScoreboard()
     }
 
     @EventHandler

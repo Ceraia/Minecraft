@@ -16,7 +16,7 @@ import java.io.IOException
 import java.util.*
 
 class PlayerManager(private val plugin: Double) {
-    private val doublePlayers: MutableList<DoublePlayer> = mutableListOf()
+    val doublePlayers: MutableList<DoublePlayer> = mutableListOf()
 
     init {
         // Load arenaPlayers
@@ -49,8 +49,6 @@ class PlayerManager(private val plugin: Double) {
             doublePlayers.add(doublePlayer)
         }
     }
-
-    fun getDoublePlayers(): List<DoublePlayer> = doublePlayers
 
     fun getDoublePlayer(playerUUID: UUID): DoublePlayer {
         return doublePlayers.find { it.uuid == playerUUID } ?: createNewDoublePlayer(playerUUID).also {

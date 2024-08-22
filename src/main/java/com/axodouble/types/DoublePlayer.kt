@@ -17,8 +17,8 @@ class DoublePlayer(
     var elo: Int,
     private var arenaBanned: Boolean,
     private var pvpBanned: Boolean,
-    private var wins: Int,
-    private var losses: Int,
+    var wins: Int,
+    var losses: Int,
     private val configFile: File
 ) {
 
@@ -39,10 +39,6 @@ class DoublePlayer(
     fun isPvpBanned(): Boolean = pvpBanned
 
     fun isArenaBanned(): Boolean = arenaBanned
-
-    fun getWins(): Int = wins
-
-    fun getLosses(): Int = losses
 
     fun addWin() {
         wins++
