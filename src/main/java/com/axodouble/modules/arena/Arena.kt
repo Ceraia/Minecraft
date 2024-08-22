@@ -153,14 +153,8 @@ class Arena(
         for (pl in getOnlinePlayers()) {
             if (pl == player && quit) continue
 
-            pl.sendMessage(
-                    MiniMessage.miniMessage().deserialize(
-                            "<green>${winners.joinToString(", ") { it.name }} just killed ${losers.joinToString(", ") { it.name }} in the ${name} arena with a win chance of ${plugin.playerManager.calculateWinChance(winners.first().uniqueId, losers.first().uniqueId)}%!"
-                    )
-            )
-
             pl.inventory.clear()
-            pl.health = 20.0
+            pl.health = pl.getAttribute(org.bukkit.attribute.Attribute.GENERIC_MAX_HEALTH)?.value ?: 20.0
             pl.fireTicks = 0
             pl.foodLevel = 20
             pl.saturation = 20.0F

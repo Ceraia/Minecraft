@@ -28,7 +28,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
 
     fun openArenaList(inviter: Player, invited: Player) {
         val invite = ArenaInviteManager.Invite(inviter, invited)
-        plugin.arenaInviteManager.selectingInvites.put(inviter, invite)
+        plugin.arenaInviteManager.selectingInvites[inviter] = invite
 
         val arenas = plugin.arenaModule.arenaManager.arenas
             .filter { it.isPublic || it.owner == inviter.name }
@@ -40,9 +40,12 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         var i = 0
 
         for (arena in arenas.filter { it.getState() == Arena.ArenaState.WAITING }) {
-            val itemStack = ItemStack(Material.ENDER_EYE)
-            itemStack.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
-            itemStack.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
+            var itemStack = ItemStack(Material.ENDER_EYE)
+
+            itemStack.editMeta { meta ->
+                meta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
+                meta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
+            }
 
             inv.setItem(i, itemStack)
             arenasSelectSlots[i] = arena
@@ -58,50 +61,24 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         val inv = Bukkit.createInventory(null, size, INVENTORY_NAME_TOTEMS)
 
         val itemStackEnable = ItemStack(Material.GREEN_STAINED_GLASS_PANE)
-
-        itemStackEnable.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>Enable totems</green>"))
-        itemStackEnable.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to enable totems in the fight")))
-
+        itemStackEnable.editMeta { meta ->
+            meta.displayName(MiniMessage.miniMessage().deserialize("<green>Enable totems</green>"))
+            meta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to enable totems in the fight")))
+        }
         inv.setItem(1, itemStackEnable)
 
         val itemStackDisable = ItemStack(Material.RED_STAINED_GLASS_PANE)
-        itemStackDisable.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<red>Disable totems</red>"))
-        itemStackDisable.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to disable totems in the fight")))
-
+        itemStackDisable.editMeta { meta ->
+            meta.displayName(MiniMessage.miniMessage().deserialize("<red>Disable totems</red>"))
+            meta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to disable totems in the fight")))
+        }
         inv.setItem(7, itemStackDisable)
 
         val itemStackArena = ItemStack(Material.ENDER_EYE)
-        itemStackArena.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
-        itemStackArena.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
-
-        inv.setItem(4, itemStackArena)
-
-        inviter.openInventory(inv)
-    }
-
-    fun openRanked(inviter: Player, arena: Arena, totems: Boolean) {
-        val size = 9
-        val inv = Bukkit.createInventory(null, size, INVENTORY_NAME_RANKED)
-
-        val itemStackEnable = ItemStack(Material.GREEN_STAINED_GLASS_PANE)
-
-        itemStackEnable.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>Enable ranked</green>"))
-        itemStackEnable.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to enable ranked in the fight")))
-
-        inv.setItem(1, itemStackEnable)
-
-        val itemStackDisable = ItemStack(Material.RED_STAINED_GLASS_PANE)
-
-        itemStackDisable.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<red>Disable ranked</red>"))
-        itemStackDisable.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Click to disable ranked in the fight")))
-
-        inv.setItem(7, itemStackDisable)
-
-        val itemStackArena = ItemStack(Material.ENDER_EYE)
-
-        itemStackArena.itemMeta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
-        itemStackArena.itemMeta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
-
+        itemStackArena.editMeta { meta ->
+            meta.displayName(MiniMessage.miniMessage().deserialize("<green>${arena.name}</green>"))
+            meta.lore(listOf(MiniMessage.miniMessage().deserialize("<gray>Owner: ${arena.owner}")))
+        }
         inv.setItem(4, itemStackArena)
 
         inviter.openInventory(inv)
@@ -148,7 +125,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 val invitedPlayer = invite?.invited?.let { plugin.server.getPlayer(it.uniqueId) }
                 invitedPlayer?.sendMessage(
                     MiniMessage.miniMessage().deserialize(
-                        "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.calculateWinChance(inviter.uniqueId, invite.invited.uniqueId)}% chance of winning!</green>"
+                        "<green>Click <white><hover:show_text:\"<green>Click to accept the pvp match!</green>\"><click:run_command:/pvp accept>[here]</click></hover> <green>to join PVP arena with ${inviter.name} in ${arena?.name}, totems are $totemsEnabled you have a ${plugin.playerManager.calculateWinChance(invite.invited.uniqueId, inviter.uniqueId)}% chance of winning!</green>"
                     )
                 )
 

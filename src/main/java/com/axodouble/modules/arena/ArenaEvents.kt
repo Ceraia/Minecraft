@@ -272,6 +272,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
         }
 
         if (!isInArena(e.player)) {
+            plugin.logger.log(java.util.logging.Level.FINE, "Player is not in arena")
             return
         }
 
@@ -283,6 +284,8 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
         } else {
             ArenaActions.calculateElo(e.player, arena.getTeam1()[0])
         }
+
+        arena.end(e.player, true)
         ArenaActions.updateScoreboard()
     }
 
