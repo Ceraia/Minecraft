@@ -1,20 +1,20 @@
-package com.axodouble.modules.arena;
+package com.axodouble.modules.arena
 
-import com.axodouble.Double;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
+import com.axodouble.Double
+import org.bukkit.Location
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
-import java.io.File;
+import java.io.File
 
 object ArenaHelper {
 
     @JvmStatic
     fun revertInventory( plugin: Double, player: Player,  arena: Arena) {
         try {
-            val file = File(plugin.getDataFolder(), "data/pinventory_" + arena.name + "_" + player.getName() + ".yml")
+            val file = File(plugin.dataFolder, "data/pinventory_" + arena.name + "_" + player.name + ".yml")
 
             val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
 
@@ -31,9 +31,9 @@ object ArenaHelper {
 
             player.inventory.contents = content
 
-            file.delete();
+            file.delete()
         } catch ( e: Exception) {
-            e.printStackTrace();
+            e.printStackTrace()
             println("Problem loading player inventory")
         }
     }

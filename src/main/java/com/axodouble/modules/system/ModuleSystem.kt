@@ -114,7 +114,7 @@ class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, 
                     val time = if (command.name.equals("noon", ignoreCase = true)) 6000 else 0
                     sender.world.time = time.toLong()
                     sender.world.weatherDuration = 1
-                    sender.world.setClearWeatherDuration(15 * 60 * 20)
+                    sender.world.clearWeatherDuration = 15 * 60 * 20
                 }
                 return true
             }
@@ -156,7 +156,7 @@ class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, 
         command: Command,
         label: String,
         args: Array<String>
-    ): List<String>? {
+    ): List<String> {
         val tabOptions = mutableListOf<String>()
         if (command.name.lowercase() == "mod") {
             when (args.size) {

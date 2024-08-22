@@ -25,7 +25,7 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
     init {
         plugin.getCommand("marry")?.setExecutor(this)
         plugin.getCommand("divorce")?.setExecutor(this)
-        plugin.getCommand("marry")?.setTabCompleter(this)
+        plugin.getCommand("marry")?.tabCompleter = this
 
 
         Bukkit.getPluginManager().registerEvents(this, plugin)

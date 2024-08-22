@@ -188,8 +188,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     e.setCancelled(true);
                     playerRaceFactionSelected.get(player).apply(player, playerRaceSelection.get(player).get(e.getCurrentItem()));
                     e.getClickedInventory().close();
-                    player.sendMessage(MiniMessage.miniMessage().deserialize("" +
-                            "<green>Succesfully changed your faction to <white>" +
+                    player.sendMessage(MiniMessage.miniMessage().deserialize("<green>Succesfully changed your faction to <white>" +
                             playerRaceFactionSelected.get(player).getName()+
                             "<green>, and your race to " +
                             playerRaceSelection.get(player).get(e.getCurrentItem()).getName()+"<green>!"));
@@ -475,7 +474,7 @@ public class ModuleRaces implements CommandExecutor, TabCompleter, Listener {
                     0,
                     0,
                     0,
-                    Arrays.asList(
+                    List.of(
                             "*"
                     )
                     )

@@ -118,7 +118,7 @@ class ArenaActions(private val plugin: Double) {
             ArenaDefaultMessages.notYours(sender)
             return
         }
-        if (arena.getState() != Arena.ArenaState.WAITING) {
+        if (arena.state != Arena.ArenaState.WAITING) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Arena is not empty"))
             return
         }
@@ -214,7 +214,6 @@ class ArenaActions(private val plugin: Double) {
         }
     }
 
-
     fun updateScoreboard() {
         // Update scoreboard
         val scoreboardManager = Bukkit.getScoreboardManager()
@@ -234,14 +233,12 @@ class ArenaActions(private val plugin: Double) {
         for (onlinePlayer in Bukkit.getOnlinePlayers()) {
             val doublePlayer = plugin.playerManager.getDoublePlayer(onlinePlayer.uniqueId)
 
-            objectivePlayerList?.getScore(onlinePlayer.name)?.score = doublePlayer.elo
-            objectiveBelowName?.getScore(onlinePlayer.name)?.score = doublePlayer.elo
-            objectivePlayerList?.displaySlot = DisplaySlot.PLAYER_LIST
-            objectiveBelowName?.displaySlot = DisplaySlot.BELOW_NAME
+            objectivePlayerList.getScore(onlinePlayer.name).score = doublePlayer.elo
+            objectiveBelowName.getScore(onlinePlayer.name).score = doublePlayer.elo
+            objectivePlayerList.displaySlot = DisplaySlot.PLAYER_LIST
+            objectiveBelowName.displaySlot = DisplaySlot.BELOW_NAME
 
-            if (scoreboardDefault != null) {
-                onlinePlayer.scoreboard = scoreboardDefault
-            }
+            onlinePlayer.scoreboard = scoreboardDefault
         }
     }
 

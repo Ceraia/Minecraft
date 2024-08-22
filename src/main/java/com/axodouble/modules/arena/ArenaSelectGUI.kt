@@ -39,7 +39,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
         val arenasSelectSlots = mutableMapOf<Int, Arena>()
         var i = 0
 
-        for (arena in arenas.filter { it.getState() == Arena.ArenaState.WAITING }) {
+        for (arena in arenas.filter { it.state == Arena.ArenaState.WAITING }) {
             var itemStack = ItemStack(Material.ENDER_EYE)
 
             itemStack.editMeta { meta ->
@@ -99,7 +99,7 @@ class ArenaSelectGUI(private val plugin: Double) : Listener {
                 val invite = plugin.arenaInviteManager.selectingInvites[inviter]
                 invite?.arena = arena
 
-                if (arena == null || arena.getState() != Arena.ArenaState.WAITING) {
+                if (arena == null || arena.state != Arena.ArenaState.WAITING) {
                     inviter.sendMessage(
                         MiniMessage.miniMessage().deserialize("<red>That arena is not available at the moment. Please try again later.")
                     )

@@ -165,7 +165,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
         // If the arena is null, return
 
         // If the arena is not running, return
-        if (arena.getState() != Arena.ArenaState.RUNNING) {
+        if (arena.state != Arena.ArenaState.RUNNING) {
             e.isCancelled = true
             return
         }

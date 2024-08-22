@@ -26,7 +26,7 @@ class Arena(
     private val startPlayers = mutableListOf<Player>()
     private val placedBlocks = mutableListOf<Location>()
     private val priorLocations = mutableMapOf<Player, Location>()
-    private var state: ArenaState = ArenaState.WAITING
+    var state: ArenaState = ArenaState.WAITING
     var totems = false
     private val team1 = mutableListOf<Player>()
     private val team2 = mutableListOf<Player>()
@@ -55,12 +55,6 @@ class Arena(
     fun setTotems(totems: Boolean, save: Boolean = false) {
         this.totems = totems
         if (save) saveArena()
-    }
-
-    fun getState(): ArenaState = state
-
-    fun setState(state: ArenaState) {
-        this.state = state
     }
 
     fun delete() {
@@ -160,7 +154,7 @@ class Arena(
             pl.saturation = 20.0F
         }
 
-        setState(ArenaState.ENDING)
+        this.state = ArenaState.ENDING
 
         val thisArena = this
         object : BukkitRunnable() {
@@ -186,14 +180,15 @@ class Arena(
                     plugin.playerManager.getDoublePlayer(pl.uniqueId).addLoss()
                 }
 
-                setState(ArenaState.WAITING)
+                thisArena.state = ArenaState.WAITING
+
                 reset()
             }
         }.runTaskLater(plugin, 5 * 20L)
     }
 
     fun start(invite: ArenaInviteManager.Invite, players: List<Player>) {
-        setState(ArenaState.STARTING)
+        this.state = ArenaState.STARTING
 
         try {
             for (pl in players) {
@@ -259,7 +254,7 @@ class Arena(
                 }
 
                 if (i.get() == 0) {
-                    setState(ArenaState.RUNNING)
+                    thisArena.state = ArenaState.RUNNING
                     cancel()
                 }
 
