@@ -16,7 +16,6 @@ import java.io.IOException
 import java.util.*
 
 class PlayerManager(private val plugin: Double) {
-
     private val doublePlayers: MutableList<DoublePlayer> = mutableListOf()
 
     init {
@@ -28,6 +27,11 @@ class PlayerManager(private val plugin: Double) {
 
         dataFolder.listFiles()?.forEach { file ->
                 val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
+
+            if(config.getString("uuid") == null) {
+
+            }
+
             val doublePlayer = DoublePlayer(
                     plugin,
                     config.getString("name") ?: throw IllegalArgumentException("Name cannot be null"),
@@ -122,7 +126,7 @@ class PlayerManager(private val plugin: Double) {
 
     private fun createNewDoublePlayer(playerUUID: UUID): DoublePlayer {
         val playerName = Bukkit.getPlayer(playerUUID)?.name ?: throw IllegalArgumentException("Player not found")
-        val configFile = File(plugin.dataFolder, "data/users/$playerName.yml")
+        val configFile = File(plugin.dataFolder, "data/users/$playerUUID.yml")
         try {
             configFile.createNewFile()
             val config = YamlConfiguration.loadConfiguration(configFile)
