@@ -55,10 +55,6 @@ class Ceraia : JavaPlugin() {
         playerManager.savePlayers()
     }
 
-    fun badUsage(player: Player) {
-        player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage."))
-    }
-
     fun noPermission(player: Player) {
         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>You don't have permission to execute this command."))
     }

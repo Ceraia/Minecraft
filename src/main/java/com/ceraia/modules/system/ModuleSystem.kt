@@ -133,9 +133,9 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
                 """
                     <yellow><bold>Mod Help
                     <gray>/mod ban pvp <player>
-                    <gray>/mod ban arena <player>
+                    <gray>/mod ban arenas <player>
                     <gray>/mod remove pvp <player>
-                    <gray>/mod remove arena <player>
+                    <gray>/mod remove arenas <player>
                 """.trimIndent()
             )
         )
