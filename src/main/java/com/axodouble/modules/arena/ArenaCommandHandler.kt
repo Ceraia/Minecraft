@@ -1,7 +1,7 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
-import com.axodouble.types.DoublePlayer
+import com.axodouble.Ceraia
+import com.axodouble.types.CeraiaPlayer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -16,7 +16,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.streams.toList
 
-class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabCompleter {
+class ArenaCommandHandler(private val plugin: Ceraia) : CommandExecutor, TabCompleter {
 
     init {
         plugin.getCommand("arena")?.setExecutor(this)
@@ -120,7 +120,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     return true
                 }
 
-                val doublePlayer = plugin.playerManager.getDoublePlayer((sender as Player).uniqueId)
+                val doublePlayer = plugin.playerManager.getCeraiaPlayer((sender as Player).uniqueId)
                 if (doublePlayer.isPvpBanned()) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are banned from PvP!"))
                     return true
@@ -129,7 +129,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 when (args[0].lowercase()) {
                     "accept" -> {
                         val p = sender
-                        if (plugin.playerManager.getDoublePlayer(p.uniqueId).isPvpBanned()) {
+                        if (plugin.playerManager.getCeraiaPlayer(p.uniqueId).isPvpBanned()) {
                             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>This player is banned from PvP!"))
                             return true
                         }

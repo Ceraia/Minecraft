@@ -1,14 +1,14 @@
 package com.axodouble.types
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 import java.io.IOException
 import java.util.UUID
 
-class DoublePlayer(
-    private val plugin: Double,
+class CeraiaPlayer(
+    private val plugin: Ceraia,
     val name: String,
     private var race: String,
     private var faction: String?,

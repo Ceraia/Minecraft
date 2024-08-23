@@ -1,12 +1,12 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import java.io.File
 
-class ArenaManager(private val plugin: Double) {
+class ArenaManager(private val plugin: Ceraia) {
 
     val arenas: MutableList<Arena> = mutableListOf()
     private val playersInArena: MutableMap<Player, Arena> = mutableMapOf()

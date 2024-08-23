@@ -13,8 +13,8 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
-class Double : JavaPlugin() {
-    private val plugin: Double = this
+class Ceraia : JavaPlugin() {
+    private val plugin: Ceraia = this
     lateinit var arenaInviteManager: ArenaInviteManager
         private set
     lateinit var arenaSelectGUI: ArenaSelectGUI

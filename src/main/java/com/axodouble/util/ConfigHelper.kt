@@ -1,11 +1,11 @@
 package com.axodouble.util
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
-class ConfigHelper(private val plugin: Double) {
+class ConfigHelper(private val plugin: Ceraia) {
 
     // Get the FileConfiguration from a file
     fun get(file: File): FileConfiguration {

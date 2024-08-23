@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 import kotlin.math.max
 
-class ModuleRaces(private val plugin: com.axodouble.Double) : CommandExecutor, TabCompleter, Listener {
+class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, TabCompleter, Listener {
     private var races: MutableList<Race> = ArrayList()
     private var raceFactions: MutableList<RaceFaction> = ArrayList()
     private var playerRaceSelection: MutableMap<Player, Map<ItemStack?, Race>> = HashMap()
@@ -201,10 +201,10 @@ class ModuleRaces(private val plugin: com.axodouble.Double) : CommandExecutor, T
                         )
                     )
 
-                    plugin.playerManager.getDoublePlayer(player).setRace(
+                    plugin.playerManager.getCeraiaPlayer(player).setRace(
                         playerRaceSelection[player]!![e.currentItem]!!.name
                     )
-                    plugin.playerManager.getDoublePlayer(player).setFaction(playerRaceFactionSelected[player]!!.name)
+                    plugin.playerManager.getCeraiaPlayer(player).setFaction(playerRaceFactionSelected[player]!!.name)
                 }
             }
         } else if (e.view.title().toString() == MiniMessage.miniMessage().deserialize("<green>Select a faction to join")

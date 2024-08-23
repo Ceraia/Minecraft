@@ -12,8 +12,8 @@ group = "com.axodouble"
 // Get the current date
 val date = Date()
 
-val major = "1"
-val minor = "5"
+val major = "0"
+val minor = "0"
 
 // Format the version string
 version = "${major}.${minor}.${SimpleDateFormat("yyMMdd").format(date)}-build-${SimpleDateFormat("HHmm").format(date)}"
@@ -32,6 +32,7 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
 }
 
 val targetJavaVersion = 21

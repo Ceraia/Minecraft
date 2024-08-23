@@ -21,7 +21,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
+class ArenaEvents(private val plugin: com.axodouble.Ceraia) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }

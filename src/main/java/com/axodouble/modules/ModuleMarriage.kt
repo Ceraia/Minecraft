@@ -1,7 +1,7 @@
 package com.axodouble.modules
 
-import com.axodouble.Double
-import com.axodouble.types.DoublePlayer
+import com.axodouble.Ceraia
+import com.axodouble.types.CeraiaPlayer
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.StringUtil
 
-class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter, Listener {
+class ModuleMarriage(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
     private val invites: MutableMap<Player, Player> = mutableMapOf()
 
@@ -74,14 +74,14 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
     }
 
     fun invite(sender: Player, target: Player) {
-        val senderDoublePlayer = plugin.playerManager.getDoublePlayer(sender.uniqueId)
-        val targetDoublePlayer = plugin.playerManager.getDoublePlayer(target.uniqueId)
+        val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
+        val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
-        if (senderDoublePlayer.isMarried()) {
+        if (senderCeraiaPlayer.isMarried()) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already married!"))
             return
         }
-        if (targetDoublePlayer.isMarried()) {
+        if (targetCeraiaPlayer.isMarried()) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>${target.name} is already married!"))
             return
         }
@@ -103,15 +103,15 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
     }
 
     fun accept(target: Player, sender: Player) {
-        val senderDoublePlayer = plugin.playerManager.getDoublePlayer(sender.uniqueId)
-        val targetDoublePlayer = plugin.playerManager.getDoublePlayer(target.uniqueId)
+        val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
+        val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
-        if (senderDoublePlayer.isMarried()) {
+        if (senderCeraiaPlayer.isMarried()) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already married!"))
             target.sendMessage(MiniMessage.miniMessage().deserialize("<red>${sender.name} is already married!"))
             return
         }
-        if (targetDoublePlayer.isMarried()) {
+        if (targetCeraiaPlayer.isMarried()) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>${target.name} is already married!"))
             target.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already married!"))
             return
@@ -124,19 +124,19 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
                 "<green>${target.name}<gray> has accepted <green>${sender.name}<gray>'s marriage proposal!"
         ))
 
-        targetDoublePlayer.marry(sender.name)
-        senderDoublePlayer.marry(target.name)
+        targetCeraiaPlayer.marry(sender.name)
+        senderCeraiaPlayer.marry(target.name)
         invites.remove(target)
     }
 
     fun decline(target: Player, sender: Player): Int {
-        val senderDoublePlayer = plugin.playerManager.getDoublePlayer(sender.uniqueId)
-        val targetDoublePlayer = plugin.playerManager.getDoublePlayer(target.uniqueId)
+        val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
+        val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
-        if (senderDoublePlayer.isMarried()) {
+        if (senderCeraiaPlayer.isMarried()) {
             return 1
         }
-        if (targetDoublePlayer.isMarried()) {
+        if (targetCeraiaPlayer.isMarried()) {
             return 2
         }
         if (invites[target] != sender) {
@@ -151,8 +151,8 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
     }
 
     fun divorce(player: Player) {
-        val doublePlayer = plugin.playerManager.getDoublePlayer(player.uniqueId)
-        val doublePartner = plugin.playerManager.getDoublePlayer(doublePlayer.getPartner() ?: return)
+        val doublePlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
+        val doublePartner = plugin.playerManager.getCeraiaPlayer(doublePlayer.getPartner() ?: return)
 
         doublePlayer.divorce()
         doublePartner.divorce()
@@ -172,7 +172,7 @@ class ModuleMarriage(private val plugin: Double) : CommandExecutor, TabCompleter
         val rightClicked = event.rightClicked as? Player ?: return
         if (event.player.uniqueId == rightClicked.uniqueId || !event.player.isSneaking) return
 
-                val doublePlayer = plugin.playerManager.getDoublePlayer(event.player.uniqueId)
+                val doublePlayer = plugin.playerManager.getCeraiaPlayer(event.player.uniqueId)
         if (doublePlayer.isMarried() && rightClicked.name == doublePlayer.getMarriedName()) {
             // Spawn a bunch of hearts
             spawnHeartsAroundPlayer(rightClicked)

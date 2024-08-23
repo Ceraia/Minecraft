@@ -1,6 +1,6 @@
 package com.axodouble.modules.system
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.util.StringUtil
 
-class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, Listener {
+class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
     init {
         // Register the commands
@@ -69,7 +69,7 @@ class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, 
                                 return true
                             }
 
-                            val doublePlayer = plugin.playerManager.getDoublePlayer(target.uniqueId)
+                            val doublePlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
                             when (args[1].lowercase()) {
                                 "arena" -> {
                                     val arenaBanned = doublePlayer.toggleArenaBan()
@@ -98,7 +98,7 @@ class ModuleSystem(private val plugin: Double) : CommandExecutor, TabCompleter, 
             "version" -> {
                 sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(
-                        "<green>Running <white>Double <green>v${plugin.pluginMeta.version} <green>by <white>Axodouble"
+                        "<green>Running <white>Ceraia <green>v${plugin.pluginMeta.version} <green>by <white>Axodouble"
                     )
                 )
                 return true

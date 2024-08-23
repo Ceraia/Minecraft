@@ -1,10 +1,10 @@
-name: Double
+name: Ceraia
 version: ${version}
-main: com.axodouble.Double
+main: com.axodouble.Ceraia
 api-version: '1.21'
-description: Double, the utility plugin.
+description: Ceraia, the utility plugin.
 author: Axodouble
-website: https://github.com/Axodouble/Double
+website: https://github.com/Axodouble/Ceraia
 commands:
   arena:
     description: Arena command

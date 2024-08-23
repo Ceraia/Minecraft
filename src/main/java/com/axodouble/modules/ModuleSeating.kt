@@ -1,6 +1,6 @@
 package com.axodouble.modules
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.data.Bisected
@@ -18,7 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.jetbrains.annotations.NotNull
 
-class ModuleSeating(private val plugin: Double) : CommandExecutor, TabCompleter, Listener {
+class ModuleSeating(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
     val chairs: MutableList<Chair> = mutableListOf()
 

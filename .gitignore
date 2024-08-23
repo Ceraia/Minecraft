@@ -24,6 +24,7 @@ gradle-app.setting
 .kotlin
 
 # Idea
+/.idea
 .idea
 
 # Dev environment

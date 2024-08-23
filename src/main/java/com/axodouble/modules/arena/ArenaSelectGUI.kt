@@ -1,6 +1,6 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -12,7 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemStack
 
-class ArenaSelectGUI(private val plugin: Double) : Listener {
+class ArenaSelectGUI(private val plugin: Ceraia) : Listener {
 
     companion object {
         private val INVENTORY_NAME_ARENAS: Component = MiniMessage.miniMessage().deserialize("Select an arena")

@@ -1,7 +1,7 @@
 package com.axodouble.managers
 
-import com.axodouble.Double
-import com.axodouble.types.DoublePlayer
+import com.axodouble.Ceraia
+import com.axodouble.types.CeraiaPlayer
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
@@ -12,8 +12,8 @@ import java.io.File
 import java.io.IOException
 import java.util.*
 
-class PlayerManager(private val plugin: Double) {
-    val doublePlayers: MutableList<DoublePlayer> = mutableListOf()
+class PlayerManager(private val plugin: Ceraia) {
+    val doublePlayers: MutableList<CeraiaPlayer> = mutableListOf()
 
     init {
         // Load arenaPlayers
@@ -29,7 +29,7 @@ class PlayerManager(private val plugin: Double) {
 
             }
 
-            val doublePlayer = DoublePlayer(
+            val doublePlayer = CeraiaPlayer(
                     plugin,
                     config.getString("name") ?: throw IllegalArgumentException("Name cannot be null"),
                     config.getString("race", "human").toString(),
@@ -47,27 +47,27 @@ class PlayerManager(private val plugin: Double) {
         }
     }
 
-    fun getDoublePlayer(playerUUID: UUID): DoublePlayer {
-        return doublePlayers.find { it.uuid == playerUUID } ?: createNewDoublePlayer(playerUUID).also {
+    fun getCeraiaPlayer(playerUUID: UUID): CeraiaPlayer {
+        return doublePlayers.find { it.uuid == playerUUID } ?: createNewCeraiaPlayer(playerUUID).also {
             doublePlayers.add(it)
         }
     }
 
-    fun getDoublePlayer(playerName: String): DoublePlayer {
+    fun getCeraiaPlayer(playerName: String): CeraiaPlayer {
         return doublePlayers.find { it.name == playerName }
-            ?: createNewDoublePlayer(Bukkit.getPlayer(playerName)?.uniqueId ?: throw IllegalArgumentException("Player not found"))
+            ?: createNewCeraiaPlayer(Bukkit.getPlayer(playerName)?.uniqueId ?: throw IllegalArgumentException("Player not found"))
                 .also { doublePlayers.add(it) }
     }
 
-    fun getDoublePlayer(player: Player): DoublePlayer {
-        return doublePlayers.find { it.uuid == player.uniqueId } ?: createNewDoublePlayer(player.uniqueId).also {
+    fun getCeraiaPlayer(player: Player): CeraiaPlayer {
+        return doublePlayers.find { it.uuid == player.uniqueId } ?: createNewCeraiaPlayer(player.uniqueId).also {
             doublePlayers.add(it)
         }
     }
 
     fun playerKill(playerKiller: UUID, playerVictim: UUID) {
-        val killer = getDoublePlayer(playerKiller)
-        val victim = getDoublePlayer(playerVictim)
+        val killer = getCeraiaPlayer(playerKiller)
+        val victim = getCeraiaPlayer(playerVictim)
 
         // Constants for the Elo calculation
         val kFactor = 32.0
@@ -90,7 +90,7 @@ class PlayerManager(private val plugin: Double) {
 
         // Get all online players and set their score to their Elo rating
         Bukkit.getOnlinePlayers().forEach { onlinePlayer ->
-                val doublePlayer = plugin.playerManager.getDoublePlayer(onlinePlayer.uniqueId)
+                val doublePlayer = plugin.playerManager.getCeraiaPlayer(onlinePlayer.uniqueId)
             objectivePlayerList.getScore(onlinePlayer.name).score = doublePlayer.elo
             objectiveBelowName.getScore(onlinePlayer.name).score = doublePlayer.elo
             objectivePlayerList.displaySlot = DisplaySlot.PLAYER_LIST
@@ -104,22 +104,22 @@ class PlayerManager(private val plugin: Double) {
     }
 
     fun calculateWinChance(playerKiller: UUID, playerVictim: UUID): Int {
-        val killer = getDoublePlayer(playerKiller)
-        val victim = getDoublePlayer(playerVictim)
+        val killer = getCeraiaPlayer(playerKiller)
+        val victim = getCeraiaPlayer(playerVictim)
 
         val expectedScoreKiller = 1.0 / (1.0 + Math.pow(10.0, (victim.elo - killer.elo) / 400.0))
         return (expectedScoreKiller * 100).toInt()
     }
 
     fun calculateLossChance(playerKiller: UUID, playerVictim: UUID): Int {
-        val killer = getDoublePlayer(playerKiller)
-        val victim = getDoublePlayer(playerVictim)
+        val killer = getCeraiaPlayer(playerKiller)
+        val victim = getCeraiaPlayer(playerVictim)
 
         val expectedScoreVictim = 1.0 / (1.0 + Math.pow(10.0, (killer.elo - victim.elo) / 400.0))
         return (expectedScoreVictim * 100).toInt()
     }
 
-    private fun createNewDoublePlayer(playerUUID: UUID): DoublePlayer {
+    private fun createNewCeraiaPlayer(playerUUID: UUID): CeraiaPlayer {
         val playerName = Bukkit.getPlayer(playerUUID)?.name ?: throw IllegalArgumentException("Player not found")
         val configFile = File(plugin.dataFolder, "data/users/$playerUUID.yml")
         try {
@@ -143,7 +143,7 @@ class PlayerManager(private val plugin: Double) {
             }
             config.save(configFile)
 
-            return DoublePlayer(
+            return CeraiaPlayer(
                     plugin,
                     playerName,
                     "human",
@@ -159,7 +159,7 @@ class PlayerManager(private val plugin: Double) {
             )
         } catch (e: IOException) {
             e.printStackTrace()
-            return DoublePlayer(
+            return CeraiaPlayer(
                     plugin,
                     playerName,
                     "human",
@@ -176,11 +176,11 @@ class PlayerManager(private val plugin: Double) {
         }
     }
 
-    fun getPlayer(uniqueId: UUID): DoublePlayer? {
+    fun getPlayer(uniqueId: UUID): CeraiaPlayer? {
         return doublePlayers.find { it.uuid == uniqueId }
     }
 
-    fun getPlayer(name: String): DoublePlayer? {
+    fun getPlayer(name: String): CeraiaPlayer? {
         return doublePlayers.find { it.name.equals(name, ignoreCase = true) }
     }
 

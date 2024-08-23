@@ -1,8 +1,8 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 
-class ArenaModule(private val plugin: Double) {
+class ArenaModule(private val plugin: Ceraia) {
     @JvmField
     var arenaManager: ArenaManager
     var arenaEvents: ArenaEvents

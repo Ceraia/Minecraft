@@ -1,6 +1,6 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
@@ -9,7 +9,7 @@ import org.bukkit.scoreboard.Criteria
 import org.bukkit.scoreboard.DisplaySlot
 import java.io.File
 
-class ArenaActions(private val plugin: Double) {
+class ArenaActions(private val plugin: Ceraia) {
     val playersByGroup: MutableMap<Player, Player> = HashMap()
     private val groups: MutableMap<Player, MutableList<Player>> = HashMap()
 
@@ -63,7 +63,7 @@ class ArenaActions(private val plugin: Double) {
         val name = args[1]
 
         // Check if the user is banned from creating arenas
-        if (plugin.playerManager.getDoublePlayer((sender as Player).uniqueId).isArenaBanned()) {
+        if (plugin.playerManager.getCeraiaPlayer((sender as Player).uniqueId).isArenaBanned()) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are banned from creating arenas"))
             return
         }
@@ -228,7 +228,7 @@ class ArenaActions(private val plugin: Double) {
 
         // Get all online players and set their score to their Elo rating
         for (onlinePlayer in Bukkit.getOnlinePlayers()) {
-            val doublePlayer = plugin.playerManager.getDoublePlayer(onlinePlayer.uniqueId)
+            val doublePlayer = plugin.playerManager.getCeraiaPlayer(onlinePlayer.uniqueId)
 
             objectivePlayerList.getScore(onlinePlayer.name).score = doublePlayer.elo
             objectiveBelowName.getScore(onlinePlayer.name).score = doublePlayer.elo

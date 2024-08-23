@@ -1,6 +1,6 @@
 package com.axodouble.modules.arena
 
-import com.axodouble.Double
+import com.axodouble.Ceraia
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.kyori.adventure.title.Title
@@ -15,7 +15,7 @@ import java.io.IOException
 import java.util.concurrent.atomic.AtomicInteger
 
 class Arena(
-    private val plugin: Double,
+    private val plugin: Ceraia,
     val name: String,
     val owner: String,
     private var spawnPoint1: Location,
@@ -172,12 +172,12 @@ class Arena(
 
                 // Reward
                 for (pl in winners) {
-                    plugin.playerManager.getDoublePlayer(pl.uniqueId).addWin()
+                    plugin.playerManager.getCeraiaPlayer(pl.uniqueId).addWin()
                 }
 
                 // Reward losers
                 for (pl in losers) {
-                    plugin.playerManager.getDoublePlayer(pl.uniqueId).addLoss()
+                    plugin.playerManager.getCeraiaPlayer(pl.uniqueId).addLoss()
                 }
 
                 thisArena.state = ArenaState.WAITING
