@@ -1,20 +1,17 @@
 package com.axodouble.modules.arena
 
 import com.axodouble.Double
-import com.axodouble.types.DoublePlayer
-import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
+import org.bukkit.scoreboard.Criteria
 import org.bukkit.scoreboard.DisplaySlot
 import java.io.File
-import java.util.concurrent.atomic.AtomicInteger
 
 class ArenaActions(private val plugin: Double) {
-    val invites: MutableMap<Player, Player> = HashMap()
     val playersByGroup: MutableMap<Player, Player> = HashMap()
-    val groups: MutableMap<Player, MutableList<Player>> = HashMap()
+    private val groups: MutableMap<Player, MutableList<Player>> = HashMap()
 
 
     fun arenaSP1(sender: CommandSender, args: Array<String>) {
@@ -220,12 +217,12 @@ class ArenaActions(private val plugin: Double) {
         val scoreboardDefault = scoreboardManager.newScoreboard
         val objectivePlayerList = scoreboardDefault.registerNewObjective(
             "eloObjectivePlayerList",
-            "dummy",
+            Criteria.DUMMY,
             MiniMessage.miniMessage().deserialize("Top Arena Players")
         )
         val objectiveBelowName = scoreboardDefault.registerNewObjective(
             "eloObjectiveBelowName",
-            "dummy",
+            Criteria.DUMMY,
             MiniMessage.miniMessage().deserialize("<green>ELO")
         )
 
@@ -240,37 +237,6 @@ class ArenaActions(private val plugin: Double) {
 
             onlinePlayer.scoreboard = scoreboardDefault
         }
-    }
-
-    fun leaderboard(sender: CommandSender) {
-        val p = sender as Player
-
-        // Create and show a string list of the top 10 players with the highest elo
-        val top: MutableList<Component> = ArrayList()
-        val i = AtomicInteger(1)
-
-        top.add(MiniMessage.miniMessage().deserialize("<yellow><bold>Top 10 players with the highest ELO:"))
-
-        plugin.playerManager.doublePlayers.sortedByDescending(DoublePlayer::elo).take(10).forEach { ap ->
-            val playerName = Bukkit.getOfflinePlayer(ap.uuid).name
-            val elo = ap.elo
-
-            val medal = when (i.get()) {
-                1 -> "<gold>"
-                2 -> "<#C0C0C0>"
-                3 -> "<#cd7f32>"
-                else -> "<white>"
-            }
-
-            top.add(
-                MiniMessage.miniMessage().deserialize(
-                    "$medal${i.getAndIncrement()} $playerName <dark_gray>- <gray>$elo ELO (${ap.wins + ap.losses} games)"
-                )
-            )
-        }
-
-        // Send the top 10 players with the highest elo to the player
-        top.forEach(p::sendMessage)
     }
 
 }

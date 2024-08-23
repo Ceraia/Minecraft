@@ -1,6 +1,5 @@
 package com.axodouble
 
-import com.axodouble.listeners.OLDSpellsListener
 import com.axodouble.modules.arena.ArenaInviteManager
 import com.axodouble.managers.PlayerManager
 import com.axodouble.modules.*
@@ -63,11 +62,6 @@ class Double : JavaPlugin() {
         arenaSelectGUI = ArenaSelectGUI(plugin)
 
         /*---------------------------------*/
-        /*            Listeners            */
-        /*---------------------------------*/
-        OLDSpellsListener(plugin)
-
-        /*---------------------------------*/
         /*             Helpers             */
         /*---------------------------------*/
         configHelper = ConfigHelper(plugin)
@@ -76,7 +70,6 @@ class Double : JavaPlugin() {
     override fun onDisable() {
         playerManager.savePlayers()
     }
-
 
     fun badUsage(player: Player) {
         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage."))

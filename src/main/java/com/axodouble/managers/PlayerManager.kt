@@ -7,10 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.scoreboard.DisplaySlot
-import org.bukkit.scoreboard.Objective
-import org.bukkit.scoreboard.Scoreboard
-import org.bukkit.scoreboard.ScoreboardManager
+import org.bukkit.scoreboard.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -88,8 +85,8 @@ class PlayerManager(private val plugin: Double) {
         // Update scoreboard
         val scoreboardManager: ScoreboardManager = Bukkit.getScoreboardManager()
         val scoreboardDefault: Scoreboard = scoreboardManager.newScoreboard
-        val objectivePlayerList: Objective = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", "dummy", MiniMessage.miniMessage().deserialize("Top Arena Players"))
-        val objectiveBelowName: Objective = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", "dummy", MiniMessage.miniMessage().deserialize("<green>ELO"))
+        val objectivePlayerList: Objective = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", Criteria.DUMMY, MiniMessage.miniMessage().deserialize("Top Arena Players"))
+        val objectiveBelowName: Objective = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", Criteria.DUMMY, MiniMessage.miniMessage().deserialize("<green>ELO"))
 
         // Get all online players and set their score to their Elo rating
         Bukkit.getOnlinePlayers().forEach { onlinePlayer ->
