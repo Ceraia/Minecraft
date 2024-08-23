@@ -1,6 +1,5 @@
 package com.axodouble
 
-import com.axodouble.listeners.OLDSpellsListener
 import com.axodouble.modules.arena.ArenaInviteManager
 import com.axodouble.managers.PlayerManager
 import com.axodouble.modules.*
@@ -61,11 +60,6 @@ class Double : JavaPlugin() {
         /*               GUIs              */
         /*---------------------------------*/
         arenaSelectGUI = ArenaSelectGUI(plugin)
-
-        /*---------------------------------*/
-        /*            Listeners            */
-        /*---------------------------------*/
-        OLDSpellsListener(plugin)
 
         /*---------------------------------*/
         /*             Helpers             */
