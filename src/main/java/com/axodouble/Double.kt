@@ -71,7 +71,6 @@ class Double : JavaPlugin() {
         playerManager.savePlayers()
     }
 
-
     fun badUsage(player: Player) {
         player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage."))
     }
