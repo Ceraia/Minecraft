@@ -1,12 +1,10 @@
-package com.axodouble.modules
+package com.ceraia.modules
 
-import com.axodouble.Ceraia
-import com.axodouble.types.CeraiaPlayer
+import com.ceraia.Ceraia
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Particle
-import org.bukkit.World
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender

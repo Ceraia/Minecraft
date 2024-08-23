@@ -1,8 +1,7 @@
-package com.axodouble.modules.system
+package com.ceraia.modules.system
 
-import com.axodouble.Ceraia
+import com.ceraia.Ceraia
 import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -34,64 +33,6 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
             "jump", "j" -> {
                 if (sender is Player) {
                     jump(sender)
-                }
-                return true
-            }
-            "mod" -> {
-                if (!sender.hasPermission("double.mod")) {
-                    plugin.noPermission(sender as Player)
-                    return true
-                }
-
-                when (args.size) {
-                    0 -> {
-                        modHelp(sender)
-                        return true
-                    }
-                    1 -> {
-                        if (args[0].equals("ban", ignoreCase = true)) {
-                            modHelp(sender)
-                            return true
-                        }
-                    }
-                    2 -> {
-                        if (args[0].equals("ban", ignoreCase = true)) {
-                            if (args[1].equals("pvp", ignoreCase = true) || args[1].equals("arena", ignoreCase = true)) {
-                                modHelp(sender)
-                                return true
-                            }
-                        }
-                    }
-                    3 -> {
-                        if (args[0].equals("ban", ignoreCase = true)) {
-                            val target = Bukkit.getPlayer(args[2]) ?: run {
-                                sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"))
-                                return true
-                            }
-
-                            val doublePlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
-                            when (args[1].lowercase()) {
-                                "arena" -> {
-                                    val arenaBanned = doublePlayer.toggleArenaBan()
-                                    val message = if (arenaBanned) {
-                                        "<red>Banned from creation of arenas by ${sender.name}"
-                                    } else {
-                                        "<green>Unbanned from creation of arenas by ${sender.name}"
-                                    }
-                                    sender.sendMessage(MiniMessage.miniMessage().deserialize(message))
-                                }
-                                "pvp" -> {
-                                    val pvpBanned = doublePlayer.togglePvpBan()
-                                    val message = if (pvpBanned) {
-                                        "<red>Banned from PVPing by ${sender.name}"
-                                    } else {
-                                        "<green>Unbanned from PVPing by ${sender.name}"
-                                    }
-                                    sender.sendMessage(MiniMessage.miniMessage().deserialize(message))
-                                }
-                            }
-                        }
-                    }
                 }
                 return true
             }
@@ -158,30 +99,6 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
         args: Array<String>
     ): List<String> {
         val tabOptions = mutableListOf<String>()
-        if (command.name.lowercase() == "mod") {
-            when (args.size) {
-                1 -> {
-                    tabOptions.add("ban")
-                    tabOptions.add("remove")
-                }
-                2 -> {
-                    if (args[1].equals("ban", ignoreCase = true)) {
-                        tabOptions.add("pvp")
-                    }
-                    tabOptions.add("arena")
-                }
-                3 -> {
-                    when (args[2].lowercase()) {
-                        "pvp" -> {
-                            Bukkit.getOnlinePlayers().mapTo(tabOptions) { it.name }
-                        }
-                        "arena" -> {
-                            plugin.arenaModule.arenaManager.arenas.mapTo(tabOptions) { it.name }
-                        }
-                    }
-                }
-            }
-        }
 
         return StringUtil.copyPartialMatches(args.last(), tabOptions, ArrayList())
     }

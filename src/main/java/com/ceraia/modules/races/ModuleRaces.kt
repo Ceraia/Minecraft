@@ -1,4 +1,4 @@
-package com.axodouble.modules.races
+package com.ceraia.modules.races
 
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 import kotlin.math.max
 
-class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, TabCompleter, Listener {
+class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCompleter, Listener {
     private var races: MutableList<Race> = ArrayList()
     private var raceFactions: MutableList<RaceFaction> = ArrayList()
     private var playerRaceSelection: MutableMap<Player, Map<ItemStack?, Race>> = HashMap()

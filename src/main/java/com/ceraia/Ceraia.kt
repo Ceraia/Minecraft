@@ -1,13 +1,10 @@
-package com.axodouble
+package com.ceraia
 
-import com.axodouble.modules.arena.ArenaInviteManager
-import com.axodouble.managers.PlayerManager
-import com.axodouble.modules.*
-import com.axodouble.modules.arena.ArenaModule
-import com.axodouble.modules.arena.ArenaSelectGUI
-import com.axodouble.modules.races.ModuleRaces
-import com.axodouble.modules.system.ModuleSystem
-import com.axodouble.util.ConfigHelper
+import com.ceraia.managers.PlayerManager
+import com.ceraia.modules.*
+import com.ceraia.modules.races.ModuleRaces
+import com.ceraia.modules.system.ModuleSystem
+import com.ceraia.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
@@ -15,17 +12,11 @@ import java.io.File
 
 class Ceraia : JavaPlugin() {
     private val plugin: Ceraia = this
-    lateinit var arenaInviteManager: ArenaInviteManager
-        private set
-    lateinit var arenaSelectGUI: ArenaSelectGUI
-        private set
     lateinit var playerManager: PlayerManager
         private set
     lateinit var moduleSeating: ModuleSeating
         private set
     lateinit var moduleMarriage: ModuleMarriage
-        private set
-    lateinit var arenaModule: ArenaModule
         private set
     lateinit var moduleSystem: ModuleSystem
         private set
@@ -45,21 +36,14 @@ class Ceraia : JavaPlugin() {
         /*       Registering Managers      */
         /*---------------------------------*/
         playerManager = PlayerManager(plugin)
-        arenaInviteManager = ArenaInviteManager()
 
         /*---------------------------------*/
         /*             Modules             */
         /*---------------------------------*/
         moduleSeating = ModuleSeating(plugin)
         moduleMarriage = ModuleMarriage(plugin)
-        arenaModule = ArenaModule(plugin)
         moduleSystem = ModuleSystem(plugin)
         moduleRaces = ModuleRaces(plugin)
-
-        /*---------------------------------*/
-        /*               GUIs              */
-        /*---------------------------------*/
-        arenaSelectGUI = ArenaSelectGUI(plugin)
 
         /*---------------------------------*/
         /*             Helpers             */

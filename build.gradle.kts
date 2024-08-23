@@ -7,7 +7,7 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
-group = "com.axodouble"
+group = "com.ceraia"
 
 // Get the current date
 val date = Date()
@@ -34,7 +34,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.incendo:cloud-paper:2.0.0-beta.8")
-    implementation("org.incendo.interfaces:interfaces-{package}:1.0.0-SNAPSHOT")
+    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
 }
 
 val targetJavaVersion = 21

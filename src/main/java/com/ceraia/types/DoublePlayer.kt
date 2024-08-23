@@ -1,6 +1,6 @@
-package com.axodouble.types
+package com.ceraia.types
 
-import com.axodouble.Ceraia
+import com.ceraia.Ceraia
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
@@ -34,20 +34,6 @@ class CeraiaPlayer(
         arenaBanned = !arenaBanned
         savePlayer()
         return arenaBanned
-    }
-
-    fun isPvpBanned(): Boolean = pvpBanned
-
-    fun isArenaBanned(): Boolean = arenaBanned
-
-    fun addWin() {
-        wins++
-        savePlayer()
-    }
-
-    fun addLoss() {
-        losses++
-        savePlayer()
     }
 
     fun savePlayer() {

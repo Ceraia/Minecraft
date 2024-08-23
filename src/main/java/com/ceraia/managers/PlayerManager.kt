@@ -1,13 +1,11 @@
-package com.axodouble.managers
+package com.ceraia.managers
 
-import com.axodouble.Ceraia
-import com.axodouble.types.CeraiaPlayer
-import net.kyori.adventure.text.minimessage.MiniMessage
+import com.ceraia.Ceraia
+import com.ceraia.types.CeraiaPlayer
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.scoreboard.*
 import java.io.File
 import java.io.IOException
 import java.util.*
@@ -63,60 +61,6 @@ class PlayerManager(private val plugin: Ceraia) {
         return doublePlayers.find { it.uuid == player.uniqueId } ?: createNewCeraiaPlayer(player.uniqueId).also {
             doublePlayers.add(it)
         }
-    }
-
-    fun playerKill(playerKiller: UUID, playerVictim: UUID) {
-        val killer = getCeraiaPlayer(playerKiller)
-        val victim = getCeraiaPlayer(playerVictim)
-
-        // Constants for the Elo calculation
-        val kFactor = 32.0
-        val expectedScoreKiller = 1.0 / (1.0 + Math.pow(10.0, (victim.elo - killer.elo) / 400.0))
-        val expectedScoreVictim = 1.0 / (1.0 + Math.pow(10.0, (killer.elo - victim.elo) / 400.0))
-
-        // Update Elo ratings
-        val newEloKiller = (killer.elo + kFactor * (1.0 - expectedScoreKiller)).toInt()
-        val newEloVictim = (victim.elo + kFactor * (0.0 - expectedScoreVictim)).toInt()
-
-        // Set new Elo ratings
-        killer.elo = newEloKiller
-        victim.elo = newEloVictim
-
-        // Update scoreboard
-        val scoreboardManager: ScoreboardManager = Bukkit.getScoreboardManager()
-        val scoreboardDefault: Scoreboard = scoreboardManager.newScoreboard
-        val objectivePlayerList: Objective = scoreboardDefault.registerNewObjective("eloObjectivePlayerList", Criteria.DUMMY, MiniMessage.miniMessage().deserialize("Top Arena Players"))
-        val objectiveBelowName: Objective = scoreboardDefault.registerNewObjective("eloObjectiveBelowName", Criteria.DUMMY, MiniMessage.miniMessage().deserialize("<green>ELO"))
-
-        // Get all online players and set their score to their Elo rating
-        Bukkit.getOnlinePlayers().forEach { onlinePlayer ->
-                val doublePlayer = plugin.playerManager.getCeraiaPlayer(onlinePlayer.uniqueId)
-            objectivePlayerList.getScore(onlinePlayer.name).score = doublePlayer.elo
-            objectiveBelowName.getScore(onlinePlayer.name).score = doublePlayer.elo
-            objectivePlayerList.displaySlot = DisplaySlot.PLAYER_LIST
-            objectiveBelowName.displaySlot = DisplaySlot.BELOW_NAME
-            onlinePlayer.scoreboard = scoreboardDefault
-        }
-
-        // Update player stats
-        killer.savePlayer()
-        victim.savePlayer()
-    }
-
-    fun calculateWinChance(playerKiller: UUID, playerVictim: UUID): Int {
-        val killer = getCeraiaPlayer(playerKiller)
-        val victim = getCeraiaPlayer(playerVictim)
-
-        val expectedScoreKiller = 1.0 / (1.0 + Math.pow(10.0, (victim.elo - killer.elo) / 400.0))
-        return (expectedScoreKiller * 100).toInt()
-    }
-
-    fun calculateLossChance(playerKiller: UUID, playerVictim: UUID): Int {
-        val killer = getCeraiaPlayer(playerKiller)
-        val victim = getCeraiaPlayer(playerVictim)
-
-        val expectedScoreVictim = 1.0 / (1.0 + Math.pow(10.0, (killer.elo - victim.elo) / 400.0))
-        return (expectedScoreVictim * 100).toInt()
     }
 
     private fun createNewCeraiaPlayer(playerUUID: UUID): CeraiaPlayer {

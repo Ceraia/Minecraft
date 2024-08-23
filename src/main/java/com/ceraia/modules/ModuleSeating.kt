@@ -1,6 +1,6 @@
-package com.axodouble.modules
+package com.ceraia.modules
 
-import com.axodouble.Ceraia
+import com.ceraia.Ceraia
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.block.data.Bisected
