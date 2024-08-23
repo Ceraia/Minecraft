@@ -1,5 +1,5 @@
 # Ceraia, the successor to Double, a utility and pvp plugin built for Ceraia.
-![GitHub branch check runs](https://img.shields.io/github/check-runs/Axodouble/Ceraia/Minecraft?style=for-the-badge)
+![GitHub branch check runs](https://img.shields.io/github/check-runs/Ceraia/Minecraft?style=for-the-badge)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/Ceraia/Minecraft?style=for-the-badge)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/Ceraia/Minecraft?style=for-the-badge)
 
