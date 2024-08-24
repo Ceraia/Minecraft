@@ -15,6 +15,7 @@ class Arena private constructor(
     private val players: MutableMap<Player, Location> = mutableMapOf()
     private val placedBlocks: MutableList<Location> = mutableListOf()
     private val brokenBlocks: MutableList<Location> = mutableListOf()
+    private val state: ArenaState = ArenaState.READY
 
 
     fun getPlugin(): Ceraia { return this.plugin }
@@ -32,6 +33,25 @@ class Arena private constructor(
     fun getPlacedBlocks(): MutableList<Location> { return this.placedBlocks }
 
     fun getBrokenBlocks(): MutableList<Location> { return this.brokenBlocks }
+
+    fun getState(): ArenaState { return this.state }
+
+    fun addPlayer(player: Player, location: Location) {
+        this.players[player] = location
+    }
+
+    fun removePlayer(player: Player) {
+        this.players.remove(player)
+    }
+
+    fun addPlacedBlock(location: Location) {
+        this.placedBlocks.add(location)
+    }
+
+    fun removePlacedBlocks() {
+        // #TODO: Remove all placed blocks from the world
+        this.placedBlocks.clear()
+    }
 
     class Builder {
         private lateinit var plugin: Ceraia
@@ -53,6 +73,14 @@ class Arena private constructor(
 
     companion object {
         fun builder() = Builder()
+    }
+
+    enum class ArenaState {
+        READY,
+        STARTING,
+        INGAME,
+        ENDING,
+        ENDLESS
     }
 }
 
