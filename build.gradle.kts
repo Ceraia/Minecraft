@@ -4,6 +4,7 @@ import java.util.Date
 plugins {
     kotlin("jvm") version "2.0.20-RC2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.8"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
@@ -33,8 +34,11 @@ repositories {
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.incendo:cloud-paper:2.0.0-beta.8")
-    implementation("org.incendo.interfaces:interfaces-paper:1.0.0-SNAPSHOT")
+    implementation("dev.triumphteam:triumph-gui:3.1.10")
+}
+
+tasks.shadowJar {
+    relocate("dev.triumphteam.gui", "com.ceraia.gui")
 }
 
 val targetJavaVersion = 21
