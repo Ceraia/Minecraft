@@ -6,3 +6,6 @@
 
 ## Versioning Schema
 Versioning is done in the following format: `major.minor.patch`, the patch is the Year, Month, and Day of the release, in the format `YYMMDD`.
+
+## In A-DEV
+This project is in active development, however this is also a passion project and thus may not regularly recieve updates.
