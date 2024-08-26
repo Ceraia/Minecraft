@@ -4,10 +4,11 @@ import java.util.Date
 plugins {
     kotlin("jvm") version "2.0.20-RC2"
     id("com.github.johnrengelman.shadow") version "8.1.1"
+    id("io.github.goooler.shadow") version "8.1.8"
     id("xyz.jpenilla.run-paper") version "2.3.1"
 }
 
-group = "com.axodouble"
+group = "com.ceraia"
 
 // Get the current date
 val date = Date()
@@ -27,12 +28,17 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    //implementation("org.incendo:cloud-paper:2.0.0-beta.8")
+    implementation("dev.triumphteam:triumph-gui:3.1.10")
+}
+
+tasks.shadowJar {
+    relocate("dev.triumphteam.gui", "com.ceraia.gui")
 }
 
 val targetJavaVersion = 21

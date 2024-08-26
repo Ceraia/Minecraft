@@ -1,5 +1,8 @@
-package com.axodouble.modules.races
+package com.ceraia.modules.races
 
+import dev.triumphteam.gui.builder.item.ItemBuilder
+import dev.triumphteam.gui.guis.Gui
+import dev.triumphteam.gui.guis.PaginatedGui
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -12,25 +15,15 @@ import org.bukkit.command.TabCompleter
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.inventory.InventoryClickEvent
-import org.bukkit.event.inventory.InventoryType
-import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.StringUtil
 import java.io.File
 import java.util.*
-import java.util.concurrent.atomic.AtomicInteger
-import java.util.function.Consumer
-import kotlin.math.max
 
-class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, TabCompleter, Listener {
+class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCompleter, Listener {
     private var races: MutableList<Race> = ArrayList()
     private var raceFactions: MutableList<RaceFaction> = ArrayList()
-    private var playerRaceSelection: MutableMap<Player, Map<ItemStack?, Race>> = HashMap()
-    private var playerRaceFactionSelection: MutableMap<Player, Map<ItemStack?, RaceFaction>> = HashMap()
-    private var playerRaceFactionSelected: MutableMap<Player, RaceFaction?> = HashMap()
 
 
     init {
@@ -52,8 +45,8 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
             return true
         }
 
-        if (args.size == 0) {
-            openFactionGUI(sender)
+        if (args.isEmpty()) {
+            openFactionGui(sender)
             return true
         }
 
@@ -114,7 +107,7 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
                 }
             }
 
-            "gui" -> openFactionGUI(sender)
+            "gui" -> openFactionGui(sender)
             "restore" -> {
                 if (!sender.hasPermission("double.races.restore")) {
                     plugin.noPermission(sender)
@@ -132,12 +125,12 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
             }
 
             "faction" -> {
-                openFactionGUI(sender)
+                openFactionGui(sender)
                 return true
             }
         }
 
-        openFactionGUI(sender)
+        openFactionGui(sender)
         return true
     }
 
@@ -166,70 +159,15 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
         return returnedOptions
     }
 
-    @EventHandler
-    fun onClick(e: InventoryClickEvent) {
-        if (e.currentItem == null || e.currentItem!!.type == Material.AIR) {
-            return
-        } // If the item doesn't exist or is air, return
-
-
-        if ((e.inventory).type == InventoryType.PLAYER) {
-            return
-        } // If the inventory is the player's inventory, return
-
-
-        val player = e.whoClicked as Player // Get the player who clicked
-
-        if (e.view.title().toString() == MiniMessage.miniMessage().deserialize("<green>Select a race to become")
-                .toString()
-        ) {
-            if (playerRaceSelection.containsKey(player)) {
-                // Get the relevant slot and race that the player clicked on
-                if (playerRaceSelection[player]!!.containsKey(e.currentItem)) {
-                    e.isCancelled = true
-                    playerRaceFactionSelected[player]!!.apply(
-                        player,
-                        playerRaceSelection[player]!![e.currentItem]!!
-                    )
-                    e.clickedInventory!!.close()
-                    player.sendMessage(
-                        MiniMessage.miniMessage().deserialize(
-                            "<green>Succesfully changed your faction to <white>" +
-                                    playerRaceFactionSelected[player]!!.name +
-                                    "<green>, and your race to " +
-                                    playerRaceSelection[player]!![e.currentItem]!!.name + "<green>!"
-                        )
-                    )
-
-                    plugin.playerManager.getCeraiaPlayer(player).setRace(
-                        playerRaceSelection[player]!![e.currentItem]!!.name
-                    )
-                    plugin.playerManager.getCeraiaPlayer(player).setFaction(playerRaceFactionSelected[player]!!.name)
-                }
-            }
-        } else if (e.view.title().toString() == MiniMessage.miniMessage().deserialize("<green>Select a faction to join")
-                .toString()
-        ) {
-            if (playerRaceFactionSelection.containsKey(player)) {
-                // Get the relevant slot and faction that the player clicked on
-                if (playerRaceFactionSelection[player]!!.containsKey(e.currentItem)) {
-                    e.isCancelled = true
-                    playerRaceFactionSelected[player] = playerRaceFactionSelection[player]!![e.currentItem]
-                    openRaceGUI(player)
-                }
-            }
-        }
-    }
-
-    fun racesEnabled(): Boolean {
+    private fun racesEnabled(): Boolean {
         return plugin.config.getBoolean("races-enabled", true)
     }
 
-    fun reloadRaces() {
+    private fun reloadRaces() {
         loadRaces(true)
     }
 
-    fun addDefaultRaces() {
+    private fun addDefaultRaces() {
         run {
             races.add(
                 Race(
@@ -467,8 +405,22 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
         loadRaces()
     }
 
-    fun addDefaultFactions() {
+    private fun addDefaultFactions() {
         run {
+            raceFactions.add(
+                RaceFaction(
+                    "<yellow>Unaligned",
+                    "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance.",
+                    ItemStack(Material.IRON_ORE),
+                    0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    listOf(
+                        "*"
+                    )
+                )
+            )
             raceFactions.add(
                 RaceFaction(
                     "<red>Gnomish Dynasty",
@@ -503,20 +455,6 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
                     0.0,
                     0.0,
                     mutableListOf("Halfling", "Half-Elf", "Elf", "Goliath")
-                )
-            )
-            raceFactions.add(
-                RaceFaction(
-                    "<yellow>Unaligned",
-                    "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance.",
-                    ItemStack(Material.IRON_ORE),
-                    0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    listOf(
-                        "*"
-                    )
                 )
             )
         }
@@ -592,38 +530,29 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
             raceFactions.add(faction)
         }
     }
+    
+    private fun openRaceGui(player: Player, faction: RaceFaction) {
+        val gui : PaginatedGui = Gui.paginated()
+            .title(Component.text("Select a race to become"))
+            .disableAllInteractions()
+            .rows(4)
+            .create()
 
-    private fun openRaceGUI(player: Player) {
+        gui.setItem(4, 3, ItemBuilder.from(Material.PAPER).name(Component.text("Previous")).asGuiItem { gui.previous() })
+        gui.setItem(4, 7, ItemBuilder.from(Material.PAPER).name(Component.text("Next")).asGuiItem { gui.next() })
+
         val selectable: MutableList<Race> = ArrayList()
         for (race in races) {
             if ((player.hasPermission("double.races.become." + race.name) ||
                         player.hasPermission("double.races.become.*")) &&
-                (playerRaceFactionSelected[player]!!.getRaceInhabitants().contains(race.name)
-                        || playerRaceFactionSelected[player]!!.getRaceInhabitants().contains("*"))
+                (faction.getRaceInhabitants().contains(race.name)
+                        || faction.getRaceInhabitants().contains("*"))
             ) selectable.add(race)
         }
 
-        // Open a GUI with all selectable races
-        val size = max(9.0, ((selectable.size + 8) / 9 * 9).toDouble()).toInt()
-        val inv =
-            Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a race to become"))
-
-        val raceSelectSlots: MutableMap<ItemStack?, Race> = HashMap()
-
-        val i = AtomicInteger() // Slot
-        selectable.forEach(Consumer<Race> { race: Race ->
-            val itemStack = race.item // Create the itemstack
-            val meta = itemStack.itemMeta
-            meta.displayName(
-                MiniMessage.miniMessage().deserialize("<green>" + race.name + "</green>")
-            )
-
+        selectable.forEach { race ->
             val lore: MutableList<Component> = ArrayList()
 
-            Arrays.stream(race.lore.split("<newline>".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()).toList()
-                .forEach(
-                    Consumer { s: String -> lore.add(MiniMessage.miniMessage().deserialize(s)) })
-            //lore.add(MiniMessage.miniMessage().deserialize(race.getLore()));
             lore.add(MiniMessage.miniMessage().deserialize("<gray>Scale : <green>" + race.scale))
             lore.add(MiniMessage.miniMessage().deserialize("<gray>Speed : <green>" + race.speed))
             lore.add(MiniMessage.miniMessage().deserialize("<gray>Health : <green>" + race.health))
@@ -638,60 +567,68 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
             lore.add(MiniMessage.miniMessage().deserialize("<gray>Mining Efficiency : <green>" + race.miningEfficiency))
             lore.add(MiniMessage.miniMessage().deserialize("<gray>Armor : <green>" + race.armor))
 
-            meta.lore(lore)
+            gui.addItem(
+                ItemBuilder.from(race.item)
+                    .lore(lore as List<Component?>)
+                    .name(MiniMessage.miniMessage().deserialize(race.name))
+                    .asGuiItem {
+                        plugin.playerManager.getCeraiaPlayer(player).setRace(race.name)
+                        plugin.playerManager.getCeraiaPlayer(player).setFaction(faction.name)
+                        faction.apply(player, race)
 
-            itemStack.setItemMeta(meta)
-            itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
-
-            inv.setItem(i.get(), itemStack)
-            raceSelectSlots[itemStack] = race
-            i.getAndIncrement()
-        })
-        playerRaceSelection[player] = raceSelectSlots
-        player.openInventory(inv)
-    }
-
-    private fun openFactionGUI(player: Player) {
-        val selectable: List<RaceFaction> = ArrayList(raceFactions)
-        // Open a GUI with all selectable factions
-        val size = max(9.0, ((selectable.size + 8) / 9 * 9).toDouble()).toInt()
-        val inv =
-            Bukkit.createInventory(null, size, MiniMessage.miniMessage().deserialize("<green>Select a faction to join"))
-
-        val factionSelectSlots: MutableMap<ItemStack?, RaceFaction> = HashMap()
-
-        val i = AtomicInteger() // Slot
-        selectable.forEach(Consumer<RaceFaction> { faction: RaceFaction ->
-            val itemStack = faction.item // Create the itemstack
-            val meta = itemStack.itemMeta
-            meta.displayName(
-                MiniMessage.miniMessage().deserialize(faction.name)
+                        player.sendMessage(
+                            MiniMessage.miniMessage().deserialize(
+                                "<green>Succesfully changed your faction to <white>" +
+                                        faction.name +
+                                        "<green>, and your race to " +
+                                        race.name + "<green>!"
+                            )
+                        )
+                        gui.close(player)
+                    }
             )
 
+        }
+
+        gui.open(player)
+}
+
+    private fun openFactionGui(player: Player){
+        val gui : PaginatedGui = Gui.paginated()
+            .title(Component.text("Select a faction to join"))
+            .disableAllInteractions()
+            .rows(4)
+            .create()
+
+        gui.setItem(4, 3, ItemBuilder.from(Material.PAPER).name(Component.text("Previous")).asGuiItem { gui.previous() })
+        gui.setItem(4, 7, ItemBuilder.from(Material.PAPER).name(Component.text("Next")).asGuiItem { gui.next() })
+
+        val selectable: List<RaceFaction> = ArrayList(raceFactions)
+
+        selectable.forEach { raceFaction ->
             val lore: MutableList<Component> = ArrayList()
-            lore.add(MiniMessage.miniMessage().deserialize(faction.lore))
-            lore.add(MiniMessage.miniMessage().deserialize("<gray>Health Bonus : <green>" + faction.health))
-            lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage Bonus : <green>" + faction.damage))
+            lore.add(MiniMessage.miniMessage().deserialize(raceFaction.lore))
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Health Bonus : <green>" + raceFaction.health))
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Damage Bonus : <green>" + raceFaction.damage))
             lore.add(
                 MiniMessage.miniMessage()
-                    .deserialize("<gray>Mining Efficiency Bonus : <green>" + faction.miningEfficiency)
+                    .deserialize("<gray>Mining Efficiency Bonus : <green>" + raceFaction.miningEfficiency)
             )
-            lore.add(MiniMessage.miniMessage().deserialize("<gray>Armor Bonus : <green>" + faction.armor))
+            lore.add(MiniMessage.miniMessage().deserialize("<gray>Armor Bonus : <green>" + raceFaction.armor))
 
-            meta.lore(lore)
+            gui.addItem(
+                ItemBuilder.from(raceFaction.item)
+                    .lore(lore as List<Component?>)
+                    .name(MiniMessage.miniMessage().deserialize(raceFaction.name))
+                    .asGuiItem {
+                        openRaceGui(player, raceFaction)
+                    })
+        }
 
-            itemStack.setItemMeta(meta)
-            itemStack.addItemFlags(ItemFlag.HIDE_ATTRIBUTES, ItemFlag.HIDE_ADDITIONAL_TOOLTIP)
-
-            inv.setItem(i.get(), itemStack)
-            factionSelectSlots[itemStack] = faction
-            i.getAndIncrement()
-        })
-        playerRaceFactionSelection[player] = factionSelectSlots
-        player.openInventory(inv)
+        gui.open(player)
     }
 
-    fun saveAllRaces() {
+    private fun saveAllRaces() {
         // Save the races to the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
@@ -719,7 +656,7 @@ class ModuleRaces(private val plugin: com.axodouble.Ceraia) : CommandExecutor, T
         }
     }
 
-    fun saveAllFactions() {
+    private fun saveAllFactions() {
         // Save the factions to the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)

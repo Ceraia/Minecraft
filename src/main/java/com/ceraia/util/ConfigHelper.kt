@@ -1,6 +1,6 @@
-package com.axodouble.util
+package com.ceraia.util
 
-import com.axodouble.Ceraia
+import com.ceraia.Ceraia
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File

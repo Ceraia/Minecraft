@@ -1,31 +1,11 @@
 name: Ceraia
 version: ${version}
-main: com.axodouble.Ceraia
+main: com.ceraia.Ceraia
 api-version: '1.21'
 description: Ceraia, the utility plugin.
 author: Axodouble
-website: https://github.com/Axodouble/Ceraia
+website: https://github.com/Ceraia/Minecraft
 commands:
-  arena:
-    description: Arena command
-    usage: /arena <list|delete|public> [name]
-  pvp:
-    description: PVP command
-    usage: /pvp <player|accept>
-  gvg:
-    description: GVG command
-    usage: /gvg <player|accept|invite>
-  mod:
-    description: Moderation commands
-    usage: /mod <ban> <arena|pvp> <player>
-  leaderboard:
-    description: Show the top fighters in the server
-    usage: /leaderboard
-    aliases: [ top ]
-  profile:
-    description: Show your profile
-    usage: /profile
-    aliases: [ stats ]
   version:
     description: Show the version of the plugin.
     usage: /version
@@ -74,18 +54,6 @@ permissions :
       double.time.*:
         description: "Access to all time commands"
         default: op
-  double.arena:
-    description: "Access to the /arena command"
-    default: true
-  double.pvp:
-    description: "Access to the /pvp command"
-    default: true
-  double.gvg:
-    description: "Access to the /gvg command"
-    default: true
-  double.mod:
-    description: "Access to the /mod command"
-    default: op
   double.sit:
     description: "Access to the /sit command and to sit on blocks"
     default: true
