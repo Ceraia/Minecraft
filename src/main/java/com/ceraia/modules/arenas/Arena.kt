@@ -2,6 +2,8 @@ package com.ceraia.modules.arenas
 
 import com.ceraia.Ceraia
 import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.World
 import org.bukkit.entity.Player
 import java.util.UUID
 
@@ -16,7 +18,7 @@ class Arena private constructor(
     private val placedBlocks: MutableList<Location> = mutableListOf()
     private val brokenBlocks: MutableList<Location> = mutableListOf()
     private val state: ArenaState = ArenaState.READY
-
+    private val world: World = spawnpoints[0].world
 
     fun getPlugin(): Ceraia { return this.plugin }
 
@@ -49,7 +51,9 @@ class Arena private constructor(
     }
 
     fun removePlacedBlocks() {
-        // #TODO: Remove all placed blocks from the world
+        this.placedBlocks.forEach {
+                block -> block.block.type = Material.AIR
+        }
         this.placedBlocks.clear()
     }
 
