@@ -87,9 +87,3 @@ class Arena private constructor(
         ENDLESS
     }
 }
-
-class Test(){
-    fun test(){
-        Arena.builder()
-    }
-}

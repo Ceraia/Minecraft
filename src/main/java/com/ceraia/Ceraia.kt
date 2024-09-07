@@ -8,6 +8,7 @@ import com.ceraia.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
+import org.incendo.cloud.paper.PaperCommandManager
 import java.io.File
 
 class Ceraia : JavaPlugin() {
