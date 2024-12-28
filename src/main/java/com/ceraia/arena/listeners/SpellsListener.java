@@ -1,6 +1,6 @@
 package com.ceraia.arena.listeners;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

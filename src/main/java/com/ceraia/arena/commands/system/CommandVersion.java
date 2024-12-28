@@ -1,6 +1,6 @@
 package com.ceraia.arena.commands.system;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

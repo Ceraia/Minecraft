@@ -1,6 +1,6 @@
 package com.ceraia.arena.types;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;

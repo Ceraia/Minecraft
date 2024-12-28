@@ -1,6 +1,6 @@
 package com.ceraia.arena.commands.arena;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.types.Arena;
 import com.ceraia.arena.types.DoublePlayer;
 import net.kyori.adventure.text.Component;

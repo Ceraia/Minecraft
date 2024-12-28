@@ -1,6 +1,6 @@
 package com.ceraia.arena.listeners;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.managers.EloScoreboardManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

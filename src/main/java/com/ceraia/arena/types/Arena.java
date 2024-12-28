@@ -1,6 +1,6 @@
 package com.ceraia.arena.types;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.Utils;
 import com.ceraia.arena.managers.InviteManager;
 import net.kyori.adventure.text.Component;

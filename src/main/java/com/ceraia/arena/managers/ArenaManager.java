@@ -1,6 +1,6 @@
 package com.ceraia.arena.managers;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

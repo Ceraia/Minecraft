@@ -1,6 +1,6 @@
 package com.ceraia.arena.types;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.listeners.PlayerEventListener;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;

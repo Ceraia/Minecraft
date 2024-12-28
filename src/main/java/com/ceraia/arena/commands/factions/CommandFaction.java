@@ -1,6 +1,6 @@
 package com.ceraia.arena.commands.factions;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.types.Faction;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;

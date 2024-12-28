@@ -1,6 +1,6 @@
 package com.ceraia.arena.listeners;
 
-import com.ceraia.arena.Double;
+import com.ceraia.Double;
 import com.ceraia.arena.managers.InviteManager;
 import com.ceraia.arena.types.Arena;
 import net.kyori.adventure.text.minimessage.MiniMessage;
