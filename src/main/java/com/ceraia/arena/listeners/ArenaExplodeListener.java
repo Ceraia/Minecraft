@@ -27,7 +27,7 @@ public class ArenaExplodeListener implements Listener {
 
     // TNT
     @EventHandler
-    public void onEntiyExplode(EntityExplodeEvent e) {
+    public void onEntityExplode(EntityExplodeEvent e) {
         Player source = null;
         if (e.getEntityType().equals(EntityType.TNT)) {
             TNTPrimed tnt = (TNTPrimed) e.getEntity();
@@ -36,7 +36,7 @@ public class ArenaExplodeListener implements Listener {
             source = (Player) entity;
         }
 
-        if (source == null || !isInArena(source)) {
+        if (source == null || isInArena(source)) {
             return;
         }
         e.blockList().clear();
@@ -48,16 +48,13 @@ public class ArenaExplodeListener implements Listener {
         Entity entity = e.getEntity();
         Entity damager = e.getDamager();
 
-        if (damager == null) return;
-
-        Player source = null;
+        Player source;
 
         if (!(entity instanceof EnderCrystal)) return;
 
         if (damager instanceof Player) {
             source = (Player) damager;
-        } else if (damager instanceof Arrow) {
-            Arrow arrow = (Arrow) damager;
+        } else if (damager instanceof Arrow arrow) {
             Entity entity2 = (Entity) arrow.getShooter();
             if (!(entity2 instanceof Player)) return;
             source = (Player) entity2;
@@ -65,7 +62,7 @@ public class ArenaExplodeListener implements Listener {
             return;
         }
 
-        if (!isInArena(source)) {
+        if (isInArena(source)) {
             return;
         }
 
@@ -90,7 +87,7 @@ public class ArenaExplodeListener implements Listener {
         RespawnAnchor data = (RespawnAnchor) block.getBlockData();
         if (data.getCharges() < data.getMaximumCharges()) return;
 
-        if (!isInArena(e.getPlayer())) return;
+        if (isInArena(e.getPlayer())) return;
 
         e.setCancelled(true);
         block.setType(Material.AIR);
