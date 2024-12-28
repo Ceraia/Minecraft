@@ -1,6 +1,7 @@
 package com.ceraia
 
 import com.ceraia.managers.PlayerManager
+import com.ceraia.metrics.Metrics
 import com.ceraia.modules.*
 import com.ceraia.modules.arenas.ArenaModule
 import com.ceraia.modules.races.ModuleRaces
@@ -14,6 +15,9 @@ import java.io.File
 
 class Ceraia : JavaPlugin() {
     private val plugin: Ceraia = this
+
+    var metrics: Metrics? = null
+
     lateinit var playerManager: PlayerManager
         private set
     lateinit var moduleSeating: ModuleSeating
@@ -30,7 +34,10 @@ class Ceraia : JavaPlugin() {
         private set
 
     override fun onEnable() {
+        metrics = Metrics(this, 20303)
+
         saveDefaultConfig()
+
         File(dataFolder, "data").mkdirs()
         File(dataFolder, "data/arenas").mkdirs()
         File(dataFolder, "data/items").mkdirs()
@@ -58,6 +65,7 @@ class Ceraia : JavaPlugin() {
 
     override fun onDisable() {
         playerManager.savePlayers()
+        metrics?.shutdown()
     }
 
     fun noPermission(player: Player) {

@@ -84,6 +84,5 @@ class Double : JavaPlugin() {
     override fun onDisable() {
         metrics!!.shutdown()
         playerManager!!.savePlayers()
-        factionManager!!.saveFactions()
     }
 }
