@@ -6,7 +6,7 @@ import com.ceraia.arena.commands.system.CommandMod
 import com.ceraia.arena.commands.system.CommandVersion
 import com.ceraia.arena.listeners.*
 import com.ceraia.arena.managers.*
-import com.ceraia.arena.misc.Metrics
+import com.ceraia.metrics.Metrics
 import com.ceraia.arena.types.ArenaSelectGUI
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
