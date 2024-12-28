@@ -4,13 +4,12 @@ import com.ceraia.managers.PlayerManager
 import com.ceraia.metrics.Metrics
 import com.ceraia.modules.*
 import com.ceraia.modules.arenas.ArenaModule
-import com.ceraia.modules.races.ModuleRaces
-import com.ceraia.modules.system.ModuleSystem
+import com.ceraia.modules.races.RaceModule
+import com.ceraia.modules.system.SystemModule
 import com.ceraia.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
-import org.incendo.cloud.paper.PaperCommandManager
 import java.io.File
 
 class Ceraia : JavaPlugin() {
@@ -20,13 +19,13 @@ class Ceraia : JavaPlugin() {
 
     lateinit var playerManager: PlayerManager
         private set
-    lateinit var moduleSeating: ModuleSeating
+    lateinit var seatingModule: SeatingModule
         private set
-    lateinit var moduleMarriage: ModuleMarriage
+    lateinit var marriageModule: MarriageModule
         private set
-    lateinit var moduleSystem: ModuleSystem
+    lateinit var systemModule: SystemModule
         private set
-    lateinit var moduleRaces: ModuleRaces
+    lateinit var raceModule: RaceModule
         private set
     lateinit var configHelper: ConfigHelper
         private set
@@ -51,10 +50,10 @@ class Ceraia : JavaPlugin() {
         /*---------------------------------*/
         /*             Modules             */
         /*---------------------------------*/
-        moduleSeating = ModuleSeating(plugin)
-        moduleMarriage = ModuleMarriage(plugin)
-        moduleSystem = ModuleSystem(plugin)
-        moduleRaces = ModuleRaces(plugin)
+        seatingModule = SeatingModule(plugin)
+        marriageModule = MarriageModule(plugin)
+        systemModule = SystemModule(plugin)
+        raceModule = RaceModule(plugin)
         arenaModule = ArenaModule(plugin)
 
         /*---------------------------------*/

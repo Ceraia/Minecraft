@@ -21,7 +21,7 @@ import org.bukkit.util.StringUtil
 import java.io.File
 import java.util.*
 
-class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCompleter, Listener {
+class RaceModule(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCompleter, Listener {
     private var races: MutableList<Race> = ArrayList()
     private var raceFactions: MutableList<RaceFaction> = ArrayList()
 

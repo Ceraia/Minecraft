@@ -16,7 +16,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.StringUtil
 
-class ModuleMarriage(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
+class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
     private val invites: MutableMap<Player, Player> = mutableMapOf()
 

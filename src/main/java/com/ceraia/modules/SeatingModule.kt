@@ -18,7 +18,7 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEvent
 import org.jetbrains.annotations.NotNull
 
-class ModuleSeating(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
+class SeatingModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
     val chairs: MutableList<Chair> = mutableListOf()
 
