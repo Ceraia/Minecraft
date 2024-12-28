@@ -1,11 +1,11 @@
 package com.ceraia
 
-import com.ceraia.managers.PlayerManager
+import com.ceraia.modules.ceraia.managers.PlayerManager
 import com.ceraia.metrics.Metrics
 import com.ceraia.modules.*
 import com.ceraia.modules.arenas.ArenaModule
-import com.ceraia.modules.races.RaceModule
-import com.ceraia.modules.system.SystemModule
+import com.ceraia.modules.RaceModule
+import com.ceraia.modules.SystemModule
 import com.ceraia.util.ConfigHelper
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
