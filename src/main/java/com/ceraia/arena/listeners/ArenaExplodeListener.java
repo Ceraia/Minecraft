@@ -29,7 +29,7 @@ public class ArenaExplodeListener implements Listener {
     @EventHandler
     public void onEntiyExplode(EntityExplodeEvent e) {
         Player source = null;
-        if (e.getEntityType().equals(EntityType.PRIMED_TNT)) {
+        if (e.getEntityType().equals(EntityType.TNT)) {
             TNTPrimed tnt = (TNTPrimed) e.getEntity();
             Entity entity = tnt.getSource();
             if (!(entity instanceof Player)) return;

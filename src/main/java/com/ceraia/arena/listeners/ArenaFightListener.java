@@ -99,7 +99,7 @@ public class ArenaFightListener implements Listener {
             }
 
             // If the damage is caused by a tnt
-            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.PRIMED_TNT) {
+            else if (event.getDamager().getType() == org.bukkit.entity.EntityType.TNT) {
                 plugin.getLogger().info("TNT");
                 if (event.getDamager().customName() != null) {
                     killer = Bukkit.getPlayer(Objects.requireNonNull(event.getDamager().customName()).toString());
