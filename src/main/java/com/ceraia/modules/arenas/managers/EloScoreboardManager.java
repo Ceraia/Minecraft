@@ -26,10 +26,10 @@ public class EloScoreboardManager {
 
         // Get all online players and set their score to their Elo rating
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(onlinePlayer.getUniqueId());
+            CeraiaPlayer ceraiaPlayer = plugin.getPlayerManager().getCeraiaPlayer(onlinePlayer.getUniqueId());
 
-            objectivePlayerList.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
-            objectiveBelowName.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
+            objectivePlayerList.getScore(onlinePlayer.getName()).setScore(ceraiaPlayer.getElo());
+            objectiveBelowName.getScore(onlinePlayer.getName()).setScore(ceraiaPlayer.getElo());
             objectivePlayerList.setDisplaySlot(DisplaySlot.PLAYER_LIST);
             objectiveBelowName.setDisplaySlot(DisplaySlot.BELOW_NAME);
 

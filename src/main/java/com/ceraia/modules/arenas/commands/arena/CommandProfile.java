@@ -42,13 +42,13 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         }
 
         // Return the player's profile
-        CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(player.getUniqueId());
+        CeraiaPlayer ceraiaPlayer = plugin.getPlayerManager().getCeraiaPlayer(player.getUniqueId());
         plugin.getConfig().getStringList("messages.profile").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s
                 .replace("%player%", player.getName())
-                .replace("%elo%", String.valueOf(doublePlayer.getElo()))
-                .replace("%wins%", String.valueOf(doublePlayer.getWins()))
-                .replace("%losses%", String.valueOf(doublePlayer.getLosses()))
-                .replace("%games%", String.valueOf(doublePlayer.getWins() + doublePlayer.getLosses())))));
+                .replace("%elo%", String.valueOf(ceraiaPlayer.getElo()))
+                .replace("%wins%", String.valueOf(ceraiaPlayer.getWins()))
+                .replace("%losses%", String.valueOf(ceraiaPlayer.getLosses()))
+                .replace("%games%", String.valueOf(ceraiaPlayer.getWins() + ceraiaPlayer.getLosses())))));
 
 
 

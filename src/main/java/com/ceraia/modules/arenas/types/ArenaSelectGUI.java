@@ -26,15 +26,10 @@ public class ArenaSelectGUI implements Listener {
     public ArenaSelectGUI(Ceraia plugin) {
         this.plugin = plugin;
 
-        INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
-        INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name")));
+        INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize("Quick Text Arena Title");
+        INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize("Quick Text Totem Title");
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
-
-    public void reloadConfig() {
-        INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
-        INVENTORY_NAME_TOTEMS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.totem_select_gui.inventory_name")));
     }
 
     public void openArenaList(Player inviter, Player invited) { // Let the player select what arena to fight in

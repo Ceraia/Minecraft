@@ -42,7 +42,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
 
         top.add(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.scoreboard.top"))));
 
-        plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(CeraiaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
+        plugin.getPlayerManager().getCeraiaPlayers().stream().sorted(Comparator.comparingInt(CeraiaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
             String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
             int elo = ap.getElo();
 

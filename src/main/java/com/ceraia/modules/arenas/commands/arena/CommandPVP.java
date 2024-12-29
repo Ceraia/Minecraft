@@ -39,7 +39,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         }
 
         // Check if the sender is pvpbanned
-        CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(((Player) sender).getUniqueId());
+        CeraiaPlayer ceraiaPlayer = plugin.getPlayerManager().getCeraiaPlayer(((Player) sender).getUniqueId());
 
         if (args[0].equalsIgnoreCase("accept")) {
             Player p = (Player) sender;
@@ -156,7 +156,6 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         // reload for op
         if (playerName.equalsIgnoreCase("reload") && sender.isOp()) {
             plugin.reloadConfig();
-            plugin.getArenaModule().getArenaSelectGUI().reloadConfig();
             sender.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<green>Reloaded!")
             );

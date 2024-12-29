@@ -33,7 +33,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
         if (sender !is Player) return true
 
-        if (!sender.hasPermission("double.marry")) {
+        if (!sender.hasPermission("ceraia.marry")) {
             plugin.noPermission(sender)
             return true
         }
@@ -150,14 +150,14 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
     }
 
     private fun divorce(player: Player) {
-        val doublePlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
-        val doublePartner = plugin.playerManager.getCeraiaPlayer(doublePlayer.getPartner() ?: return)
+        val ceraiaPlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
+        val ceraiaPartner = plugin.playerManager.getCeraiaPlayer(ceraiaPlayer.getPartner() ?: return)
 
-        doublePlayer.divorce()
-        doublePartner.divorce()
+        ceraiaPlayer.divorce()
+        ceraiaPartner.divorce()
 
         plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
-                "<green>${player.name} has divorced ${doublePartner.name}."
+                "<green>${player.name} has divorced ${ceraiaPartner.name}."
         ))
     }
 
@@ -171,8 +171,8 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         val rightClicked = event.rightClicked as? Player ?: return
         if (event.player.uniqueId == rightClicked.uniqueId || !event.player.isSneaking) return
 
-        val doublePlayer = plugin.playerManager.getCeraiaPlayer(event.player.uniqueId)
-        if (doublePlayer.isMarried() && rightClicked.name == doublePlayer.getMarriedName()) {
+        val ceraiaPlayer = plugin.playerManager.getCeraiaPlayer(event.player.uniqueId)
+        if (ceraiaPlayer.isMarried() && rightClicked.name == ceraiaPlayer.getMarriedName()) {
             // Spawn a bunch of hearts
             spawnHeartsAroundPlayer(rightClicked)
             spawnHeartsAroundPlayer(event.player)
