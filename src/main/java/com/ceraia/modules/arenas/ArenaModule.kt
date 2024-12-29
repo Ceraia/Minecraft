@@ -3,7 +3,6 @@ package com.ceraia.modules.arenas
 import com.ceraia.Ceraia
 import com.ceraia.metrics.Metrics
 import com.ceraia.modules.arenas.commands.arena.*
-import com.ceraia.modules.arenas.commands.factions.CommandFaction
 import com.ceraia.modules.arenas.commands.system.CommandMod
 import com.ceraia.modules.arenas.commands.system.CommandVersion
 import com.ceraia.modules.arenas.listeners.*
@@ -49,7 +48,6 @@ class ArenaModule(private val plugin: Ceraia) {
             val commandTop = CommandTop(plugin)
             val commandProfile = CommandProfile(plugin)
             val commandVersion = CommandVersion(plugin)
-            val commandFaction = CommandFaction(plugin)
 
             // Listeners
             PlayerEloChangeListener(plugin)
@@ -70,16 +68,11 @@ class ArenaModule(private val plugin: Ceraia) {
             // System Misc
             Objects.requireNonNull(plugin.getCommand("mod"))?.setExecutor(commandMod)
             Objects.requireNonNull(plugin.getCommand("version"))?.setExecutor(commandVersion)
-
-            // Faction Commands
-            Objects.requireNonNull(plugin.getCommand("faction"))?.setExecutor(commandFaction)
-        
-
     }
 
     fun calculateWinChance(player1: UUID, player2: UUID): Double {
-        val elo1 = playerManager.getPlayer(player1)?.elo
-        val elo2 = playerManager.getPlayer(player2)?.elo
+        val elo1 = playerManager?.getPlayer(player1)?.elo
+        val elo2 = playerManager?.getPlayer(player2)?.elo
 
         if ((elo1 == 0 || elo1 == null) || (elo2 == 0 || elo2 == null)) {
             return 0.5

@@ -222,7 +222,7 @@ public class ArenaSelectGUI implements Listener {
             String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.invite_message"))
                     .replace("%inviter%", inviter.getName())
                     .replace("%arena_name%", arena.getName())
-                    .replace("%winchance%", plugin.getArenaModule().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
+                    .replace("%winchance%", plugin.getArenaModule().calculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
                     .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>");
             // Get the invite message from the config and replace the placeholders
 
