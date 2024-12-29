@@ -39,6 +39,8 @@ class PlayerManager(private val plugin: Ceraia) {
                     config.getBoolean("pvpbanned", false),
                     config.getInt("wins", 0),
                     config.getInt("losses", 0),
+                    config.getStringList("parents"),
+                    config.getStringList("children"),
                     file
             )
             ceraiaPlayers.add(ceraiaPlayer)
@@ -84,6 +86,8 @@ class PlayerManager(private val plugin: Ceraia) {
                 set("wins", 0)
                 set("losses", 0)
                 set("logs", mutableListOf<String>())
+                set("parents", mutableListOf<String>())
+                set("children", mutableListOf<String>())
             }
             config.save(configFile)
 
@@ -99,6 +103,8 @@ class PlayerManager(private val plugin: Ceraia) {
                     false,
                     0,
                     0,
+                     mutableListOf(),
+                        mutableListOf(),
                     configFile
             )
         } catch (e: IOException) {
@@ -115,6 +121,8 @@ class PlayerManager(private val plugin: Ceraia) {
                     false,
                     0,
                     0,
+                    mutableListOf(),
+                    mutableListOf(),
                     configFile
             )
         }

@@ -19,9 +19,9 @@ class CeraiaPlayer(
     private var pvpBanned: Boolean,
     var wins: Int,
     var losses: Int,
-    private val configFile: File,
     private val parents: MutableList<String>,
-    private var children: MutableList<String>
+    private var children: MutableList<String>,
+    private val configFile: File,
 ) {
     fun getUUID(): UUID = uuid
 
