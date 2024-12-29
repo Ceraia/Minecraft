@@ -57,11 +57,58 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
                 propose(sender, target)
             }
             "adopt" -> {
+                if (args.isEmpty() || args.size < 2 || (args[0] != "parent" && args[0] != "kid")) {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Usage: <white>/adopt <parent/kid> <player>"))
+                    return true
+                }
 
+                val target = plugin.server.getPlayer(args[1])
+
+                if (target == null) {
+                    sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Player not found"))
+                    return true
+                }
+
+                if(args[0] == "parent") adopt(sender, target) else adopt(target, sender)
             }
         }
 
         return true
+    }
+
+    private fun adopt(parent: Player, child: Player) {
+        if (adoptionRequests.containsKey(parent)) {
+            if (adoptionRequests[parent] == child) {
+                acceptAdoption(parent, child)
+                return
+            }
+        }
+
+        adoptionRequests[child] = parent
+        plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
+                "<green>${parent.name}<gray> has invited <green>${child.name}<gray> to adopt them!"
+        ))
+        child.sendMessage(MiniMessage.miniMessage().deserialize(
+                "<green>${parent.name}<gray> has invited you to adopt them! Click <hover:show_text:'Click to accept the adoption proposal.'><click:run_command:/adopt parent ${parent.name}>[<green>here<gray>]</click><gray> to accept."
+        ))
+    }
+
+    private fun acceptAdoption(parent: Player, child: Player) {
+        val parentCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(parent.uniqueId)
+        val childCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(child.uniqueId)
+
+        if (adoptionRequests[child] != parent) {
+            return
+        }
+
+        plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
+                "<green>${child.name}<gray> has accepted <green>${parent.name}<gray>'s adoption proposal!"
+        ))
+
+        childCeraiaPlayer.addParent(parent.name)
+        parentCeraiaPlayer.addChild(child.name)
+
+        adoptionRequests.remove(child)
     }
 
     override fun onTabComplete(sender: CommandSender, cmd: Command, label: String, args: Array<String>): List<String> {
@@ -143,10 +190,6 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
                 "<green>${player.name} has divorced ${ceraiaPartner.name}."
         ))
-    }
-
-    private fun adoptParent(player: Player, parent: Player) {
-
     }
 
     @EventHandler
