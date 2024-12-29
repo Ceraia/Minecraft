@@ -15,6 +15,8 @@ import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.util.StringUtil
+import kotlin.math.cos
+import kotlin.math.sin
 
 class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
@@ -24,7 +26,6 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         plugin.getCommand("marry")?.setExecutor(this)
         plugin.getCommand("divorce")?.setExecutor(this)
         plugin.getCommand("marry")?.tabCompleter = this
-
 
         Bukkit.getPluginManager().registerEvents(this, plugin)
     }
@@ -100,7 +101,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         ))
     }
 
-    fun accept(target: Player, sender: Player) {
+    private fun accept(target: Player, sender: Player) {
         val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
         val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
@@ -148,7 +149,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         return 4
     }
 
-    fun divorce(player: Player) {
+    private fun divorce(player: Player) {
         val doublePlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
         val doublePartner = plugin.playerManager.getCeraiaPlayer(doublePlayer.getPartner() ?: return)
 
@@ -170,7 +171,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         val rightClicked = event.rightClicked as? Player ?: return
         if (event.player.uniqueId == rightClicked.uniqueId || !event.player.isSneaking) return
 
-                val doublePlayer = plugin.playerManager.getCeraiaPlayer(event.player.uniqueId)
+        val doublePlayer = plugin.playerManager.getCeraiaPlayer(event.player.uniqueId)
         if (doublePlayer.isMarried() && rightClicked.name == doublePlayer.getMarriedName()) {
             // Spawn a bunch of hearts
             spawnHeartsAroundPlayer(rightClicked)
@@ -186,16 +187,12 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         repeat(heartsToSpawn) {
             val angle = Math.random() * Math.PI * 2
             val radius = 0.5
-            val x = playerLocation.x + Math.cos(angle) * radius
+            val x = playerLocation.x + cos(angle) * radius
             val y = playerLocation.y + (Math.random() * 0.3) + 1.5
-            val z = playerLocation.z + Math.sin(angle) * radius
+            val z = playerLocation.z + sin(angle) * radius
 
             val particleLocation = Location(world, x, y, z)
             world.spawnParticle(Particle.HEART, particleLocation, 1)
         }
-    }
-
-    fun getRequests(player: Player): Collection<String> {
-        return invites.filter { it.value == player }.keys.map { it.name }
     }
 }
