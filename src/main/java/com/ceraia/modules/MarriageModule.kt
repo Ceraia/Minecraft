@@ -54,7 +54,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
                     return true
                 }
 
-                invite(sender, target)
+                propose(sender, target)
             }
             "adopt" -> {
 
@@ -77,7 +77,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         return returnedOptions
     }
 
-    fun invite(sender: Player, target: Player) {
+    private fun propose(sender: Player, target: Player) {
         val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
         val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
