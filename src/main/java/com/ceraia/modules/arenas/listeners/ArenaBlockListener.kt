@@ -1,44 +1,33 @@
-package com.ceraia.modules.arenas.listeners;
+package com.ceraia.modules.arenas.listeners
 
-import com.ceraia.Ceraia;
-import com.ceraia.modules.arenas.types.Arena;
-import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
+import com.ceraia.Ceraia
+import org.bukkit.Bukkit
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockPlaceEvent
 
-public class ArenaBlockListener implements Listener {
-
-    private final Ceraia plugin;
-
-    public ArenaBlockListener(Ceraia plugin) {
-        this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+class ArenaBlockListener(private val plugin: Ceraia) : Listener {
+    init {
+        Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
     @EventHandler
-    public void onBlockPlace(BlockPlaceEvent e) {
-        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getPlayer());
-        if (arena == null) {
-            return;
-        }
+    fun onBlockPlace(e: BlockPlaceEvent) {
+        val arena = plugin.arenaModule.arenaManager!!.getArena(e.player) ?: return
 
-        arena.placeBlock(e.getBlockPlaced().getLocation());
+        arena.placeBlock(e.blockPlaced.location)
     }
 
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent e) {
-        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getPlayer());
-        if (arena == null) {
-            return;
+    fun onBlockBreak(e: BlockBreakEvent) {
+        val arena = plugin.arenaModule.arenaManager!!.getArena(e.player) ?: return
+
+        if (arena.placedBlocks.contains(e.block.location)) {
+            arena.removeBlock(e.block.location)
+            return
         }
 
-        if (arena.getPlacedBlocks().contains(e.getBlock().getLocation())) {
-            arena.removeBlock(e.getBlock().getLocation());
-            return;
-        }
-
-        e.setCancelled(true);
+        e.isCancelled = true
     }
 }

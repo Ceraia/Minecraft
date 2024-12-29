@@ -1,37 +1,16 @@
-package com.ceraia.modules.arenas.listeners;
+package com.ceraia.modules.arenas.listeners
 
-import com.ceraia.modules.ceraia.types.CeraiaPlayer;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
-import org.jetbrains.annotations.NotNull;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer
+import org.bukkit.entity.Player
+import org.bukkit.event.Event
+import org.bukkit.event.HandlerList
 
-public class PlayerEventListener extends Event {
-
-    private static final HandlerList handlers = new HandlerList();
-    private final Player player;
-    private final CeraiaPlayer ceraiaPlayer;
-
-    public PlayerEventListener(Player player, CeraiaPlayer ceraiaPlayer) {
-        this.player = player;
-        this.ceraiaPlayer = ceraiaPlayer;
+class PlayerEventListener(val player: Player, val arenaPlayer: CeraiaPlayer) : Event() {
+    override fun getHandlers(): HandlerList {
+        return handlerList
     }
 
-    public Player getPlayer() {
-        return player;
+    companion object {
+        val handlerList: HandlerList = HandlerList()
     }
-
-    public CeraiaPlayer getArenaPlayer() {
-        return ceraiaPlayer;
-    }
-
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlers;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
-    }
-
 }

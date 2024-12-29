@@ -112,8 +112,8 @@ public class Arena {
         this.state = state;
     }
 
-    public boolean delete() {
-        return configFile.delete();
+    public void delete() {
+        configFile.delete();
     }
 
     public String getName() {

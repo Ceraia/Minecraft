@@ -1,101 +1,93 @@
-package com.ceraia.modules.arenas.listeners;
+package com.ceraia.modules.arenas.listeners
 
-import com.ceraia.Ceraia;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.data.type.RespawnAnchor;
-import org.bukkit.entity.*;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityExplodeEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import com.ceraia.Ceraia
+import org.bukkit.Bukkit
+import org.bukkit.Material
+import org.bukkit.block.data.type.RespawnAnchor
+import org.bukkit.entity.*
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityExplodeEvent
+import org.bukkit.event.player.PlayerInteractEvent
 
-public class ArenaExplodeListener implements Listener {
-
-    private final Ceraia plugin;
-
-    public ArenaExplodeListener(Ceraia plugin) {
-        this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+class ArenaExplodeListener(private val plugin: Ceraia) : Listener {
+    init {
+        Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
-    private boolean isInArena(Player player) {
-        return plugin.getArenaModule().getArenaManager().getArena(player) != null;
+    private fun isInArena(player: Player): Boolean {
+        return plugin.arenaModule.arenaManager!!.getArena(player) != null
     }
 
     // TNT
     @EventHandler
-    public void onEntityExplode(EntityExplodeEvent e) {
-        Player source = null;
-        if (e.getEntityType().equals(EntityType.TNT)) {
-            TNTPrimed tnt = (TNTPrimed) e.getEntity();
-            Entity entity = tnt.getSource();
-            if (!(entity instanceof Player)) return;
-            source = (Player) entity;
+    fun onEntityExplode(e: EntityExplodeEvent) {
+        var source: Player? = null
+        if (e.entityType == EntityType.TNT) {
+            val tnt = e.entity as TNTPrimed
+            val entity = tnt.source as? Player ?: return
+            source = entity
         }
 
         if (source == null || isInArena(source)) {
-            return;
+            return
         }
-        e.blockList().clear();
+        e.blockList().clear()
     }
 
     // End crystal
     @EventHandler
-    public void onHitCrystal(EntityDamageByEntityEvent e) {
-        Entity entity = e.getEntity();
-        Entity damager = e.getDamager();
+    fun onHitCrystal(e: EntityDamageByEntityEvent) {
+        val entity = e.entity
+        val damager = e.damager
 
-        Player source;
+        val source: Player
 
-        if (!(entity instanceof EnderCrystal)) return;
+        if (entity !is EnderCrystal) return
 
-        if (damager instanceof Player) {
-            source = (Player) damager;
-        } else if (damager instanceof Arrow arrow) {
-            Entity entity2 = (Entity) arrow.getShooter();
-            if (!(entity2 instanceof Player)) return;
-            source = (Player) entity2;
+        if (damager is Player) {
+            source = damager
+        } else if (damager is Arrow) {
+            val entity2 = damager.shooter as Entity? as? Player ?: return
+            source = entity2
         } else {
-            return;
+            return
         }
 
         if (isInArena(source)) {
-            return;
+            return
         }
 
-        e.setCancelled(true);
-        if (e.getEntity().isValid())
-            e.getEntity().remove();
-        e.getEntity().getWorld().createExplosion(
-                e.getEntity().getLocation(),
-                6,
-                false,
-                false
-        );
+        e.isCancelled = true
+        if (e.entity.isValid) e.entity.remove()
+        e.entity.world.createExplosion(
+            e.entity.location,
+            6f,
+            false,
+            false
+        )
     }
 
     // Respawn Anchor
     @EventHandler
-    public void onFillAnchor(PlayerInteractEvent e) {
-        if (e.getClickedBlock() == null) return;
-        if (!e.getClickedBlock().getType().equals(Material.RESPAWN_ANCHOR)) return;
+    fun onFillAnchor(e: PlayerInteractEvent) {
+        if (e.clickedBlock == null) return
+        if (e.clickedBlock!!.type != Material.RESPAWN_ANCHOR) return
 
-        Block block = e.getClickedBlock();
-        RespawnAnchor data = (RespawnAnchor) block.getBlockData();
-        if (data.getCharges() < data.getMaximumCharges()) return;
+        val block = e.clickedBlock
+        val data = block!!.blockData as RespawnAnchor
+        if (data.charges < data.maximumCharges) return
 
-        if (isInArena(e.getPlayer())) return;
+        if (isInArena(e.player)) return
 
-        e.setCancelled(true);
-        block.setType(Material.AIR);
-        block.getWorld().createExplosion(
-                block.getLocation(),
-                5,
-                false,
-                false
-        );
+        e.isCancelled = true
+        block.type = Material.AIR
+        block.world.createExplosion(
+            block.location,
+            5f,
+            false,
+            false
+        )
     }
 }

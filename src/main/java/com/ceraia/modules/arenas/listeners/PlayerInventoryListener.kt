@@ -1,49 +1,45 @@
-package com.ceraia.modules.arenas.listeners;
+package com.ceraia.modules.arenas.listeners
 
-import com.ceraia.Ceraia;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.event.player.PlayerDropItemEvent;
+import com.ceraia.Ceraia
+import org.bukkit.Bukkit
+import org.bukkit.entity.Player
+import org.bukkit.event.EventHandler
+import org.bukkit.event.Listener
+import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.inventory.InventoryType
+import org.bukkit.event.player.PlayerDropItemEvent
 
-public class PlayerInventoryListener implements Listener {
-
-    private final Ceraia plugin;
-
-    public PlayerInventoryListener(Ceraia plugin) {
-        this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+class PlayerInventoryListener(private val plugin: Ceraia) : Listener {
+    init {
+        Bukkit.getPluginManager().registerEvents(this, plugin)
     }
 
-    private boolean isInArena(Player player) {
-        return plugin.getArenaModule().getArenaManager().getArena(player) != null;
+    private fun isInArena(player: Player): Boolean {
+        return plugin.arenaModule.arenaManager!!.getArena(player) != null
     }
 
     @EventHandler
-    public void onDropItem(PlayerDropItemEvent e) {
-        if (isInArena(e.getPlayer())) {
-            e.setCancelled(true);
+    fun onDropItem(e: PlayerDropItemEvent) {
+        if (isInArena(e.player)) {
+            e.isCancelled = true
         }
     }
 
     @EventHandler
-    public void onClickInventory(InventoryClickEvent e) {
-        Player p = (Player) e.getWhoClicked();
+    fun onClickInventory(e: InventoryClickEvent) {
+        val p = e.whoClicked as Player
 
         if (!isInArena(p)) {
-            return;
+            return
         }
 
-        if (e.getView().getTopInventory().getType() == InventoryType.PLAYER
-                || e.getView().getTopInventory().getType() ==
-                InventoryType.CRAFTING) {
-            return;
+        if (e.view.topInventory.type == InventoryType.PLAYER
+            || e.view.topInventory.type ==
+            InventoryType.CRAFTING
+        ) {
+            return
         }
 
-        e.setCancelled(true);
-
+        e.isCancelled = true
     }
 }
