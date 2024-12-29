@@ -10,7 +10,6 @@ import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 import org.bukkit.event.Listener
 import org.bukkit.util.StringUtil
-import java.io.File
 
 class SystemModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
 
@@ -126,19 +125,5 @@ class SystemModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
                 player.teleport(highestBlock.location.add(0.5, 1.0, 0.5))
             }
         }
-    }
-
-    private fun modHelp(sender: CommandSender) {
-        sender.sendMessage(
-            MiniMessage.miniMessage().deserialize(
-                """
-                    <yellow><bold>Mod Help
-                    <gray>/mod ban pvp <player>
-                    <gray>/mod ban arenas <player>
-                    <gray>/mod remove pvp <player>
-                    <gray>/mod remove arenas <player>
-                """.trimIndent()
-            )
-        )
     }
 }

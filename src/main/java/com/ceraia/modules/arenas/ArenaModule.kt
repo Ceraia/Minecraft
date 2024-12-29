@@ -64,10 +64,6 @@ class ArenaModule(private val plugin: Ceraia) {
             Objects.requireNonNull(plugin.getCommand("leaderboard"))?.setExecutor(commandTop)
             Objects.requireNonNull(plugin.getCommand("profile"))?.setExecutor(commandProfile)
             Objects.requireNonNull(plugin.getCommand("stats"))?.setExecutor(commandProfile)
-
-            // System Misc
-            Objects.requireNonNull(plugin.getCommand("mod"))?.setExecutor(commandMod)
-            Objects.requireNonNull(plugin.getCommand("version"))?.setExecutor(commandVersion)
     }
 
     fun calculateWinChance(player1: UUID, player2: UUID): Double {
