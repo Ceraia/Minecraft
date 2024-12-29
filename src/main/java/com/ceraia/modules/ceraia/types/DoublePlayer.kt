@@ -19,7 +19,9 @@ class CeraiaPlayer(
     private var pvpBanned: Boolean,
     var wins: Int,
     var losses: Int,
-    private val configFile: File
+    private val configFile: File,
+    private val parents: MutableList<String>,
+    private var children: MutableList<String>
 ) {
     fun getUUID(): UUID = uuid
 
@@ -46,6 +48,8 @@ class CeraiaPlayer(
         config.set("pvpbanned", pvpBanned)
         config.set("wins", wins)
         config.set("losses", losses)
+        config.set("parents", parents)
+        config.set("children", children)
 
         try {
             config.save(configFile)
@@ -56,6 +60,22 @@ class CeraiaPlayer(
 
     fun divorce() {
         marriedName = null
+        savePlayer()
+    }
+
+    fun disown(name: String){
+        children.remove(name)
+        parents.remove(name)
+        savePlayer()
+    }
+
+    fun addChild(name: String){
+        children.add(name)
+        savePlayer()
+    }
+
+    fun addParent(name: String){
+        parents.add(name)
         savePlayer()
     }
 
