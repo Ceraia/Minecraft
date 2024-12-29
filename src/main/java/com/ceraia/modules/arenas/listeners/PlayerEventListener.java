@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.listeners;
 
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -10,19 +10,19 @@ public class PlayerEventListener extends Event {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
-    private final DoublePlayer doublePlayer;
+    private final CeraiaPlayer ceraiaPlayer;
 
-    public PlayerEventListener(Player player, DoublePlayer doublePlayer) {
+    public PlayerEventListener(Player player, CeraiaPlayer ceraiaPlayer) {
         this.player = player;
-        this.doublePlayer = doublePlayer;
+        this.ceraiaPlayer = ceraiaPlayer;
     }
 
     public Player getPlayer() {
         return player;
     }
 
-    public DoublePlayer getArenaPlayer() {
-        return doublePlayer;
+    public CeraiaPlayer getArenaPlayer() {
+        return ceraiaPlayer;
     }
 
     @Override

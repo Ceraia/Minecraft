@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.types;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.managers.InviteManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -20,10 +20,10 @@ import java.util.*;
 public class ArenaSelectGUI implements Listener {
     private static Component INVENTORY_NAME_ARENAS;
     private static Component INVENTORY_NAME_TOTEMS;
-    private final Double plugin;
+    private final Ceraia plugin;
     private final Map<Player, Map<Integer, Arena>> selectingArenaCache = new HashMap<>();
 
-    public ArenaSelectGUI(Double plugin) {
+    public ArenaSelectGUI(Ceraia plugin) {
         this.plugin = plugin;
 
         INVENTORY_NAME_ARENAS = MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.inventory_name")));
@@ -41,10 +41,10 @@ public class ArenaSelectGUI implements Listener {
         // Add the player invitee and inviter
         InviteManager.Invite invite = new InviteManager.Invite(inviter, invited);
 
-        plugin.getInviteManager().selectingInvites.put(inviter, invite);
+        plugin.getArenaModule().getInviteManager().selectingInvites.put(inviter, invite);
 
         // Get a list of all arenas accessible to the player
-        List<Arena> arenas = plugin.getArenaManager().getArenas()
+        List<Arena> arenas = plugin.getArenaModule().getArenaManager().getArenas()
                 .stream().filter(a -> a.isPublic() || a.getOwner().equals(inviter.getName())).toList();
 
         // Size is from arenas.size() and must be devidable by 9
@@ -186,7 +186,7 @@ public class ArenaSelectGUI implements Listener {
             int slot = e.getSlot();
             Arena arena = selectingArenaCache.get(inviter).get(slot); // Get the specific player and then the arena from the cache
 
-            InviteManager.Invite invite = plugin.getInviteManager().selectingInvites.get(inviter); // Get the invite from the selectingInvites map
+            InviteManager.Invite invite = plugin.getArenaModule().getInviteManager().selectingInvites.get(inviter); // Get the invite from the selectingInvites map
             invite.arena = arena; // Set the arena in the invite
 
 
@@ -206,7 +206,7 @@ public class ArenaSelectGUI implements Listener {
             int slot = e.getSlot();
 
             // Get the invite from the selectingInvites map
-            InviteManager.Invite invite = plugin.getInviteManager().selectingInvites.get(inviter);
+            InviteManager.Invite invite = plugin.getArenaModule().getInviteManager().selectingInvites.get(inviter);
 
             // Get the arena from the invite
             Arena arena = invite.arena;
@@ -222,7 +222,7 @@ public class ArenaSelectGUI implements Listener {
             String invite_message = Objects.requireNonNull(plugin.getConfig().getString("messages.arena_select_gui.invite_message"))
                     .replace("%inviter%", inviter.getName())
                     .replace("%arena_name%", arena.getName())
-                    .replace("%winchance%", plugin.getPlayerManager().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
+                    .replace("%winchance%", plugin.getArenaModule().CalculateWinChance(inviter.getUniqueId(), invite.invited.getUniqueId()) + "%")
                     .replace("%totems%", arena.totems ? "<green>enabled</green>" : "<red>disabled</red>");
             // Get the invite message from the config and replace the placeholders
 
@@ -231,8 +231,8 @@ public class ArenaSelectGUI implements Listener {
 
             invite.arena = arena;
 
-            plugin.getInviteManager().selectingInvites.remove(inviter); // Remove the invite from the selectingInvites map
-            plugin.getInviteManager().invites.put(invite.invited, invite); // Put the invite in the invites map
+            plugin.getArenaModule().getInviteManager().selectingInvites.remove(inviter); // Remove the invite from the selectingInvites map
+            plugin.getArenaModule().getInviteManager().invites.put(invite.invited, invite); // Put the invite in the invites map
 
             inviter.closeInventory(); // Close the inventory
         }

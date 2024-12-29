@@ -1,8 +1,8 @@
 package com.ceraia.modules.arenas.commands.arena;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.types.Arena;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
 
 public class CommandArena implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandArena(Double plugin) {
+    public CommandArena(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -53,7 +53,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
             top.add(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.scoreboard.top")));
 
-            plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(DoublePlayer::getElo).reversed()).limit(10).forEach(ap -> {
+            plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(CeraiaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
                 String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
                 int elo = ap.getElo();
 
@@ -70,7 +70,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
                     medal = "<white>"; // Default medal color for players outside the top 3
                 }
 
-                top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+                top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.getWins() + ap.getLosses()) + " games)"));
                 i.getAndIncrement();
             });
 
@@ -118,7 +118,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
                         args[0].equalsIgnoreCase("public") ||
                         args[0].equalsIgnoreCase("sp1") ||
                         args[0].equalsIgnoreCase("sp2"))) {
-            plugin.getArenaManager().getArenas().forEach(a ->{
+            plugin.getArenaModule().getArenaManager().getArenas().forEach(a ->{
                 if (a.getOwner().equals(sender.getName())) {
                     arenas.add(a.getName());
                 }
@@ -140,7 +140,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         String name = args[1];
 
-        Arena arena = plugin.getArenaManager().getArena(name);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(name);
         if (arena == null) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_found"))
@@ -167,7 +167,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         String name = args[1];
 
-        Arena arena = plugin.getArenaManager().getArena(name);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(name);
         if (arena == null) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_found"))
@@ -195,14 +195,6 @@ public class CommandArena implements CommandExecutor, TabCompleter {
 
         String name = args[1];
 
-        // Check if the user is banned from creating arenas
-        if (plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId()).arenaBanned()){
-            sender.sendMessage(
-                    MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.banned"))
-            );
-            return;
-        }
-
         // Check if the string is the same as <name>, if so state the user should put a name
         if (name.equalsIgnoreCase("<name>")) {
             sender.sendMessage(
@@ -219,7 +211,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         // Check if the arena already exists
-        if (plugin.getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).count() > 0) {
+        if (plugin.getArenaModule().getArenaManager().getArenas().stream().filter(a -> a.getName().equalsIgnoreCase(name)).count() > 0) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.exists"))
             );
@@ -233,7 +225,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         arena.setSpawnPoint1(((Player) sender).getLocation());
         arena.setSpawnPoint2(((Player) sender).getLocation());
 
-        plugin.getArenaManager().addArena(arena);
+        plugin.getArenaModule().getArenaManager().addArena(arena);
 
         sender.sendMessage(
                 MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.create.success"))
@@ -247,7 +239,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         String name = args[1];
-        Arena arena = plugin.getArenaManager().getArena(name);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(name);
         if (arena == null) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_found"))
@@ -268,7 +260,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         arena.delete();
-        plugin.getArenaManager().removeArena(arena);
+        plugin.getArenaModule().getArenaManager().removeArena(arena);
 
         sender.sendMessage(
                 MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.delete.delete"))
@@ -282,7 +274,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
         }
 
         String name = args[1];
-        Arena arena = plugin.getArenaManager().getArena(name);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(name);
         if (arena == null) {
             sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.arena.not_found"))
@@ -316,7 +308,7 @@ public class CommandArena implements CommandExecutor, TabCompleter {
     }
 
     private void arenaList(CommandSender sender) {
-        List<Arena> arenas = plugin.getArenaManager().getArenas().stream().filter(arena -> arena.getOwner().equals(sender.getName())).collect(Collectors.toList());
+        List<Arena> arenas = plugin.getArenaModule().getArenaManager().getArenas().stream().filter(arena -> arena.getOwner().equals(sender.getName())).collect(Collectors.toList());
         plugin.getConfig().getStringList("messages.arena.list").forEach(s -> {
             if (s.contains("%arenas%")) {
                 arenas.forEach(a -> {

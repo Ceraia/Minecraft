@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.listeners;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.managers.InviteManager;
 import com.ceraia.modules.arenas.types.Arena;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -21,15 +21,15 @@ import java.util.UUID;
 
 public class ArenaFightListener implements Listener {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public ArenaFightListener(Double plugin) {
+    public ArenaFightListener(Ceraia plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     private boolean isInArena(Player player) {
-        return plugin.getArenaManager().getArena(player) != null;
+        return plugin.getArenaModule().getArenaManager().getArena(player) != null;
     }
 
     @EventHandler
@@ -46,12 +46,12 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
-        if (((isInArena(damager) && !isInArena(player)) || (!isInArena(damager) && isInArena(player))) || !Objects.equals(plugin.getArenaManager().getArena(damager).getName(), plugin.getArenaManager().getArena(player).getName())) {
+        if (((isInArena(damager) && !isInArena(player)) || (!isInArena(damager) && isInArena(player))) || !Objects.equals(plugin.getArenaModule().getArenaManager().getArena(damager).getName(), plugin.getArenaModule().getArenaManager().getArena(player).getName())) {
             e.setCancelled(true);
             return;
         }
 
-        Arena arena = plugin.getArenaManager().getArena(damager);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(damager);
 
         if (arena == null) {
             return;
@@ -107,16 +107,16 @@ public class ArenaFightListener implements Listener {
             }
         }
 
-        Arena arena = plugin.getArenaManager().getArena(player);
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(player);
 
         double healthAfter = player.getHealth() - e.getFinalDamage();
         if (healthAfter <= 0) {
 
             // Check if during the fight totems are allowed
 
-            InviteManager.Invite invite = plugin.getInviteManager().invites.get(player);
+            InviteManager.Invite invite = plugin.getArenaModule().getInviteManager().invites.get(player);
 
-            if (invite == null) invite = plugin.getInviteManager().selectingInvites.get(killer);
+            if (invite == null) invite = plugin.getArenaModule().getInviteManager().selectingInvites.get(killer);
 
             if (invite != null) {
                 if (arena.totems) {
@@ -139,7 +139,7 @@ public class ArenaFightListener implements Listener {
         if (!isInArena(e.getEntity())) {
             return;
         }
-        Arena arena = plugin.getArenaManager().getArena(e.getEntity());
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getEntity());
 
         Location loc = e.getEntity().getLocation();
 
@@ -170,7 +170,7 @@ public class ArenaFightListener implements Listener {
             return;
         }
 
-        Arena arena = plugin.getArenaManager().getArena(e.getPlayer());
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getPlayer());
 
         // Check in which team the player is
         if (arena.getTeam1().contains(e.getPlayer())) {
@@ -187,14 +187,15 @@ public class ArenaFightListener implements Listener {
         UUID loserUUID = loser.getUniqueId();
 
         // Get the win chance
-        int winChance = plugin.getPlayerManager().CalculateWinChance(winnerUUID, loserUUID);
+        int winChance = (int) plugin.getArenaModule().calculateWinChance(winnerUUID, loserUUID);
 
         // Announce the winner and the win chance in chat
-        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getDoublePlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaManager().getArena(loser).getName()))
+        Bukkit.broadcast(MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.fight.end_global").replace("%winner%", winner.getName()).replace("%loser%", loser.getName()).replace("%elo%", String.valueOf(plugin.getPlayerManager().getCeraiaPlayer(loserUUID).getElo())).replace("%winchance%", String.valueOf(winChance)).replace("%arena%", plugin.getArenaModule().getArenaManager().getArena(loser).getName()))
 
         );
 
         // Handle ELO calculations
-        plugin.getPlayerManager().PlayerKill(winnerUUID, loserUUID);
+        // #TODO: Re-implement ELO calculations
+        //plugin.getPlayerManager().PlayerKill(winnerUUID, loserUUID);
     }
 }

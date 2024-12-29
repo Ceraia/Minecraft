@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.commands.system;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,9 +13,9 @@ import java.util.List;
 
 public class CommandVersion implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandVersion(Double plugin) {
+    public CommandVersion(Ceraia plugin) {
         this.plugin = plugin;
     }
 

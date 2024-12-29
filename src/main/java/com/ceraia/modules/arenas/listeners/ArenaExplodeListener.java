@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.listeners;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,15 +14,15 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 public class ArenaExplodeListener implements Listener {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public ArenaExplodeListener(Double plugin) {
+    public ArenaExplodeListener(Ceraia plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     private boolean isInArena(Player player) {
-        return plugin.getArenaManager().getArena(player) != null;
+        return plugin.getArenaModule().getArenaManager().getArena(player) != null;
     }
 
     // TNT

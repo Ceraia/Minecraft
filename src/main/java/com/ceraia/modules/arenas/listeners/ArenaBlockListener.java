@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.listeners;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.types.Arena;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -10,16 +10,16 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class ArenaBlockListener implements Listener {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public ArenaBlockListener(Double plugin) {
+    public ArenaBlockListener(Ceraia plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
-        Arena arena = plugin.getArenaManager().getArena(e.getPlayer());
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getPlayer());
         if (arena == null) {
             return;
         }
@@ -29,7 +29,7 @@ public class ArenaBlockListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
-        Arena arena = plugin.getArenaManager().getArena(e.getPlayer());
+        Arena arena = plugin.getArenaModule().getArenaManager().getArena(e.getPlayer());
         if (arena == null) {
             return;
         }

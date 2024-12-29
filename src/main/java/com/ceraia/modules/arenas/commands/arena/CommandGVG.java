@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.commands.arena;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -19,13 +19,13 @@ import java.util.stream.Collectors;
 
 public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
 
-    private final Double plugin;
+    private final Ceraia plugin;
     private final Map<Player, List<Player>> groups = new HashMap<>();
     private final Map<Player, Player> playersByGroup = new HashMap<>();
 
     private final Map<Player, Player> invites = new HashMap<>();
 
-    public CommandGVG(Double plugin) {
+    public CommandGVG(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -212,7 +212,7 @@ public class CommandGVG implements CommandExecutor, TabCompleter, Listener {
                 return true;
             }
 
-            plugin.getArenaSelectGUI().openArenaList(player, invited);
+            plugin.getArenaModule().getArenaSelectGUI().openArenaList(player, invited);
         }
 
         return true;

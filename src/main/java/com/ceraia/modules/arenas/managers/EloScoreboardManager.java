@@ -1,7 +1,7 @@
 package com.ceraia.modules.arenas.managers;
 
-import com.ceraia.modules.arenas.Double;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.Ceraia;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -12,9 +12,9 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class EloScoreboardManager {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public EloScoreboardManager(Double plugin) {
+    public EloScoreboardManager(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -26,7 +26,7 @@ public class EloScoreboardManager {
 
         // Get all online players and set their score to their Elo rating
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(onlinePlayer.getUniqueId());
+            CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(onlinePlayer.getUniqueId());
 
             objectivePlayerList.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());
             objectiveBelowName.getScore(onlinePlayer.getName()).setScore(doublePlayer.getElo());

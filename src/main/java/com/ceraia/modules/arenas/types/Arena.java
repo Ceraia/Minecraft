@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.types;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.Utils;
 import com.ceraia.modules.arenas.managers.InviteManager;
 import net.kyori.adventure.text.Component;
@@ -22,8 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class Arena {
-
-    private final Double plugin;
+    private final Ceraia plugin;
 
     // before ready
     private final String name;
@@ -43,7 +42,7 @@ public class Arena {
     public boolean totems = false;
     private boolean isFFA = false;
 
-    public Arena(Double plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean isFFA, File configFile) {
+    public Arena(Ceraia plugin, String name, String owner, Location spawnPoint1, Location spawnPoint2, boolean isPublic, boolean isFFA, File configFile) {
         this.plugin = plugin;
 
         this.name = name;
@@ -160,7 +159,7 @@ public class Arena {
     }
 
     public void addPlayer(Player player, int team) {
-        plugin.getArenaManager().addPlayerToArena(player, this);
+        plugin.getArenaModule().getArenaManager().addPlayerToArena(player, this);
         if (team == 1) {
             team1.add(player);
         } else {
@@ -224,7 +223,7 @@ public class Arena {
 
         if (!end || quit) {
             Utils.teleportPlayerToSpawn(plugin, player, this);
-            plugin.getArenaManager().removePlayerFromArena(player);
+            plugin.getArenaModule().getArenaManager().removePlayerFromArena(player);
 
             player.getInventory().clear();
             Utils.revertInventory(plugin, player, this);
@@ -270,15 +269,14 @@ public class Arena {
                     }
                     Utils.teleportPlayerToSpawn(plugin, pl, thisArena);
 
-                    plugin.getArenaManager().removePlayerFromArena(pl);
+                    plugin.getArenaModule().getArenaManager().removePlayerFromArena(pl);
 
                     Utils.revertInventory(plugin, pl, thisArena);
                 }
 
                 // Reward
                 for (Player pl : winners) {
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addWin();
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
+                    plugin.getPlayerManager().getCeraiaPlayer(pl.getUniqueId()).addWin();
                     for (String command : plugin.getConfig().getStringList("rewards")) {
                         pl.performCommand(command.replace("%player%", pl.getName()));
                     }
@@ -286,8 +284,7 @@ public class Arena {
 
                 // Reward losers
                 for (Player pl : losers) {
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).addLoss();
-                    plugin.getPlayerManager().getDoublePlayer(pl.getUniqueId()).setLastFought(System.currentTimeMillis() / 1000L);
+                    plugin.getPlayerManager().getCeraiaPlayer(pl.getUniqueId()).addLoss();
                     for (String command : plugin.getConfig().getStringList("rewards_lose")) {
                         pl.performCommand(command.replace("%player%", pl.getName()));
                     }
@@ -381,7 +378,7 @@ public class Arena {
                                 plugin.getConfig().getString("messages.fight.starting")
                                         .replace("%time%", String.valueOf(i.get() - 1))
                         ), MiniMessage.miniMessage().deserialize(
-                                        Objects.requireNonNull(plugin.getArenaManager().getArena(pl).totems ?
+                                        Objects.requireNonNull(plugin.getArenaModule().getArenaManager().getArena(pl).totems ?
                                                 plugin.getConfig().getString("messages.fight.totems_enabled")
                                                 : plugin.getConfig().getString("messages.fight.totems_disabled"))
                         )

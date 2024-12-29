@@ -1,9 +1,9 @@
 package com.ceraia.modules.arenas.commands.arena;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.managers.InviteManager;
 import com.ceraia.modules.arenas.types.Arena;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,9 +20,9 @@ import java.util.Objects;
 
 public class CommandPVP implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandPVP(Double plugin) {
+    public CommandPVP(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -39,32 +39,18 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         }
 
         // Check if the sender is pvpbanned
-        DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(((Player) sender).getUniqueId());
-        if (doublePlayer.pvpBanned()) {
-            sender.sendMessage(
-                    MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_invite")))
-            );
-            return true;
-        }
+        CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(((Player) sender).getUniqueId());
 
         if (args[0].equalsIgnoreCase("accept")) {
             Player p = (Player) sender;
 
-            // Check if the player is banned
-            if (plugin.getPlayerManager().getDoublePlayer(p.getUniqueId()).pvpBanned()) {
-                sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.pvp.banned.cant_accept")))
-                );
-                return true;
-            }
-
-            InviteManager.Invite invite = plugin.getInviteManager().invites.get(p);
+            InviteManager.Invite invite = Objects.requireNonNull(plugin.getArenaModule().getInviteManager()).invites.get(p);
 
             if (invite == null) {
                 sender.sendMessage(
                         MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.invite_not_found")))
                 );
-                plugin.getInviteManager().invites.remove(p);
+                plugin.getArenaModule().getInviteManager().invites.remove(p);
                 return true;
             }
 
@@ -82,7 +68,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            if (invite.arena.getState() != Arena.ArenaState.WAITING || plugin.getArenaManager().getArenas().stream().noneMatch(
+            if (invite.arena.getState() != Arena.ArenaState.WAITING || plugin.getArenaModule().getArenaManager().getArenas().stream().noneMatch(
                     a -> a.getName().equalsIgnoreCase(invite.arena.getName())
             )) {
                 for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
@@ -90,15 +76,15 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                             MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.arena_not_ready")))
                     );
                 }
-                plugin.getInviteManager().invites.remove(p);
+                plugin.getArenaModule().getInviteManager().invites.remove(p);
                 return true;
             }
 
             List<Player> playersToFight = new ArrayList<>();
 
             if (invite.group) {
-                List<Player> group1 = plugin.getGroupManager().getPlayersByGroup(invite.inviter);
-                List<Player> group2 = plugin.getGroupManager().getPlayersByGroup(invite.invited);
+                List<Player> group1 = plugin.getArenaModule().getGroupManager().getPlayersByGroup(invite.inviter);
+                List<Player> group2 = plugin.getArenaModule().getGroupManager().getPlayersByGroup(invite.invited);
 
                 if (group1 == null || group2 == null) {
                     for (Player pl : Arrays.asList(invite.invited, invite.inviter)) {
@@ -106,7 +92,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                                 MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.group.group_not_found")))
                         );
                     }
-                    plugin.getInviteManager().invites.remove(p);
+                    plugin.getArenaModule().getInviteManager().invites.remove(p);
                     return true;
                 }
 
@@ -116,20 +102,20 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                                 MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.invite_accept.group.group_too_small")))
                         );
                     }
-                    plugin.getInviteManager().invites.remove(p);
+                    plugin.getArenaModule().getInviteManager().invites.remove(p);
                     return true;
                 }
 
                 boolean allPlayersAreReady = true;
 
                 for (Player pl : group1) {
-                    if (plugin.getArenaManager().getArena(pl) != null) {
+                    if (plugin.getArenaModule().getArenaManager().getArena(pl) != null) {
                         return true;
                     }
                 }
 
                 for (Player pl : group2) {
-                    if (plugin.getArenaManager().getArena(pl) != null) {
+                    if (plugin.getArenaModule().getArenaManager().getArena(pl) != null) {
                         return true;
                     }
                 }
@@ -140,7 +126,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
                                 MiniMessage.miniMessage().deserialize(plugin.getConfig().getString("messages.invite_accept.group.someone_already_in_fight"))
                         );
                     }
-                    plugin.getInviteManager().invites.remove(p);
+                    plugin.getArenaModule().getInviteManager().invites.remove(p);
                     return true;
                 }
 
@@ -170,7 +156,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
         // reload for op
         if (playerName.equalsIgnoreCase("reload") && sender.isOp()) {
             plugin.reloadConfig();
-            plugin.getArenaSelectGUI().reloadConfig();
+            plugin.getArenaModule().getArenaSelectGUI().reloadConfig();
             sender.sendMessage(MiniMessage.miniMessage().deserialize(
                     "<green>Reloaded!")
             );
@@ -195,7 +181,7 @@ public class CommandPVP implements CommandExecutor, TabCompleter {
             return true;
         } // If the inviter is the same as the invited, return
 
-        plugin.getArenaSelectGUI().openArenaList(inviter, invited);
+        plugin.getArenaModule().getArenaSelectGUI().openArenaList(inviter, invited);
         return true;
     }
 

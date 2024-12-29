@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.managers;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.types.Arena;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -15,12 +15,12 @@ import java.util.Map;
 
 public class ArenaManager {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
     private final List<Arena> arenas = new ArrayList<>();
     private final Map<Player, Arena> playersInArena = new HashMap<>();
 
-    public ArenaManager(Double plugin) {
+    public ArenaManager(Ceraia plugin) {
         this.plugin = plugin;
 
         // Load arenas

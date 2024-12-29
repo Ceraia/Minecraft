@@ -1,6 +1,6 @@
 package com.ceraia.modules.arenas.listeners;
 
-import com.ceraia.modules.arenas.Double;
+import com.ceraia.Ceraia;
 import com.ceraia.modules.arenas.managers.EloScoreboardManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -8,9 +8,9 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 public class PlayerEloChangeListener implements Listener {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public PlayerEloChangeListener(Double plugin) {
+    public PlayerEloChangeListener(Ceraia plugin) {
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

@@ -21,7 +21,6 @@ class CeraiaPlayer(
     var losses: Int,
     private val configFile: File
 ) {
-
     fun getUUID(): UUID = uuid
 
     fun togglePvpBan(): Boolean {
@@ -78,6 +77,16 @@ class CeraiaPlayer(
 
     fun setRace(race: String) {
         this.race = race
+        savePlayer()
+    }
+
+    fun addWin() {
+        wins++
+        savePlayer()
+    }
+
+    fun addLoss() {
+        losses++
         savePlayer()
     }
 }

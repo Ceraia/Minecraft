@@ -11,6 +11,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
+import java.util.UUID
 
 class Ceraia : JavaPlugin() {
     private val plugin: Ceraia = this
@@ -38,8 +39,6 @@ class Ceraia : JavaPlugin() {
         saveDefaultConfig()
 
         File(dataFolder, "data").mkdirs()
-        File(dataFolder, "data/arenas").mkdirs()
-        File(dataFolder, "data/items").mkdirs()
         File(dataFolder, "data/users").mkdirs()
 
         /*---------------------------------*/

@@ -1,5 +1,6 @@
 package com.ceraia.modules.arenas
 
+import com.ceraia.Ceraia
 import com.ceraia.modules.arenas.types.Arena
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -12,7 +13,7 @@ import java.util.*
 
 object Utils {
     @JvmStatic
-    fun revertInventory(plugin: Double, pl: Player, arena: Arena) {
+    fun revertInventory(plugin: Ceraia, pl: Player, arena: Arena) {
         try {
             val file = File(plugin.dataFolder, "data/pinventory_" + arena.name + "_" + pl.name + ".yml")
 
@@ -38,7 +39,7 @@ object Utils {
     }
 
     @JvmStatic
-    fun teleportPlayerToSpawn(plugin: Double, player: Player, arena: Arena) {
+    fun teleportPlayerToSpawn(plugin: Ceraia, player: Player, arena: Arena) {
         val useLocation = checkNotNull(plugin.config.getString("spawn_teleport.use"))
         if (useLocation.equals("command", ignoreCase = true)) {
             Objects.requireNonNull(plugin.config.getString("spawn_teleport.command"))?.let {

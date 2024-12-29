@@ -1,7 +1,7 @@
 package com.ceraia.modules.arenas.commands.arena;
 
-import com.ceraia.modules.arenas.Double;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.Ceraia;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class CommandTop implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandTop(Double plugin) {
+    public CommandTop(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -42,7 +42,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
 
         top.add(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.scoreboard.top"))));
 
-        plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(DoublePlayer::getElo).reversed()).limit(10).forEach(ap -> {
+        plugin.getPlayerManager().getDoublePlayers().stream().sorted(Comparator.comparingInt(CeraiaPlayer::getElo).reversed()).limit(10).forEach(ap -> {
             String playerName = Bukkit.getOfflinePlayer(ap.getUUID()).getName();
             int elo = ap.getElo();
 
@@ -59,7 +59,7 @@ public class CommandTop implements CommandExecutor, TabCompleter {
                 medal = "<white>"; // Default medal color for players outside the top 3
             }
 
-            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.wins() + ap.losses()) + " games)"));
+            top.add(MiniMessage.miniMessage().deserialize(medal + i + " " + playerName + " <dark_gray>- <gray>" + elo + " ELO (" + (ap.getWins() + ap.getLosses()) + " games)"));
             i.getAndIncrement();
         });
 

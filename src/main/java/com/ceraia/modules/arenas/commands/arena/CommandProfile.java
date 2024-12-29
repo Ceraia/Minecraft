@@ -1,7 +1,7 @@
 package com.ceraia.modules.arenas.commands.arena;
 
-import com.ceraia.modules.arenas.Double;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.Ceraia;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,9 +17,9 @@ import java.util.Objects;
 
 public class CommandProfile implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandProfile(Double plugin) {
+    public CommandProfile(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -42,16 +42,13 @@ public class CommandProfile implements CommandExecutor, TabCompleter {
         }
 
         // Return the player's profile
-        DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(player.getUniqueId());
+        CeraiaPlayer doublePlayer = plugin.getPlayerManager().getCeraiaPlayer(player.getUniqueId());
         plugin.getConfig().getStringList("messages.profile").forEach(s -> sender.sendMessage(MiniMessage.miniMessage().deserialize(s
                 .replace("%player%", player.getName())
                 .replace("%elo%", String.valueOf(doublePlayer.getElo()))
-                .replace("%wins%", String.valueOf(doublePlayer.wins()))
-                .replace("%losses%", String.valueOf(doublePlayer.losses()))
-                .replace("%draws%", String.valueOf(doublePlayer.draws()))
-                .replace("%games%", String.valueOf(doublePlayer.wins() + doublePlayer.losses()))
-                .replace("%pvpbanned%", doublePlayer.pvpBanned() ? "<red>Yes" : "<green>No")
-                .replace("%arenabanned%", doublePlayer.arenaBanned() ? "<red>Yes" : "<green>No"))));
+                .replace("%wins%", String.valueOf(doublePlayer.getWins()))
+                .replace("%losses%", String.valueOf(doublePlayer.getLosses()))
+                .replace("%games%", String.valueOf(doublePlayer.getWins() + doublePlayer.getLosses())))));
 
 
 

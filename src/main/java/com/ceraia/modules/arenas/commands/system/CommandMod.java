@@ -1,7 +1,7 @@
 package com.ceraia.modules.arenas.commands.system;
 
-import com.ceraia.modules.arenas.Double;
-import com.ceraia.modules.arenas.types.DoublePlayer;
+import com.ceraia.Ceraia;
+import com.ceraia.modules.ceraia.types.CeraiaPlayer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -17,9 +17,9 @@ import java.util.Objects;
 
 public class CommandMod implements CommandExecutor, TabCompleter {
 
-    private final Double plugin;
+    private final Ceraia plugin;
 
-    public CommandMod(Double plugin) {
+    public CommandMod(Ceraia plugin) {
         this.plugin = plugin;
     }
 
@@ -54,44 +54,6 @@ public class CommandMod implements CommandExecutor, TabCompleter {
                 }
             }
         }
-
-        if (args.length == 3) {
-            if (args[0].equalsIgnoreCase("ban")) {
-                Player target = Bukkit.getPlayer(args[2]);
-
-                if (args[1].equalsIgnoreCase("arena")) {
-                    if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
-                        return true;
-                    }
-                    DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
-                    boolean arenabanned = doublePlayer.arenaBan();
-                    if (arenabanned) {
-                        doublePlayer.addLog("Banned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.banned")).replace("%player%", target.getName())));
-                    } else {
-                        doublePlayer.addLog("Unbanned from creation of arenas by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.arena.unbanned")).replace("%player%", target.getName())));
-                    }
-                }
-                if (args[1].equalsIgnoreCase("pvp")) {
-                    if (target == null) {
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.player_not_found"))));
-                        return true;
-                    }
-                    DoublePlayer doublePlayer = plugin.getPlayerManager().getDoublePlayer(target.getUniqueId());
-                    boolean pvpbanned = doublePlayer.pvpBan();
-                    if (pvpbanned) {
-                        doublePlayer.addLog("Banned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.banned")).replace("%player%", target.getName())));
-                    } else {
-                        doublePlayer.addLog("Unbanned from PVPing by " + sender.getName());
-                        sender.sendMessage(MiniMessage.miniMessage().deserialize(Objects.requireNonNull(plugin.getConfig().getString("messages.mod.ban.pvp.unbanned")).replace("%player%", target.getName())));
-                    }
-                }
-            }
-        }
-
         return true;
     }
 
@@ -121,7 +83,7 @@ public class CommandMod implements CommandExecutor, TabCompleter {
             if (args[2].equalsIgnoreCase("arena")) {
                 List<String> tabOptions = new ArrayList<>();
                 // If there is an argument, suggest all arena names
-                plugin.getArenaManager().getArenas().forEach(arena -> tabOptions.add(arena.getName()));
+                Objects.requireNonNull(plugin.getArenaModule().getArenaManager()).getArenas().forEach(arena -> tabOptions.add(arena.getName()));
                 return tabOptions;
             }
         }
