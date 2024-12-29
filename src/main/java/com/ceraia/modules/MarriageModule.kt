@@ -92,7 +92,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
 
         if (proposals.containsKey(sender)) {
             if (proposals[sender] == target) {
-                accept(sender, target)
+                acceptProposal(sender, target)
                 return
             }
         }
@@ -106,7 +106,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
         ))
     }
 
-    private fun accept(target: Player, sender: Player) {
+    private fun acceptProposal(target: Player, sender: Player) {
         val senderCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(sender.uniqueId)
         val targetCeraiaPlayer = plugin.playerManager.getCeraiaPlayer(target.uniqueId)
 
@@ -146,15 +146,7 @@ class MarriageModule(private val plugin: Ceraia) : CommandExecutor, TabCompleter
     }
 
     private fun adoptParent(player: Player, parent: Player) {
-        val ceraiaPlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
-        val ceraiaParent = plugin.playerManager.getCeraiaPlayer(parent.uniqueId)
 
-        ceraiaPlayer.addParent(parent.name)
-        ceraiaParent.addChild(player.name)
-
-        plugin.server.sendMessage(MiniMessage.miniMessage().deserialize(
-                "<green>${player.name} has adopted ${parent.name} as their parent."
-        ))
     }
 
     @EventHandler
