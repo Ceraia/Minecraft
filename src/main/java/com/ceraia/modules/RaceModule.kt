@@ -695,29 +695,29 @@ class RaceModule(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCo
         val item: ItemStack
     ) {
         fun apply(player: Player) {
-            player.getAttribute(Attribute.GENERIC_SCALE)?.baseValue =
+            player.getAttribute(Attribute.SCALE)?.baseValue =
                 scale
-            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue =
+            player.getAttribute(Attribute.MOVEMENT_SPEED)?.baseValue =
                 speed
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue =
+            player.getAttribute(Attribute.MAX_HEALTH)?.baseValue =
                 health.toDouble()
-            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)?.baseValue =
+            player.getAttribute(Attribute.JUMP_STRENGTH)?.baseValue =
                 jumpHeight
-            player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE)?.baseValue =
+            player.getAttribute(Attribute.SAFE_FALL_DISTANCE)?.baseValue =
                 jumpHeight * 7.145
-            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue =
+            player.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue =
                 damage
-            player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)?.baseValue =
+            player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE)?.baseValue =
                 reach
-            player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)?.baseValue =
+            player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE)?.baseValue =
                 reach
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue =
+            player.getAttribute(Attribute.ATTACK_SPEED)?.baseValue =
                 attackSpeed
-            player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)?.baseValue =
+            player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.baseValue =
                 fallDamageMultiplier
-            player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)?.baseValue =
+            player.getAttribute(Attribute.MINING_EFFICIENCY)?.baseValue =
                 miningEfficiency
-            player.getAttribute(Attribute.GENERIC_ARMOR)?.baseValue =
+            player.getAttribute(Attribute.ARMOR)?.baseValue =
                 armor
         }
     }
@@ -743,29 +743,29 @@ class RaceModule(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabCo
         }
 
         fun apply(player: Player, race: Race) {
-            player.getAttribute(Attribute.GENERIC_SCALE)?.baseValue =
+            player.getAttribute(Attribute.SCALE)?.baseValue =
                 race.scale
-            player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)?.baseValue =
+            player.getAttribute(Attribute.MOVEMENT_SPEED)?.baseValue =
                 race.speed
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH)?.baseValue =
+            player.getAttribute(Attribute.MAX_HEALTH)?.baseValue =
                 (health + race.health).toDouble()
-            player.getAttribute(Attribute.GENERIC_JUMP_STRENGTH)?.baseValue =
+            player.getAttribute(Attribute.JUMP_STRENGTH)?.baseValue =
                 race.jumpHeight
-            player.getAttribute(Attribute.GENERIC_SAFE_FALL_DISTANCE)?.baseValue =
+            player.getAttribute(Attribute.SAFE_FALL_DISTANCE)?.baseValue =
                 race.jumpHeight * 7.145
-            player.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE)?.baseValue =
+            player.getAttribute(Attribute.ATTACK_DAMAGE)?.baseValue =
                 damage + race.damage
-            player.getAttribute(Attribute.PLAYER_BLOCK_INTERACTION_RANGE)?.baseValue =
+            player.getAttribute(Attribute.BLOCK_INTERACTION_RANGE)?.baseValue =
                 race.reach
-            player.getAttribute(Attribute.PLAYER_ENTITY_INTERACTION_RANGE)?.baseValue =
+            player.getAttribute(Attribute.ENTITY_INTERACTION_RANGE)?.baseValue =
                 race.reach
-            player.getAttribute(Attribute.GENERIC_ATTACK_SPEED)?.baseValue =
+            player.getAttribute(Attribute.ATTACK_SPEED)?.baseValue =
                 race.attackSpeed
-            player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER)?.baseValue =
+            player.getAttribute(Attribute.FALL_DAMAGE_MULTIPLIER)?.baseValue =
                 race.fallDamageMultiplier
-            player.getAttribute(Attribute.PLAYER_MINING_EFFICIENCY)?.baseValue =
+            player.getAttribute(Attribute.MINING_EFFICIENCY)?.baseValue =
                 miningEfficiency + race.miningEfficiency
-            player.getAttribute(Attribute.GENERIC_ARMOR)?.baseValue =
+            player.getAttribute(Attribute.ARMOR)?.baseValue =
                 armor + race.armor
         }
     }
