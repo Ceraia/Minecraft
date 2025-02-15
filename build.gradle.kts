@@ -28,10 +28,12 @@ repositories {
     maven("https://oss.sonatype.org/content/groups/public/") {
         name = "sonatype"
     }
+    maven ("https://jitpack.io")
     maven("https://oss.sonatype.org/content/repositories/snapshots/")
 }
 
 dependencies {
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     implementation("dev.triumphteam:triumph-gui:3.1.10")
 }

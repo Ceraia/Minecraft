@@ -2,7 +2,6 @@ package com.ceraia
 
 import com.ceraia.managers.PlayerManager
 import com.ceraia.modules.*
-import com.ceraia.modules.arenas.ArenaModule
 import com.ceraia.modules.races.ModuleRaces
 import com.ceraia.modules.system.ModuleSystem
 import com.ceraia.util.ConfigHelper
@@ -25,8 +24,6 @@ class Ceraia : JavaPlugin() {
         private set
     lateinit var configHelper: ConfigHelper
         private set
-    lateinit var arenaModule: ArenaModule
-        private set
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -47,7 +44,6 @@ class Ceraia : JavaPlugin() {
         moduleMarriage = ModuleMarriage(plugin)
         moduleSystem = ModuleSystem(plugin)
         moduleRaces = ModuleRaces(plugin)
-        arenaModule = ArenaModule(plugin)
 
         /*---------------------------------*/
         /*             Helpers             */
