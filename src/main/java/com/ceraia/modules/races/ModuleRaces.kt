@@ -119,8 +119,7 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
                         "<green>Restoring all default races & factions..."
                     )
                 )
-                addDefaultRaces()
-                addDefaultFactions()
+                addDefaultRacesFactions()
                 return true
             }
 
@@ -167,299 +166,15 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         loadRaces(true)
     }
 
-    private fun addDefaultRaces() {
-        run {
-            races.add(
-                Race(
-                    "Halfling",  // Name
-                    0.54,  // Scale
-                    0.12,  // Speed
-                    14,  // Health
-                    0.42,  // Jumpheight
-                    0.95,  // Damage
-                    2.5,  // Reach
-                    4.5,  // Attack Speed
-                    "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    5.2,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.POTATO) // Item
-                )
-            )
-            races.add(
-                Race(
-                    "Gnome",  // Name
-                    0.7,  // Scale
-                    0.11,  // Speed
-                    16,  // Health
-                    0.42,  // Jumpheight
-                    0.9,  // Damage
-                    3.0,  // Reach
-                    5.0,  // Attack Speed
-                    "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    6.65,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.RED_MUSHROOM) // Item
-                )
-            )
+    private fun addDefaultRacesFactions() {
+        // Save the races.yml file from resource if it doesn't exist yet
+        val file = File(plugin.dataFolder, "races.yml")
 
-            races.add(
-                Race(
-                    "Dwarf",  // Name
-                    0.9,  // Scale
-                    0.1,  // Speed
-                    24,  // Health
-                    0.42,  // Jumpheight
-                    1.0,  // Damage
-                    4.5,  // Reach
-                    4.0,  // Attack Speed
-                    "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    9.95,  // Mining Efficiency
-                    2.0,  // Armor
-                    ItemStack(Material.IRON_ORE) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Short Human",  // Name
-                    0.95,  // Scale
-                    0.1,  // Speed
-                    20,  // Health
-                    0.42,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    4.0,  // Attack Speed
-                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.BREAD) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Human",  // Name
-                    1.0,  // Scale
-                    0.1,  // Speed
-                    20,  // Health
-                    0.42,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    4.0,  // Attack Speed
-                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.BREAD) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Tall Human",  // Name
-                    1.05,  // Scale
-                    0.1,  // Speed
-                    20,  // Health
-                    0.42,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    4.0,  // Attack Speed
-                    "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.BREAD) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Satyr",  // Name
-                    1.05,  // Scale
-                    0.13,  // Speed
-                    18,  // Health
-                    0.52,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    3.9,  // Attack Speed
-                    "<gray>Fast and intelligent<newline><green>Satyrs<gray> are expert explorers and have seen far across the world.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.RABBIT_FOOT) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Githyanki",  // Name
-                    1.07,  // Scale
-                    0.975,  // Speed
-                    22,  // Health
-                    0.42,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    4.2,  // Attack Speed
-                    "<gray>Fierce and fast,<newline><green>Githyanki<gray> are veteran warriors.",  // Lore
-                    1.0,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    0.0,  // Armor
-                    ItemStack(Material.NETHER_STAR) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Half-Elf",  // Name
-                    1.11,  // Scale
-                    0.0975,  // Speed
-                    24,  // Health
-                    0.52,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    3.95,  // Attack Speed
-                    "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of a Elven - Human relationship.",  // Lore
-                    0.925,  // Fall Damage Multiplier
-                    1.0,  // Mining Efficiency
-                    1.0,  // Armor
-                    ItemStack(Material.APPLE) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Elf",  // Name
-                    1.11,  // Scale
-                    0.095,  // Speed
-                    26,  // Health
-                    0.63,  // Jumpheight
-                    1.0,  // Damage
-                    5.0,  // Reach
-                    3.9,  // Attack Speed
-                    "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery.",  // Lore
-                    0.75,  // Fall Damage Multiplier
-                    1.0,  // Mining Efficiency
-                    2.0,  // Armor
-                    ItemStack(Material.BOW) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Half-Orc",  // Name
-                    1.15,  // Scale
-                    0.0925,  // Speed
-                    26,  // Health
-                    0.63,  // Jumpheight
-                    1.0,  // Damage
-                    5.5,  // Reach
-                    3.8,  // Attack Speed
-                    "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of a Orc - Human relationship.",  // Lore
-                    0.75,  // Fall Damage Multiplier
-                    2.0,  // Mining Efficiency
-                    3.0,  // Armor
-                    ItemStack(Material.PORKCHOP) // Item
-                )
-            )
-
-            races.add(
-                Race(
-                    "Bugbear",  // Name
-                    1.22,  // Scale
-                    0.09,  // Speed
-                    28,  // Health
-                    0.63,  // Jumpheight
-                    1.25,  // Damage
-                    5.8,  // Reach
-                    3.0,  // Attack Speed
-                    "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength.",  // Lore
-                    0.75,  // Fall Damage Multiplier
-                    2.0,  // Mining Efficiency
-                    4.0,  // Armor
-                    ItemStack(Material.BEEF) // Item
-                )
-            )
-            races.add(
-                Race(
-                    "Goliath",  // Name
-                    1.33,  // Scale
-                    0.08,  // Speed
-                    30,  // Health
-                    0.63,  // Jumpheight
-                    1.25,  // Damage
-                    6.1,  // Reach
-                    3.0,  // Attack Speed
-                    "<gray>Large and strong,<newline><green>Goliaths<gray> are often used in heavy labour.",  // Lore
-                    0.75,  // Fall Damage Multiplier
-                    0.0,  // Mining Efficiency
-                    5.0,  // Armor
-                    ItemStack(Material.OAK_SAPLING) // Item
-                )
-            )
+        if (!file.exists()) {
+            plugin.saveResource("races.yml", false)
         }
-        saveAllRaces()
+
         loadRaces()
-    }
-
-    private fun addDefaultFactions() {
-        run {
-            raceFactions.add(
-                RaceFaction(
-                    "<yellow>Unaligned",
-                    "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance.",
-                    ItemStack(Material.IRON_ORE),
-                    0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    listOf(
-                        "*"
-                    )
-                )
-            )
-            raceFactions.add(
-                RaceFaction(
-                    "<red>Gnomish Dynasty",
-                    "<red>The Gnomish Dynasty<gray>, formed by the Gnomish, a monarchy.",
-                    ItemStack(Material.RED_MUSHROOM),
-                    0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    mutableListOf("Gnome", "Satyr", "Githyanki", "Bugbear")
-                )
-            )
-            raceFactions.add(
-                RaceFaction(
-                    "<blue>Republic of Man",
-                    "<blue>The Republic of Man<gray>, formed by the Humans, a democratic republic.",
-                    ItemStack(Material.BREAD),
-                    0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    mutableListOf("Dwarf", "Short Human", "Human", "Tall Human", "Half-Elf", "Half-Orc")
-                )
-            )
-            raceFactions.add(
-                RaceFaction(
-                    "<green>Elven Demagogue",
-                    "<green>The Elven Demagogue<gray>, formed by the Elves, a theocracy.",
-                    ItemStack(Material.PORKCHOP),
-                    0,
-                    0.0,
-                    0.0,
-                    0.0,
-                    mutableListOf("Halfling", "Half-Elf", "Elf", "Goliath")
-                )
-            )
-        }
-        saveAllFactions()
-        loadRaceFactions()
     }
 
     @JvmOverloads
@@ -471,17 +186,17 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         // Load all races from the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-        val racesSection = config.getConfigurationSection("races")
+        val racesSection = config.getList("races")
         if (racesSection == null) {
             plugin.logger.warning("No races found in races.yml! Adding default races.")
-            addDefaultRaces()
+            addDefaultRacesFactions()
             return
         }
 
-        for (raceName in racesSection.getKeys(false)) {
-            val path = "races.$raceName"
+        for (raceEntry in racesSection) {
+            val path = "races"
             val race = Race(
-                raceName,
+                config.getString("$path.name", "<gray>No name...")!!,
                 config.getDouble("$path.scale", 1.0),
                 config.getDouble("$path.speed", 0.1),
                 config.getInt("$path.health", 20),
@@ -508,17 +223,16 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         // Load all factions from the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-        val factionsSection = config.getConfigurationSection("factions")
+        val factionsSection = config.getList("factions")
         if (factionsSection == null) {
             plugin.logger.warning("No factions found in races.yml! Adding default factions.")
-            addDefaultFactions()
             return
         }
 
-        for (factionName in factionsSection.getKeys(false)) {
-            val path = "factions.$factionName"
+        for (factionEntry in factionsSection) {
+            val path = "factions"
             val faction = RaceFaction(
-                factionName,
+                config.getString("$path.name", "<gray>No name...")!!,
                 config.getString("$path.lore", "<gray>No known lore...")!!,
                 config.getItemStack("$path.item", ItemStack(Material.BREAD))!!,
                 config.getInt("$path.health", 0),
@@ -626,57 +340,6 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         }
 
         gui.open(player)
-    }
-
-    private fun saveAllRaces() {
-        // Save the races to the races.yml file
-        val file = File(plugin.dataFolder, "races.yml")
-        val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-
-        for (race in races) {
-            val path = "races." + race.name
-            config["$path.lore"] = race.lore
-            config["$path.scale"] = race.scale
-            config["$path.speed"] = race.speed
-            config["$path.health"] = race.health
-            config["$path.jumpheight"] = race.jumpHeight
-            config["$path.damage"] = race.damage
-            config["$path.reach"] = race.reach
-            config["$path.attackspeed"] = race.attackSpeed
-            config["$path.item"] = race.item
-            config["$path.falldamagemultiplier"] = race.fallDamageMultiplier
-            config["$path.miningefficiency"] = race.miningEfficiency
-            config["$path.armor"] = race.armor
-        }
-
-        try {
-            config.save(file)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    private fun saveAllFactions() {
-        // Save the factions to the races.yml file
-        val file = File(plugin.dataFolder, "races.yml")
-        val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-
-        for (faction in raceFactions) {
-            val path = "factions." + faction.name
-            config["$path.lore"] = faction.lore
-            config["$path.item"] = faction.item
-            config["$path.health"] = faction.health
-            config["$path.damage"] = faction.damage
-            config["$path.miningefficiency"] = faction.miningEfficiency
-            config["$path.armor"] = faction.armor
-            config["$path.raceInhabitants"] = faction.getRaceInhabitants()
-        }
-
-        try {
-            config.save(file)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     class Race(

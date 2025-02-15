@@ -1,0 +1,238 @@
+races:
+  - name: "Halfling"
+    scale: 0.54
+    speed: 0.12
+    health: 14
+    jumpHeight: 0.42
+    damage: 0.95
+    reach: 2.5
+    attackSpeed: 4.5
+    lore: "<gray>Nimble and stealthy,<newline><green>Halflings<gray> excel in evading danger."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 5.2
+    armor: 0.0
+    item: "POTATO"
+
+  - name: "Gnome"
+    scale: 0.7
+    speed: 0.11
+    health: 16
+    jumpHeight: 0.42
+    damage: 0.9
+    reach: 3.0
+    attackSpeed: 5.0
+    lore: "<gray>Clever and elusive,<newline><green>Gnomes<gray> use their fast attack to outwit foes."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 6.65
+    armor: 0.0
+    item: "RED_MUSHROOM"
+
+  - name: "Dwarf"
+    scale: 0.9
+    speed: 0.1
+    health: 24
+    jumpHeight: 0.42
+    damage: 1.0
+    reach: 4.5
+    attackSpeed: 4.0
+    lore: "<gray>Sturdy and relentless,<newline><green>Dwarves<gray> are master miners and warriors."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 9.95
+    armor: 2.0
+    item: "IRON_ORE"
+
+  - name: "Short Human"
+    scale: 0.95
+    speed: 0.1
+    health: 20
+    jumpHeight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 4.0
+    lore: "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 0.0
+    armor: 0.0
+    item: "BREAD"
+
+  - name: "Human"
+    scale: 1.0
+    speed: 0.1
+    health: 20
+    jumpHeight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 4.0
+    lore: "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 0.0
+    armor: 0.0
+    item: "BREAD"
+
+  - name: "Tall Human"
+    scale: 1.05
+    speed: 0.1
+    health: 20
+    jumpHeight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 4.0
+    lore: "<gray>Balanced and adaptable,<newline><green>Humans<gray> thrive in any environment."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 0.0
+    armor: 0.0
+    item: "BREAD"
+
+  - name: "Satyr"
+    scale: 1.05
+    speed: 0.13
+    health: 18
+    jumpHeight: 0.52
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 3.9
+    lore: "<gray>Fast and intelligent<newline><green>Satyrs<gray> are expert explorers and have seen far across the world."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 0.0
+    armor: 0.0
+    item: "RABBIT_FOOT"
+
+  - name: "Githyanki"
+    scale: 1.07
+    speed: 0.975
+    health: 22
+    jumpHeight: 0.42
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 4.2
+    lore: "<gray>Fierce and fast,<newline><green>Githyanki<gray> are veteran warriors."
+    fallDamageMultiplier: 1.0
+    miningEfficiency: 0.0
+    armor: 0.0
+    item: "NETHER_STAR"
+
+  - name: "Half-Elf"
+    scale: 1.11
+    speed: 0.0975
+    health: 24
+    jumpHeight: 0.52
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 3.95
+    lore: "<gray>Graceful but adaptable,<newline><green>Half-elves<gray> are the result of an Elven - Human relationship."
+    fallDamageMultiplier: 0.925
+    miningEfficiency: 1.0
+    armor: 1.0
+    item: "APPLE"
+
+  - name: "Elf"
+    scale: 1.11
+    speed: 0.095
+    health: 26
+    jumpHeight: 0.63
+    damage: 1.0
+    reach: 5.0
+    attackSpeed: 3.9
+    lore: "<gray>Graceful and wise,<newline><green>Elves<gray> are good fighters and excel in archery."
+    fallDamageMultiplier: 0.75
+    miningEfficiency: 1.0
+    armor: 2.0
+    item: "BOW"
+
+  - name: "Half-Orc"
+    scale: 1.15
+    speed: 0.0925
+    health: 26
+    jumpHeight: 0.63
+    damage: 1.0
+    reach: 5.5
+    attackSpeed: 3.8
+    lore: "<gray>Strong and fierce,<newline><green>Half-orcs<gray> are the result of an Orc - Human relationship."
+    fallDamageMultiplier: 0.75
+    miningEfficiency: 2.0
+    armor: 3.0
+    item: "PORKCHOP"
+
+  - name: "Bugbear"
+    scale: 1.22
+    speed: 0.09
+    health: 28
+    jumpHeight: 0.63
+    damage: 1.25
+    reach: 5.8
+    attackSpeed: 3.0
+    lore: "<gray>Fierce and powerful,<newline><green>Bugbears<gray> dominate in brute strength."
+    fallDamageMultiplier: 0.75
+    miningEfficiency: 2.0
+    armor: 4.0
+    item: "BEEF"
+
+  - name: "Goliath"
+    scale: 1.33
+    speed: 0.08
+    health: 30
+    jumpHeight: 0.63
+    damage: 1.25
+    reach: 6.1
+    attackSpeed: 3.0
+    lore: "<gray>Large and strong,<newline><green>Goliaths<gray> are often used in heavy labour."
+    fallDamageMultiplier: 0.75
+    miningEfficiency: 0.0
+    armor: 5.0
+    item: "OAK_SAPLING"
+
+factions:
+  - name: "<yellow>Unaligned"
+    description: "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance."
+    item: "IRON_ORE"
+    tier: 0
+    stat_boosts:
+      strength: 0.0
+      dexterity: 0.0
+      intelligence: 0.0
+    races:
+      - "*"
+
+  - name: "<red>Gnomish Dynasty"
+    description: "<red>The Gnomish Dynasty<gray>, formed by the Gnomish, a monarchy."
+    item: "RED_MUSHROOM"
+    tier: 0
+    stat_boosts:
+      strength: 0.0
+      dexterity: 0.0
+      intelligence: 0.0
+    races:
+      - "Gnome"
+      - "Satyr"
+      - "Githyanki"
+      - "Bugbear"
+
+  - name: "<blue>Republic of Man"
+    description: "<blue>The Republic of Man<gray>, formed by the Humans, a democratic republic."
+    item: "BREAD"
+    tier: 0
+    stat_boosts:
+      strength: 0.0
+      dexterity: 0.0
+      intelligence: 0.0
+    races:
+      - "Dwarf"
+      - "Short Human"
+      - "Human"
+      - "Tall Human"
+      - "Half-Elf"
+      - "Half-Orc"
+
+  - name: "<green>Elven Demagogue"
+    description: "<green>The Elven Demagogue<gray>, formed by the Elves, a theocracy."
+    item: "PORKCHOP"
+    tier: 0
+    stat_boosts:
+      strength: 0.0
+      dexterity: 0.0
+      intelligence: 0.0
+    races:
+      - "Halfling"
+      - "Half-Elf"
+      - "Elf"
+      - "Goliath"
