@@ -167,14 +167,38 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
     }
 
     private fun addDefaultRacesFactions() {
-        // Save the races.yml file from resource if it doesn't exist yet
-        val file = File(plugin.dataFolder, "races.yml")
-
-        if (!file.exists()) {
+        val dataFile = File(plugin.dataFolder, "races.yml")
+        if (!dataFile.exists()) {
             plugin.saveResource("races.yml", false)
         }
 
-        loadRaces()
+        val dataConfig: FileConfiguration = YamlConfiguration.loadConfiguration(dataFile)
+        val existingRaces = dataConfig.getList("races")?.map { (it as Map<*, *>)["name"] }?.toSet() ?: emptySet()
+        val existingFactions = dataConfig.getList("factions")?.map { (it as Map<*, *>)["name"] }?.toSet() ?: emptySet()
+
+        val resourceConfig: FileConfiguration = plugin.getResource("races.yml")?.reader()?.let {
+            YamlConfiguration.loadConfiguration(it)
+        } ?: YamlConfiguration()
+
+        val defaultRaces = resourceConfig.getList("races")?.map { it as Map<*, *> } ?: emptyList()
+        val defaultFactions = resourceConfig.getList("factions")?.map { it as Map<*, *> } ?: emptyList()
+
+        val newRaces = defaultRaces.filter { it["name"] !in existingRaces }
+        val newFactions = defaultFactions.filter { it["name"] !in existingFactions }
+
+        if (newRaces.isNotEmpty()) {
+            val racesSection = dataConfig.getList("races")?.toMutableList() ?: mutableListOf()
+            racesSection.addAll(newRaces)
+            dataConfig.set("races", racesSection)
+        }
+
+        if (newFactions.isNotEmpty()) {
+            val factionsSection = dataConfig.getList("factions")?.toMutableList() ?: mutableListOf()
+            factionsSection.addAll(newFactions)
+            dataConfig.set("factions", factionsSection)
+        }
+
+        dataConfig.save(dataFile)
     }
 
     @JvmOverloads
@@ -186,15 +210,16 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         // Load all races from the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-        val racesSection = config.getList("races")
+        val racesSection = config.getConfigurationSection("races")
         if (racesSection == null) {
             plugin.logger.warning("No races found in races.yml! Adding default races.")
             addDefaultRacesFactions()
             return
         }
 
-        for (raceEntry in racesSection) {
-            val path = "races"
+        for (raceEntry in racesSection.getKeys(false)) {
+            plugin.logger.info("races.$raceEntry")
+            val path = "races.$raceEntry"
             val race = Race(
                 config.getString("$path.name", "<gray>No name...")!!,
                 config.getDouble("$path.scale", 1.0),
@@ -208,8 +233,10 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
                 config.getDouble("$path.falldamagemultiplier", 1.0),
                 config.getDouble("$path.miningefficiency", 0.0),
                 config.getDouble("$path.armor", 0.0),
-                config.getItemStack("$path.item", ItemStack(Material.BREAD))!!
+                ItemStack(Material.valueOf(config.getString("$path.item", "BREAD")!!)),
             )
+            plugin.logger.info(config.getString("$path.name", "<gray>No name..."))
+            plugin.logger.info("$path.name" )
             races.add(race)
         }
     }
@@ -223,18 +250,18 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         // Load all factions from the races.yml file
         val file = File(plugin.dataFolder, "races.yml")
         val config: FileConfiguration = YamlConfiguration.loadConfiguration(file)
-        val factionsSection = config.getList("factions")
+        val factionsSection = config.getConfigurationSection("factions")
         if (factionsSection == null) {
             plugin.logger.warning("No factions found in races.yml! Adding default factions.")
             return
         }
 
-        for (factionEntry in factionsSection) {
-            val path = "factions"
+        for (factionName in factionsSection.getKeys(false)) {
+            val path = "factions.$factionName"
             val faction = RaceFaction(
-                config.getString("$path.name", "<gray>No name...")!!,
+                config.getString("$path.name", "<gray>No known name...")!!,
                 config.getString("$path.lore", "<gray>No known lore...")!!,
-                config.getItemStack("$path.item", ItemStack(Material.BREAD))!!,
+                ItemStack(Material.valueOf(config.getString("$path.item", "BREAD")!!)),
                 config.getInt("$path.health", 0),
                 config.getDouble("$path.damage", 0.0),
                 config.getDouble("$path.miningefficiency", 0.0),
@@ -257,11 +284,12 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
 
         val selectable: MutableList<Race> = ArrayList()
         for (race in races) {
-            if ((player.hasPermission("double.races.become." + race.name) ||
-                        player.hasPermission("double.races.become.*")) &&
-                (faction.getRaceInhabitants().contains(race.name)
-                        || faction.getRaceInhabitants().contains("*"))
-            ) selectable.add(race)
+            if (player.isOp ||
+                (player.hasPermission("double.races.become." + race.name) || player.hasPermission("double.races.become.*")) &&
+                (faction.getRaceInhabitants().contains(race.name) || faction.getRaceInhabitants().contains("*"))
+            ) {
+                selectable.add(race)
+            }
         }
 
         selectable.forEach { race ->

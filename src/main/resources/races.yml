@@ -1,5 +1,6 @@
 races:
-  - name: "Halfling"
+  halfling:
+    name: "Halfling"
     scale: 0.54
     speed: 0.12
     health: 14
@@ -13,7 +14,8 @@ races:
     armor: 0.0
     item: "POTATO"
 
-  - name: "Gnome"
+  gnome:
+    name: "Gnome"
     scale: 0.7
     speed: 0.11
     health: 16
@@ -27,7 +29,8 @@ races:
     armor: 0.0
     item: "RED_MUSHROOM"
 
-  - name: "Dwarf"
+  dwarf:
+    name: "Dwarf"
     scale: 0.9
     speed: 0.1
     health: 24
@@ -41,7 +44,8 @@ races:
     armor: 2.0
     item: "IRON_ORE"
 
-  - name: "Short Human"
+  short-human:
+    name: "Short Human"
     scale: 0.95
     speed: 0.1
     health: 20
@@ -55,7 +59,8 @@ races:
     armor: 0.0
     item: "BREAD"
 
-  - name: "Human"
+  human:
+    name: "Human"
     scale: 1.0
     speed: 0.1
     health: 20
@@ -69,7 +74,8 @@ races:
     armor: 0.0
     item: "BREAD"
 
-  - name: "Tall Human"
+  tall-human:
+    name: "Tall Human"
     scale: 1.05
     speed: 0.1
     health: 20
@@ -83,7 +89,8 @@ races:
     armor: 0.0
     item: "BREAD"
 
-  - name: "Satyr"
+  satyr:
+    name: "Satyr"
     scale: 1.05
     speed: 0.13
     health: 18
@@ -97,7 +104,8 @@ races:
     armor: 0.0
     item: "RABBIT_FOOT"
 
-  - name: "Githyanki"
+  githyanki:
+    name: "Githyanki"
     scale: 1.07
     speed: 0.975
     health: 22
@@ -111,7 +119,8 @@ races:
     armor: 0.0
     item: "NETHER_STAR"
 
-  - name: "Half-Elf"
+  half-elf:
+    name: "Half-Elf"
     scale: 1.11
     speed: 0.0975
     health: 24
@@ -125,7 +134,8 @@ races:
     armor: 1.0
     item: "APPLE"
 
-  - name: "Elf"
+  elf:
+    name: "Elf"
     scale: 1.11
     speed: 0.095
     health: 26
@@ -139,7 +149,8 @@ races:
     armor: 2.0
     item: "BOW"
 
-  - name: "Half-Orc"
+  half-orc:
+    name: "Half-Orc"
     scale: 1.15
     speed: 0.0925
     health: 26
@@ -153,7 +164,8 @@ races:
     armor: 3.0
     item: "PORKCHOP"
 
-  - name: "Bugbear"
+  bugbear:
+    name: "Bugbear"
     scale: 1.22
     speed: 0.09
     health: 28
@@ -167,7 +179,8 @@ races:
     armor: 4.0
     item: "BEEF"
 
-  - name: "Goliath"
+  goliath:
+    name: "Goliath"
     scale: 1.33
     speed: 0.08
     health: 30
@@ -182,8 +195,9 @@ races:
     item: "OAK_SAPLING"
 
 factions:
-  - name: "<yellow>Unaligned"
-    description: "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance."
+  unaligned:
+    name: "<yellow>Unaligned"
+    lore: "<yellow>The Unaligned<gray>, formed by those with no king, a loose alliance."
     item: "IRON_ORE"
     tier: 0
     stat_boosts:
@@ -193,8 +207,9 @@ factions:
     races:
       - "*"
 
-  - name: "<red>Gnomish Dynasty"
-    description: "<red>The Gnomish Dynasty<gray>, formed by the Gnomish, a monarchy."
+  gnomish:
+    name: "<red>Gnomish Dynasty"
+    lore: "<red>The Gnomish Dynasty<gray>, formed by the Gnomish, a monarchy."
     item: "RED_MUSHROOM"
     tier: 0
     stat_boosts:
@@ -207,8 +222,9 @@ factions:
       - "Githyanki"
       - "Bugbear"
 
-  - name: "<blue>Republic of Man"
-    description: "<blue>The Republic of Man<gray>, formed by the Humans, a democratic republic."
+  republic:
+    name: "<blue>Republic of Man"
+    lore: "<blue>The Republic of Man<gray>, formed by the Humans, a democratic republic."
     item: "BREAD"
     tier: 0
     stat_boosts:
@@ -223,8 +239,9 @@ factions:
       - "Half-Elf"
       - "Half-Orc"
 
-  - name: "<green>Elven Demagogue"
-    description: "<green>The Elven Demagogue<gray>, formed by the Elves, a theocracy."
+  elven:
+    name: "<green>Elven Demagogue"
+    lore: "<green>The Elven Demagogue<gray>, formed by the Elves, a theocracy."
     item: "PORKCHOP"
     tier: 0
     stat_boosts:
