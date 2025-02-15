@@ -76,7 +76,7 @@ class ModuleSeating(private val plugin: Ceraia) : CommandExecutor, TabCompleter,
         if (sender !is Player) {
             return true
         }
-        if (!sender.hasPermission("double.sit")) {
+        if (!sender.hasPermission("ceraia.sit")) {
             plugin.noPermission(sender)
             return true
         }

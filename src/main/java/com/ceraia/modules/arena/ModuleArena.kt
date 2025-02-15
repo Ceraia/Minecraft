@@ -75,7 +75,7 @@ val arenaInviteManager = ArenaInviteManager()
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
         when (cmd.name) {
             "arena" -> {
-                if (!sender.hasPermission("double.arena")) {
+                if (!sender.hasPermission("ceraia.arena")) {
                     plugin.noPermission(sender as Player)
                     return true
                 }
@@ -161,7 +161,7 @@ val arenaInviteManager = ArenaInviteManager()
             }
 
             "pvp" -> {
-                if (!sender.hasPermission("double.pvp")) {
+                if (!sender.hasPermission("ceraia.pvp")) {
                     plugin.noPermission(sender as Player)
                     return true
                 }
@@ -324,7 +324,7 @@ val arenaInviteManager = ArenaInviteManager()
             }
 
             "gvg" -> {
-                if (!sender.hasPermission("double.gvg")) {
+                if (!sender.hasPermission("ceraia.gvg")) {
                     plugin.noPermission(sender as Player)
                     return true
                 }
@@ -556,7 +556,7 @@ val arenaInviteManager = ArenaInviteManager()
 
             "top", "leaderboard" -> plugin.moduleArena.arenaActions.leaderboard(sender)
             "profile" -> {
-                if (!sender.hasPermission("double.pvp")) {
+                if (!sender.hasPermission("ceraia.pvp")) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"))
                     return true
                 }

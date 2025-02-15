@@ -32,7 +32,7 @@ class ModuleMarriage(private val plugin: Ceraia) : CommandExecutor, TabCompleter
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
         if (sender !is Player) return true
 
-        if (!sender.hasPermission("double.marry")) {
+        if (!sender.hasPermission("ceraia.marry")) {
             plugin.noPermission(sender)
             return true
         }

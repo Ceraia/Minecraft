@@ -45,8 +45,8 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
                 return true
             }
             "day", "noon" -> {
-                if (!sender.hasPermission("double.time.day") &&
-                    !sender.hasPermission("double.time.*")
+                if (!sender.hasPermission("ceraia.time.day") &&
+                    !sender.hasPermission("ceraia.time.*")
                 ) {
                     plugin.noPermission(sender as Player)
                     return true
@@ -60,8 +60,8 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
                 return true
             }
             "night" -> {
-                if (!sender.hasPermission("double.time.night") &&
-                    !sender.hasPermission("double.time.*")
+                if (!sender.hasPermission("ceraia.time.night") &&
+                    !sender.hasPermission("ceraia.time.*")
                 ) {
                     plugin.noPermission(sender as Player)
                     return true
@@ -72,7 +72,7 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
                 return true
             }
             "discord" -> {
-                if (!sender.hasPermission("double.discord")) {
+                if (!sender.hasPermission("ceraia.discord")) {
                     plugin.noPermission(sender as Player)
                     return true
                 }
@@ -104,7 +104,7 @@ class ModuleSystem(private val plugin: Ceraia) : CommandExecutor, TabCompleter, 
     }
 
     private fun jump(player: Player) {
-        if (!player.hasPermission("double.jump")) {
+        if (!player.hasPermission("ceraia.jump")) {
             plugin.noPermission(player)
             return
         }

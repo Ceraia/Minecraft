@@ -52,7 +52,7 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
 
         when (args[0]) {
             "reload" -> {
-                if (!sender.hasPermission("double.races.reload")) {
+                if (!sender.hasPermission("ceraia.races.reload")) {
                     plugin.noPermission(sender)
                     return true
                 }
@@ -62,7 +62,7 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
             }
 
             "become" -> {
-                if (!sender.hasPermission("double.races.become")) {
+                if (!sender.hasPermission("ceraia.races.become")) {
                     plugin.noPermission(sender)
                     return true
                 }
@@ -89,8 +89,8 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Race not found!"))
                     return true
                 } else {
-                    if (!sender.hasPermission("double.races.become." + args[1]) &&
-                        !sender.hasPermission("double.races.become.*")
+                    if (!sender.hasPermission("ceraia.races.become." + args[1]) &&
+                        !sender.hasPermission("ceraia.races.become.*")
                     ) {
                         sender.sendMessage(
                             MiniMessage.miniMessage().deserialize("<red>You do not have permission to become this race")
@@ -109,7 +109,7 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
 
             "gui" -> openFactionGui(sender)
             "restore" -> {
-                if (!sender.hasPermission("double.races.restore")) {
+                if (!sender.hasPermission("ceraia.races.restore")) {
                     plugin.noPermission(sender)
                     return true
                 }
@@ -285,7 +285,7 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         val selectable: MutableList<Race> = ArrayList()
         for (race in races) {
             if (player.isOp ||
-                (player.hasPermission("double.races.become." + race.name) || player.hasPermission("double.races.become.*")) &&
+                (player.hasPermission("ceraia.races.become." + race.name) || player.hasPermission("ceraia.races.become.*")) &&
                 (faction.getRaceInhabitants().contains(race.name) || faction.getRaceInhabitants().contains("*"))
             ) {
                 selectable.add(race)
