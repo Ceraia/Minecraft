@@ -6,6 +6,21 @@ description: Ceraia, the utility plugin.
 author: Axodouble
 website: https://github.com/Ceraia/Minecraft
 commands:
+  arena:
+    description: Join the arena.
+    usage: /arena
+  pvp:
+    description: Join the pvp arena.
+    usage: /pvp
+  gvg:
+    description: Join the gvg arena.
+    usage: /gvg
+  leaderboard:
+    description: Show the leaderboard.
+    usage: /leaderboard
+  profile:
+    description: Show your profile.
+    usage: /profile
   version:
     description: Show the version of the plugin.
     usage: /version
