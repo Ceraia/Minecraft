@@ -1,21 +1,38 @@
-package com.ceraia.modules.arena
+package com.ceraia.modules;
 
-import com.axodouble.Double
+import com.ceraia.Ceraia;
+import com.ceraia.modules.arena.*
 import com.ceraia.modules.arena.ArenaDefaultMessages.arenaHelp
 import com.ceraia.modules.arena.ArenaDefaultMessages.pvpHelp
-import com.axodouble.types.DoublePlayer
+import com.ceraia.types.CeraiaPlayer
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.minimessage.MiniMessage
-import org.bukkit.Bukkit
-import org.bukkit.command.*
-import org.bukkit.entity.Player
-import org.bukkit.util.StringUtil
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Particle;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.util.StringUtil;
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
 import java.util.function.Consumer
 import java.util.stream.Collectors
 
-class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabCompleter {
+class ModuleArena(private val plugin: Ceraia) : CommandExecutor, TabCompleter, Listener {
+
+    private val invites: MutableMap<Player, Player> = mutableMapOf()
+val arenaActions = ArenaActions(plugin)
+val arenaManager = ArenaManager(plugin)
+val arenaInviteManager = ArenaInviteManager()
+    val arenaSelectGUI = ArenaSelectGUI(plugin)
+
     init {
         plugin.getCommand("arena")?.setExecutor(this)
         plugin.getCommand("pvp")?.setExecutor(this)
@@ -33,6 +50,26 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
             this
         plugin.getCommand("profile")?.tabCompleter =
             this
+
+
+        Bukkit.getPluginManager().registerEvents(this, plugin)
+    }
+
+    fun arenaHelp(sender: CommandSender) {
+        sender.sendMessage(
+            MiniMessage.miniMessage().deserialize(
+                """
+                < yellow ><bold > Arena Help
+                <green>/arena list -Show your arenas
+                <green >/arena delete <name > -Delete your arena
+                <green >/arena public <name > -Make arena public/private
+                <yellow > How to create a new arena:
+                <gold > 1. < green >/arena create <name > -Create a new arena
+                <gold> 2. < green >/arena sp1 <name > -Set spawn point for the first player
+                <gold> 3. < green >/arena sp2 <name > -Set spawn point for the second player
+                """.trimIndent()
+            )
+        )
     }
 
     override fun onCommand(sender: CommandSender, cmd: Command, label: String, args: Array<String>): Boolean {
@@ -49,8 +86,8 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 }
 
                 if (args[0].equals("list", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaList(sender)
-                    plugin.arenaModule.arenaActions.arenaList(sender)
+                    plugin.moduleArena.arenaActions.arenaList(sender)
+                    plugin.moduleArena.arenaActions.arenaList(sender)
                     return true
                 }
 
@@ -64,9 +101,9 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
 
                     top.add(MiniMessage.miniMessage().deserialize("<yellow><bold>Top 10 players with the highest ELO:"))
 
-                    plugin.playerManager.doublePlayers.stream()
-                        .sorted(Comparator.comparingInt<DoublePlayer>(DoublePlayer::elo).reversed()).limit(10)
-                        .forEach { ap: DoublePlayer ->
+                    plugin.playerManager.ceraiaPlayers.stream()
+                        .sorted(Comparator.comparingInt<CeraiaPlayer>(CeraiaPlayer::elo).reversed()).limit(10)
+                        .forEach { ap: CeraiaPlayer ->
                             val playerName = Bukkit.getOfflinePlayer(ap.getUUID()).name
                             val elo = ap.elo
 
@@ -99,25 +136,25 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 }
 
                 if (args[0].equals("delete", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaDelete(sender, args)
+                    plugin.moduleArena.arenaActions.arenaDelete(sender, args)
                     return true
                 }
                 if (args[0].equals("create", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaCreate(sender, args)
+                    plugin.moduleArena.arenaActions.arenaCreate(sender, args)
                     return true
                 }
                 if (args[0].equals("sp1", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaSP1(sender, args)
+                    plugin.moduleArena.arenaActions.arenaSP1(sender, args)
                     return true
                 }
                 if (args[0].equals("sp2", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaSP2(sender, args)
+                    plugin.moduleArena.arenaActions.arenaSP2(sender, args)
                     return true
                 }
                 if (args[0].equals("public", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.arenaPublic(sender, args)
+                    plugin.moduleArena.arenaActions.arenaPublic(sender, args)
                 } else {
-                    plugin.badUsage(sender as Player)
+
                     arenaHelp(sender)
                 }
                 return true
@@ -134,33 +171,16 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     return true
                 }
 
-                // Check if the sender is pvpbanned
-                val doublePlayer = plugin.playerManager.getDoublePlayer((sender as Player).uniqueId)
-                if (doublePlayer.isPvpBanned()) {
-                    sender.sendMessage(
-                        MiniMessage.miniMessage().deserialize("<red>You are banned from PvP!")
-                    )
-                    return true
-                }
-
                 if (args[0].equals("accept", ignoreCase = true)) {
                     val p = sender
 
-                    // Check if the player is banned
-                    if (plugin.playerManager.getDoublePlayer(p.uniqueId).isPvpBanned()) {
-                        sender.sendMessage(
-                            MiniMessage.miniMessage().deserialize("<red>This player is banned from PvP!")
-                        )
-                        return true
-                    }
-
-                    val invite = plugin.arenaInviteManager.invites[p]
+                    val invite = plugin.moduleArena.arenaInviteManager.invites[p]
 
                     if (invite == null) {
                         sender.sendMessage(
                             MiniMessage.miniMessage().deserialize("<red>You don't have any invites!")
                         )
-                        plugin.arenaInviteManager.invites.remove(p)
+                        plugin.moduleArena.arenaInviteManager.invites.remove(p)
                         return true
                     }
 
@@ -178,7 +198,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         return true
                     }
 
-                    if (invite.arena!!.getState() != Arena.ArenaState.WAITING || plugin.arenaModule.arenaManager.arenas.stream()
+                    if (invite.arena!!.getState() != Arena.ArenaState.WAITING || plugin.moduleArena.arenaManager.arenas.stream()
                             .noneMatch { a: Arena ->
                                 a.name.equals(
                                     invite.arena!!.name, ignoreCase = true
@@ -190,15 +210,15 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                                 MiniMessage.miniMessage().deserialize("<red>Arena not found!")
                             )
                         }
-                        plugin.arenaInviteManager.invites.remove(p)
+                        plugin.moduleArena.arenaInviteManager.invites.remove(p)
                         return true
                     }
 
                     val playersToFight: MutableList<Player> = ArrayList()
 
                     if (invite.group) {
-                        val group1 = plugin.arenaModule.arenaActions.getPlayersByGroup(invite.inviter)
-                        val group2 = plugin.arenaModule.arenaActions.getPlayersByGroup(invite.invited)
+                        val group1 = plugin.moduleArena.arenaActions.getPlayersByGroup(invite.inviter)
+                        val group2 = plugin.moduleArena.arenaActions.getPlayersByGroup(invite.invited)
 
                         if (group1 == null || group2 == null) {
                             for (pl in Arrays.asList(invite.invited, invite.inviter)) {
@@ -206,7 +226,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                                     MiniMessage.miniMessage().deserialize("<red>Group not found!")
                                 )
                             }
-                            plugin.arenaInviteManager.invites.remove(p)
+                            plugin.moduleArena.arenaInviteManager.invites.remove(p)
                             return true
                         }
 
@@ -216,20 +236,20 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                                     MiniMessage.miniMessage().deserialize("<red>Group must have at least 2 players!")
                                 )
                             }
-                            plugin.arenaInviteManager.invites.remove(p)
+                            plugin.moduleArena.arenaInviteManager.invites.remove(p)
                             return true
                         }
 
                         val allPlayersAreReady = true
 
                         for (pl in group1) {
-                            if (plugin.arenaModule.arenaManager.getArena(pl) != null) {
+                            if (plugin.moduleArena.arenaManager.getArena(pl) != null) {
                                 return true
                             }
                         }
 
                         for (pl in group2) {
-                            if (plugin.arenaModule.arenaManager.getArena(pl) != null) {
+                            if (plugin.moduleArena.arenaManager.getArena(pl) != null) {
                                 return true
                             }
                         }
@@ -241,7 +261,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                                         .deserialize("<red>One or more players are already in an arena!")
                                 )
                             }
-                            plugin.arenaInviteManager.invites.remove(p)
+                            plugin.moduleArena.arenaInviteManager.invites.remove(p)
                             return true
                         }
 
@@ -299,7 +319,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 } // If the inviter is the same as the invited, return
 
 
-                plugin.arenaSelectGUI.openArenaList(inviter, invited)
+                plugin.moduleArena.arenaSelectGUI.openArenaList(inviter as Player, invited)
                 return true
             }
 
@@ -328,7 +348,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 val player = sender as Player
 
                 if (args[0].equals("invite", ignoreCase = true)) {
-                    if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(player) && !plugin.arenaModule.arenaActions.groups.containsKey(
+                    if (plugin.moduleArena.arenaActions.playersByGroup.containsKey(player) && !plugin.moduleArena.arenaActions.groups.containsKey(
                             player
                         )
                     ) {
@@ -337,7 +357,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     }
 
                     if (args.size == 1) {
-                        plugin.badUsage(sender)
+                        arenaHelp(sender)
                         return true
                     }
 
@@ -352,7 +372,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                             targets.add(target)
                         }
 
-                        if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(target)) {
+                        if (plugin.moduleArena.arenaActions.playersByGroup.containsKey(target)) {
                             checkNotNull(target)
                             sender.sendMessage(
                                 MiniMessage.miniMessage()
@@ -390,7 +410,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                             )
                         )
 
-                        plugin.arenaModule.arenaActions.invites[target] = player
+                        plugin.moduleArena.arenaActions.invites[target] = player
                     }
 
                     sender.sendMessage(
@@ -401,14 +421,14 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                                 )))
                     return true
                 } else if (args[0].equals("accept", ignoreCase = true)) {
-                    val inviter = plugin.arenaModule.arenaActions.invites[player]
+                    val inviter = plugin.moduleArena.arenaActions.invites[player]
 
                     if (inviter == null || !inviter.isOnline) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>No invites found"))
                         return true
                     }
 
-                    if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(inviter) && !plugin.arenaModule.arenaActions.groups.containsKey(
+                    if (plugin.moduleArena.arenaActions.playersByGroup.containsKey(inviter) && !plugin.moduleArena.arenaActions.groups.containsKey(
                             inviter
                         )
                     ) {
@@ -419,21 +439,21 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         return true
                     }
 
-                    if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(player)) {
+                    if (plugin.moduleArena.arenaActions.playersByGroup.containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are already in a group"))
                         return true
                     }
 
-                    var group = plugin.arenaModule.arenaActions.groups[inviter]
+                    var group = plugin.moduleArena.arenaActions.groups[inviter]
                     if (group == null) {
                         group = ArrayList()
                         group.add(inviter)
-                        plugin.arenaModule.arenaActions.playersByGroup[inviter] = inviter
+                        plugin.moduleArena.arenaActions.playersByGroup[inviter] = inviter
                     }
                     group.add(player)
-                    plugin.arenaModule.arenaActions.groups[inviter] = group
+                    plugin.moduleArena.arenaActions.groups[inviter] = group
 
-                    plugin.arenaModule.arenaActions.playersByGroup[player] = inviter
+                    plugin.moduleArena.arenaActions.playersByGroup[player] = inviter
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Invite accepted"))
                     for (pl in group) {
                         pl.sendMessage(
@@ -443,15 +463,15 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     }
                     return true
                 } else if (args[0].equals("leave", ignoreCase = true)) {
-                    plugin.arenaModule.arenaActions.leaveGang(player)
+                    plugin.moduleArena.arenaActions.leaveGang(player)
                 } else if (args[0].equals("kick", ignoreCase = true)) {
-                    if (!plugin.arenaModule.arenaActions.groups.containsKey(player)) {
+                    if (!plugin.moduleArena.arenaActions.groups.containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"))
                         return true
                     }
 
                     if (args.size == 1) {
-                        plugin.badUsage(sender)
+                        arenaHelp(sender)
                         return true
                     }
 
@@ -463,7 +483,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         return true
                     }
 
-                    val group = plugin.arenaModule.arenaActions.groups[player]!!
+                    val group = plugin.moduleArena.arenaActions.groups[player]!!
 
                     if (!group.contains(target)) {
                         sender.sendMessage(
@@ -474,7 +494,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     }
 
                     group.remove(target)
-                    plugin.arenaModule.arenaActions.playersByGroup.remove(target)
+                    plugin.moduleArena.arenaActions.playersByGroup.remove(target)
 
                     target.sendMessage(
                         MiniMessage.miniMessage()
@@ -482,13 +502,13 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     )
 
                     if (group.size <= 1) {
-                        plugin.arenaModule.arenaActions.groups[player]!!.forEach(Consumer { p: Player? ->
+                        plugin.moduleArena.arenaActions.groups[player]!!.forEach(Consumer { p: Player? ->
                             player.sendMessage(MiniMessage.miniMessage().deserialize("<red>Group has been disbanded"))
-                            plugin.arenaModule.arenaActions.playersByGroup.remove(p)
-                            plugin.arenaModule.arenaActions.groups.remove(player)
+                            plugin.moduleArena.arenaActions.playersByGroup.remove(p)
+                            plugin.moduleArena.arenaActions.groups.remove(player)
                         })
 
-                        plugin.arenaModule.arenaActions.groups.remove(player)
+                        plugin.moduleArena.arenaActions.groups.remove(player)
                     } else {
                         group.forEach(Consumer { p: Player ->
                             p.sendMessage(
@@ -514,13 +534,13 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         return true
                     }
 
-                    if (!plugin.arenaModule.arenaActions.groups.containsKey(player)) {
+                    if (!plugin.moduleArena.arenaActions.groups.containsKey(player)) {
                         sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are not in a group"))
                         return true
                     }
 
-                    if (!plugin.arenaModule.arenaActions.groups.containsKey(invited) || (plugin.arenaModule.arenaActions.groups[player]!!
-                            .contains(invited) || plugin.arenaModule.arenaActions.groups[invited]!!.contains(player))
+                    if (!plugin.moduleArena.arenaActions.groups.containsKey(invited) || (plugin.moduleArena.arenaActions.groups[player]!!
+                            .contains(invited) || plugin.moduleArena.arenaActions.groups[invited]!!.contains(player))
                     ) {
                         sender.sendMessage(
                             MiniMessage.miniMessage().deserialize("<red>Player $playerName is not in a group")
@@ -528,13 +548,13 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         return true
                     }
 
-                    plugin.arenaSelectGUI.openArenaList(player, invited)
+                    plugin.moduleArena.arenaSelectGUI.openArenaList(player, invited)
                 }
 
                 return true
             }
 
-            "top", "leaderboard" -> plugin.arenaModule.arenaActions.leaderboard(sender)
+            "top", "leaderboard" -> plugin.moduleArena.arenaActions.leaderboard(sender)
             "profile" -> {
                 if (!sender.hasPermission("double.pvp")) {
                     sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid usage"))
@@ -547,7 +567,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     if (player == null) {
                         sender.sendMessage(
                             MiniMessage.miniMessage().deserialize(
-                                    "<red>Invalid usage"
+                                "<red>Invalid usage"
                             )
                         )
                         return true
@@ -557,7 +577,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                 }
 
                 // Return the player's profile
-                val doublePlayer = plugin.playerManager.getDoublePlayer(player.uniqueId)
+                val doublePlayer = plugin.playerManager.getCeraiaPlayer(player.uniqueId)
                 sender.sendMessage(
                     MiniMessage.miniMessage().deserialize(
                         """
@@ -566,8 +586,6 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                         <yellow><bold>Games: <green>${doublePlayer.wins + doublePlayer.losses}
                         <yellow><bold>Wins: <green>${doublePlayer.wins}
                         <yellow><bold>Losses: <green>${doublePlayer.losses}
-                        <yellow><bold>PVP-Banned: <green>${doublePlayer.isPvpBanned()}
-                        <yellow><bold>Arena-Banned: <green>${doublePlayer.isArenaBanned()}
                         """.trimIndent()
                     )
                 )
@@ -589,7 +607,7 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                             args[0].equals("sp2", ignoreCase = true))
                 ) {
                     val tabOptions: MutableList<String> = ArrayList()
-                    plugin.arenaModule.arenaManager.arenas.forEach(Consumer { a: Arena ->
+                    plugin.moduleArena.arenaManager.arenas.forEach(Consumer { a: Arena ->
                         if (a.owner == sender.name) {
                             tabOptions.add(a.name)
                         }
@@ -630,8 +648,8 @@ class ArenaCommandHandler(private val plugin: Double) : CommandExecutor, TabComp
                     return mutableListOf("invite", "accept", "leave", "kick", "fight")
                 } else if (args.size == 2 && args[0].equals("kick", ignoreCase = true)) {
                     val tabOptions = ArrayList<String>()
-                    if (plugin.arenaModule.arenaActions.groups.containsKey(sender as Player)) {
-                        plugin.arenaModule.arenaActions.groups[sender]!!
+                    if (plugin.moduleArena.arenaActions.groups.containsKey(sender as Player)) {
+                        plugin.moduleArena.arenaActions.groups[sender]!!
                             .forEach(Consumer { p: Player -> tabOptions.add(p.name) })
                     }
                     val returnedOptions: MutableList<String> = ArrayList()

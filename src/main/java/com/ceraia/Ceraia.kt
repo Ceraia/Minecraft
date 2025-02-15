@@ -24,6 +24,8 @@ class Ceraia : JavaPlugin() {
         private set
     lateinit var configHelper: ConfigHelper
         private set
+    lateinit var moduleArena: ModuleArena
+        private set
 
     override fun onEnable() {
         saveDefaultConfig()
@@ -44,6 +46,7 @@ class Ceraia : JavaPlugin() {
         moduleMarriage = ModuleMarriage(plugin)
         moduleSystem = ModuleSystem(plugin)
         moduleRaces = ModuleRaces(plugin)
+        moduleArena = ModuleArena(plugin)
 
         /*---------------------------------*/
         /*             Helpers             */

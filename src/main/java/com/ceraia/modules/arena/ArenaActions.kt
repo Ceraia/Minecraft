@@ -1,7 +1,7 @@
 package com.ceraia.modules.arena
 
-import com.axodouble.Double
-import com.axodouble.types.DoublePlayer
+import com.ceraia.Ceraia
+import com.ceraia.types.CeraiaPlayer
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Bukkit
@@ -11,20 +11,36 @@ import org.bukkit.scoreboard.DisplaySlot
 import java.io.File
 import java.util.concurrent.atomic.AtomicInteger
 
-class ArenaActions(private val plugin: Double) {
+class ArenaActions(private val plugin: Ceraia) {
     val invites: MutableMap<Player, Player> = HashMap()
     val playersByGroup: MutableMap<Player, Player> = HashMap()
     val groups: MutableMap<Player, MutableList<Player>> = HashMap()
 
+    fun arenaHelp(sender: CommandSender) {
+        sender.sendMessage(
+            MiniMessage.miniMessage().deserialize(
+                """
+                < yellow ><bold > Arena Help
+                <green>/arena list -Show your arenas
+                <green >/arena delete <name > -Delete your arena
+                <green >/arena public <name > -Make arena public/private
+                <yellow > How to create a new arena:
+                <gold > 1. < green >/arena create <name > -Create a new arena
+                <gold> 2. < green >/arena sp1 <name > -Set spawn point for the first player
+                <gold> 3. < green >/arena sp2 <name > -Set spawn point for the second player
+                """.trimIndent()
+            )
+        )
+    }
 
     fun arenaSP1(sender: CommandSender, args: Array<String>) {
         if (args.size == 1) {
-            plugin.badUsage(sender as Player)
+            arenaHelp(sender)
             return
         }
 
         val name = args[1]
-        val arena = plugin.arenaModule.arenaManager.getArena(name)
+        val arena = plugin.moduleArena.arenaManager.getArena(name)
         if (arena == null) {
             ArenaDefaultMessages.notFound(sender)
             return
@@ -39,12 +55,12 @@ class ArenaActions(private val plugin: Double) {
 
     fun arenaSP2(sender: CommandSender, args: Array<String>) {
         if (args.size == 1) {
-            plugin.badUsage(sender as Player)
+            arenaHelp(sender)
             return
         }
 
         val name = args[1]
-        val arena = plugin.arenaModule.arenaManager.getArena(name)
+        val arena = plugin.moduleArena.arenaManager.getArena(name)
         if (arena == null) {
             ArenaDefaultMessages.notFound(sender)
             return
@@ -59,17 +75,11 @@ class ArenaActions(private val plugin: Double) {
 
     fun arenaCreate(sender: CommandSender, args: Array<String>) {
         if (args.size == 1) {
-            plugin.badUsage(sender as Player)
+            arenaHelp(sender)
             return
         }
 
         val name = args[1]
-
-        // Check if the user is banned from creating arenas
-        if (plugin.playerManager.getDoublePlayer((sender as Player).uniqueId).isArenaBanned()) {
-            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>You are banned from creating arenas"))
-            return
-        }
 
         // Check if the string is the same as <name>, if so state the user should put a name
         if (name.equals("<name>", ignoreCase = true)) {
@@ -87,29 +97,37 @@ class ArenaActions(private val plugin: Double) {
         }
 
         // Check if the arena already exists
-        if (plugin.arenaModule.arenaManager.arenas.any { it.name.equals(name, ignoreCase = true) }) {
+        if (plugin.moduleArena.arenaManager.arenas.any { it.name.equals(name, ignoreCase = true) }) {
             sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Arena already exists"))
             return
         }
 
         val file = File(plugin.dataFolder, "data/arenas/$name.yml")
-        val arena = Arena(plugin, name, sender.name, sender.location, sender.location, false, file)
 
-        arena.setSpawnPoint1(sender.location)
-        arena.setSpawnPoint2(sender.location)
+        val location = plugin.server.getPlayer(sender.name)?.location
 
-        plugin.arenaModule.arenaManager.addArena(arena)
+        if(location == null) {
+            sender.sendMessage(MiniMessage.miniMessage().deserialize("<red>Invalid location"))
+            return
+        }
+
+        val arena = Arena(plugin, name, sender.name, location, location, false, file)
+
+        arena.setSpawnPoint1(location)
+        arena.setSpawnPoint2(location)
+
+        plugin.moduleArena.arenaManager.addArena(arena)
         sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Arena created"))
     }
 
     fun arenaDelete(sender: CommandSender, args: Array<String>) {
         if (args.size == 1) {
-            plugin.badUsage(sender as Player)
+            arenaHelp(sender)
             return
         }
 
         val name = args[1]
-        val arena = plugin.arenaModule.arenaManager.getArena(name)
+        val arena = plugin.moduleArena.arenaManager.getArena(name)
         if (arena == null) {
             ArenaDefaultMessages.notFound(sender)
             return
@@ -124,18 +142,18 @@ class ArenaActions(private val plugin: Double) {
         }
 
         arena.delete()
-        plugin.arenaModule.arenaManager.removeArena(arena)
+        plugin.moduleArena.arenaManager.removeArena(arena)
         sender.sendMessage(MiniMessage.miniMessage().deserialize("<green>Arena deleted"))
     }
 
     fun arenaPublic(sender: CommandSender, args: Array<String>) {
         if (args.size == 1) {
-            plugin.badUsage(sender as Player)
+            arenaHelp(sender)
             return
         }
 
         val name = args[1]
-        val arena = plugin.arenaModule.arenaManager.getArena(name)
+        val arena = plugin.moduleArena.arenaManager.getArena(name)
         if (arena == null) {
             ArenaDefaultMessages.notFound(sender)
             return
@@ -156,7 +174,7 @@ class ArenaActions(private val plugin: Double) {
     }
 
     fun arenaList(sender: CommandSender) {
-        val arenas = plugin.arenaModule.arenaManager.arenas.filter { it.owner == sender.name }
+        val arenas = plugin.moduleArena.arenaManager.arenas.filter { it.owner == sender.name }
         sender.sendMessage(
             MiniMessage.miniMessage().deserialize(
                 "<yellow><bold>Your arenas:" +
@@ -179,7 +197,7 @@ class ArenaActions(private val plugin: Double) {
         Bukkit.broadcast(
             MiniMessage.miniMessage().deserialize(
                 "<green>${winner.name} just killed ${loser.name} in the " +
-                        "${plugin.arenaModule.arenaManager.getArena(loser)?.name} arena with a win chance of $winChance%!"
+                        "${plugin.moduleArena.arenaManager.getArena(loser)?.name} arena with a win chance of $winChance%!"
             )
         )
 
@@ -232,7 +250,7 @@ class ArenaActions(private val plugin: Double) {
 
         // Get all online players and set their score to their Elo rating
         for (onlinePlayer in Bukkit.getOnlinePlayers()) {
-            val doublePlayer = plugin.playerManager.getDoublePlayer(onlinePlayer.uniqueId)
+            val doublePlayer = plugin.playerManager.getCeraiaPlayer(onlinePlayer.uniqueId)
 
             objectivePlayerList?.getScore(onlinePlayer.name)?.score = doublePlayer.elo
             objectiveBelowName?.getScore(onlinePlayer.name)?.score = doublePlayer.elo
@@ -254,7 +272,7 @@ class ArenaActions(private val plugin: Double) {
 
         top.add(MiniMessage.miniMessage().deserialize("<yellow><bold>Top 10 players with the highest ELO:"))
 
-        plugin.playerManager.doublePlayers.sortedByDescending(DoublePlayer::elo).take(10).forEach { ap ->
+        plugin.playerManager.ceraiaPlayers.sortedByDescending(CeraiaPlayer::elo).take(10).forEach { ap ->
             val playerName = Bukkit.getOfflinePlayer(ap.uuid).name
             val elo = ap.elo
 

@@ -1,6 +1,6 @@
 package com.ceraia.modules.arena;
 
-import com.axodouble.Double;
+import com.ceraia.Ceraia
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,7 +12,7 @@ import java.io.File;
 object ArenaHelper {
 
     @JvmStatic
-    fun revertInventory( plugin: Double, player: Player,  arena: Arena) {
+    fun revertInventory( plugin: Ceraia, player: Player,  arena: Arena) {
         try {
             val file = File(plugin.getDataFolder(), "data/pinventory_" + arena.name + "_" + player.getName() + ".yml")
 

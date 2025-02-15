@@ -1,5 +1,6 @@
 package com.ceraia.modules.arena
 
+import com.ceraia.Ceraia
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.block.data.type.RespawnAnchor
@@ -21,19 +22,19 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.scheduler.BukkitRunnable
 import java.util.*
 
-class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
+class ArenaEvents(private val plugin: Ceraia) : Listener {
     init {
         plugin.server.pluginManager.registerEvents(this, plugin)
     }
 
     private fun isInArena(player: Player): Boolean {
-        return plugin.arenaModule.arenaManager.isInArena(player)
+        return plugin.moduleArena.arenaManager.isInArena(player)
     }
 
     // If a block gets placed in the arena, add it to the list of placed blocks
     @EventHandler
     fun onBlockPlace(e: BlockPlaceEvent) {
-        val arena = plugin.arenaModule.arenaManager.getArena(e.player) ?: return
+        val arena = plugin.moduleArena.arenaManager.getArena(e.player) ?: return
 
         arena.placeBlock(e.blockPlaced.location)
     }
@@ -41,7 +42,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
     // If a block gets broken in the arena, remove it from the list of placed blocks
     @EventHandler
     fun onBlockBreak(e: BlockBreakEvent) {
-        val arena = plugin.arenaModule.arenaManager.getArena(e.player) ?: return
+        val arena = plugin.moduleArena.arenaManager.getArena(e.player) ?: return
 
         if (arena.getPlacedBlocks().contains(e.block.location)) {
             arena.removeBlock(e.block.location)
@@ -154,13 +155,13 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
         }
 
         // If the damager and the player are in different arenas, return
-        if(plugin.arenaModule.arenaManager.getArena(damager) != plugin.arenaModule.arenaManager.getArena(player))
+        if(plugin.moduleArena.arenaManager.getArena(damager) != plugin.moduleArena.arenaManager.getArena(player))
         {
             e.isCancelled = true
             return
         }
 
-        val arena: Arena = plugin.arenaModule.arenaManager.getArena(damager) ?: return
+        val arena: Arena = plugin.moduleArena.arenaManager.getArena(damager) ?: return
 
         // If the arena is null, return
 
@@ -195,7 +196,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             return
         }
 
-        val arena: Arena? = plugin.arenaModule.arenaManager.getArena(victim)
+        val arena: Arena? = plugin.moduleArena.arenaManager.getArena(victim)
 
         if (arena == null) {
             plugin.logger.warning("Player is in arena but arena is null")
@@ -217,7 +218,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             if (e is EntityDamageByEntityEvent) {
                 if ((e.damager is Player)) {
                     // Do ELO calculations
-                    plugin.arenaModule.arenaActions.calculateElo(victim, e.damager as Player)
+                    plugin.moduleArena.arenaActions.calculateElo(victim, e.damager as Player)
                 }
             }
 
@@ -233,7 +234,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
         if (!isInArena(e.entity)) {
             return
         }
-        val arena = plugin.arenaModule.arenaManager.getArena(e.entity)
+        val arena = plugin.moduleArena.arenaManager.getArena(e.entity)
 
         val loc = e.entity.location
 
@@ -245,7 +246,7 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             )
         }
         if (killer != null) {
-            plugin.arenaModule.arenaActions.calculateElo(e.entity, killer)
+            plugin.moduleArena.arenaActions.calculateElo(e.entity, killer)
         }
 
 
@@ -256,19 +257,19 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
                 arena!!.end(e.entity, false)
             }
         }.runTaskLater(plugin, 5L)
-        plugin.arenaModule.arenaActions.updateScoreboard()
+        plugin.moduleArena.arenaActions.updateScoreboard()
     }
 
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent?) {
-        plugin.arenaModule.arenaActions.updateScoreboard()
+        plugin.moduleArena.arenaActions.updateScoreboard()
     }
 
     @EventHandler
     fun onQuit(e: PlayerQuitEvent) {
         val player = e.player
-        if (plugin.arenaModule.arenaActions.playersByGroup.containsKey(player)) {
-            plugin.arenaModule.arenaActions.leaveGang(player)
+        if (plugin.moduleArena.arenaActions.playersByGroup.containsKey(player)) {
+            plugin.moduleArena.arenaActions.leaveGang(player)
         }
 
         if (!isInArena(e.player)) {
@@ -276,17 +277,17 @@ class ArenaEvents(private val plugin: com.axodouble.Double) : Listener {
             return
         }
 
-        val arena = plugin.arenaModule.arenaManager.getArena(e.player)
+        val arena = plugin.moduleArena.arenaManager.getArena(e.player)
 
         // Check in which team the player is
         if (arena!!.getTeam1().contains(e.player)) {
-            plugin.arenaModule.arenaActions.calculateElo(e.player, arena.getTeam2()[0])
+            plugin.moduleArena.arenaActions.calculateElo(e.player, arena.getTeam2()[0])
         } else {
-            plugin.arenaModule.arenaActions.calculateElo(e.player, arena.getTeam1()[0])
+            plugin.moduleArena.arenaActions.calculateElo(e.player, arena.getTeam1()[0])
         }
 
         arena.end(e.player, true)
-        plugin.arenaModule.arenaActions.updateScoreboard()
+        plugin.moduleArena.arenaActions.updateScoreboard()
     }
 
     @EventHandler
