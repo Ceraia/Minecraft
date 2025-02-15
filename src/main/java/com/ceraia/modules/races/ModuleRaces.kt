@@ -218,7 +218,6 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
         }
 
         for (raceEntry in racesSection.getKeys(false)) {
-            plugin.logger.info("races.$raceEntry")
             val path = "races.$raceEntry"
             val race = Race(
                 config.getString("$path.name", "<gray>No name...")!!,
@@ -235,8 +234,6 @@ class ModuleRaces(private val plugin: com.ceraia.Ceraia) : CommandExecutor, TabC
                 config.getDouble("$path.armor", 0.0),
                 ItemStack(Material.valueOf(config.getString("$path.item", "BREAD")!!)),
             )
-            plugin.logger.info(config.getString("$path.name", "<gray>No name..."))
-            plugin.logger.info("$path.name" )
             races.add(race)
         }
     }
